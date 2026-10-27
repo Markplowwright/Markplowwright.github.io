@@ -46,9 +46,9 @@ export const interests: Interest[] = [
     id: 'int-sports',
     name: 'Sports & Fitness.txt',
     title: 'Sports and fitness',
-    summary: 'Gym, basketball and football',
+    summary: 'Gym, ultimate frisbee, basketball and football',
     body: [
-      'Regular at the gym.',
+      'Regular at the gym, and plays ultimate frisbee.',
       'Plays and follows basketball and football, and is learning more about the American football game.',
     ],
   },
@@ -74,4 +74,4 @@ export const writing = {
 };
 
 /** One line used by the terminal and short summaries. */
-export const interestsOneLine = 'Musician, chess player, writer and published poet, reader, gym, basketball and football, video games, audiophile';
+export const interestsOneLine = 'Musician, chess player, writer and published poet, reader, gym, ultimate frisbee, basketball and football, video games, audiophile';
