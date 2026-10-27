@@ -47,6 +47,11 @@ describe('runCommand', () => {
     expect(runCommand('open nothing', mac).open).toBeUndefined();
   });
 
+  it('lists interests and opens the folder', () => {
+    expect(runCommand('hobbies', mac).lines.join('\n')).toContain('Never Split the Difference');
+    expect(runCommand('open interests', mac).open).toBe('interests');
+  });
+
   it('has the easter egg', () => {
     const r = runCommand('sudo hire mark', linux);
     expect(r.lines[1]).toBe('Permission granted.');

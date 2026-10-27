@@ -7,6 +7,7 @@ import { wallpaperThumb } from '../../os/shared/Wallpaper';
 import { timeZone, useNow } from '../../os/shared/hooks';
 import { wallpapers } from '../../content/wallpapers';
 import { profile } from '../../content/profile';
+import { interestsOneLine } from '../../content/interests';
 import { useSettingsStore, type SettingsTab } from './store';
 
 const TABS: [SettingsTab, string][] = [
@@ -91,6 +92,7 @@ export default function SettingsApp() {
               <dt>Location</dt><dd>{profile.location}</dd>
               <dt>Education</dt><dd>{profile.education.school}, B.S. Computer Information Technology</dd>
               <dt>Building</dt><dd>{profile.building.join(', ')}</dd>
+              <dt>Interests</dt><dd>{interestsOneLine}</dd>
               <dt>Time zone</dt><dd>{tz}</dd>
               <dt>System</dt><dd>{profile.osName}, {skin.label} style</dd>
             </dl>

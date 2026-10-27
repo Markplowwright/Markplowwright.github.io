@@ -14,6 +14,7 @@ import { lab } from '../content/lab';
 import { events } from '../content/events';
 import { terminalText } from '../content/terminal';
 import { skills } from '../content/skills';
+import { interests, writing } from '../content/interests';
 import './mobile.css';
 
 type MobileApp = 'about' | 'projects' | 'slides' | 'resume' | 'contact' | 'browser' | 'terminal' | 'network' | 'activity' | 'logs' | 'settings';
@@ -35,6 +36,7 @@ const DOCK: MobileApp[] = ['projects', 'contact', 'browser', 'settings'];
 
 const BANNERS: { title: string; body: string; label: string; app: MobileApp }[] = [
   { title: "Start with Mark's projects", body: 'Each build has the problem, what he built and links.', label: 'Open Projects', app: 'projects' },
+  { title: 'Get to know Mark outside of work', body: 'Music, chess, writing and poems, books, sports, games and audio.', label: 'Open About Mark', app: 'about' },
   { title: "Here are Mark's presentations", body: 'Seminars on network security and ML in computational chemistry.', label: 'Open Presentations', app: 'slides' },
   { title: 'Want to get in touch with Mark?', body: 'Email him, or read his resume.', label: 'Open Contact', app: 'contact' },
 ];
@@ -63,7 +65,7 @@ export function MobileHome() {
   // Tip banners at the top of the home screen.
   useEffect(() => {
     if (!tipsOn) return;
-    const timers = [6000, 26000, 46000].map((ms, i) => setTimeout(() => setBanner(i), ms));
+    const timers = [6000, 26000, 46000, 66000].map((ms, i) => setTimeout(() => setBanner(i), ms));
     return () => timers.forEach(clearTimeout);
   }, [tipsOn]);
 
@@ -153,6 +155,13 @@ function MobileApp({ id }: { id: MobileApp }) {
             <Card key={j.company + j.title}>
               <strong>{j.title}</strong>
               <div className="m-muted">{j.company} · {j.period}</div>
+            </Card>
+          ))}
+          <h3>Interests</h3>
+          {[...interests, writing].map((i) => (
+            <Card key={i.title}>
+              <strong>{i.title}</strong>
+              {i.body.map((line) => <p key={line} className="m-muted">{line}</p>)}
             </Card>
           ))}
           <h3>Skills</h3>

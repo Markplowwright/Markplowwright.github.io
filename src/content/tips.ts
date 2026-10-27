@@ -13,10 +13,11 @@ export const tips: Tip[] = [
   { title: "Check out Mark's Windows Server Home Lab", body: 'A domain controller, a joined client and six Group Policies, all built in Azure.', label: 'Open the lab', target: { node: 'p-homelab' } },
   { title: "Here is where Mark's presentations live", body: 'Seminars on network security and machine learning in computational chemistry.', label: 'Open Presentations', target: { node: 'pres' } },
   { title: "Try Mark's Terminal", body: 'Type help to see what it can do. There is an easter egg too.', label: 'Open Terminal', target: { app: 'terminal' } },
+  { title: 'Get to know Mark outside of work', body: 'Music, chess, writing and poems, books, sports, games and audio.', label: 'Open Interests', target: { node: 'interests' } },
   { title: 'Meet GradAisle', body: 'The graduate school matching platform Mark co-founded, with 1,000+ programs in one place.', label: 'Open GradAisle', target: { node: 'p-grad' } },
   { title: 'See how Mark reads a security alert', body: 'Sample events, what each one means and the right response.', label: 'Open Event Viewer', target: { app: 'eventlog' } },
   { title: 'Want to get in touch with Mark?', body: 'Email him from the Contact file, or read his resume.', label: 'Open Contact', target: { node: 'contact' } },
 ];
 
 /** Seconds after sign-in when each tip appears (first after about 15s, then every 30 to 40s). */
-export const tipTimes = [15, 50, 85, 120, 155, 190, 225];
+export const tipTimes = [15, 50, 85, 120, 155, 190, 225, 260];

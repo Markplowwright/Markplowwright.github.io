@@ -11,6 +11,7 @@ const SIDEBAR: { id: string; path: string[]; icon: string }[] = [
   { id: 'about', path: ['about'], icon: 'folder' },
   { id: 'work', path: ['about', 'work'], icon: 'folder' },
   { id: 'pres', path: ['about', 'pres'], icon: 'folder' },
+  { id: 'interests', path: ['about', 'interests'], icon: 'folder' },
   { id: 'trash', path: ['trash'], icon: 'trash' },
 ];
 

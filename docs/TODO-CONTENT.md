@@ -11,6 +11,8 @@ Find them all with: `grep -rn "\[add" src/content`
 - [ ] `src/content/presentations.ts`: Adaptive Basis Sets Seminar. `[add date and audience]`.
 - [ ] `src/content/projects.ts`: disk-usage-monitor outcome. `[add results after the first scheduled runs]`, which matches the repo README's own placeholder.
 
+- [ ] `src/content/interests.ts`: your published poems. Add each one to `writing.poems` (`{ id, name: 'Title.txt', body }`); they appear in About Mark/Interests/Writing/Poems and the "Poems coming soon" file disappears.
+
 ## Decisions for Mark
 
 - [ ] **Email.** The site uses `mlpplowright@gmail.com`, the address on your resume and old portfolio. To use a different one, change `email` in `src/content/profile.ts`.
