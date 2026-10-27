@@ -32,7 +32,7 @@ function buildTree(): Record<string, FsNode> {
     nodes[n.id] = n;
   };
 
-  add({ id: 'about', name: 'About Mark', kind: 'folder', kids: ['bio', 'resume', 'experience', 'skills', 'contact', 'work', 'pres', 'interests'] });
+  add({ id: 'about', name: 'About Mark', kind: 'folder', kids: ['bio', 'resume', 'experience', 'education', 'skills', 'contact', 'work', 'pres', 'interests'] });
   add({ id: 'bio', name: 'Bio.txt', kind: 'doc', body: profile.bio.join('\n\n') });
   add({ id: 'resume', name: 'Resume.pdf', kind: 'pdf', src: '/resume.pdf', body: `${profile.fullName}. ${profile.summary}` });
   add({
@@ -41,8 +41,14 @@ function buildTree(): Record<string, FsNode> {
     kind: 'doc',
     body: profile.experience
       .map((j) => `${j.title}, ${j.company}\n${j.period} · ${j.location}\n${j.points.map((p) => `• ${p}`).join('\n')}`)
-      .concat([`Education\n${profile.education.degree}\n${profile.education.school}, ${profile.education.location} · ${profile.education.period}`])
+      .concat([`Education\n${profile.education.map((e) => `${e.degree}\n${e.school}, ${e.location} · ${e.period}`).join('\n\n')}`])
       .join('\n\n'),
+  });
+  add({
+    id: 'education',
+    name: 'Education.txt',
+    kind: 'doc',
+    body: profile.education.map((e) => `${e.school}\n${e.degree}\n${e.location} · ${e.period}`).join('\n\n'),
   });
   add({ id: 'skills', name: 'Skills.txt', kind: 'doc', body: skills.map((s) => `${s.group}: ${s.items.join(', ')}.`).join('\n\n') });
   add({

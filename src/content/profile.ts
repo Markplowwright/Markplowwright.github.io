@@ -9,6 +9,8 @@ export type Job = {
   points: string[];
 };
 
+export type Education = { degree: string; short: string; school: string; location: string; period: string };
+
 export const profile = {
   name: 'Mark Plowright',
   fullName: 'Mark Leslie Plowright',
@@ -25,7 +27,7 @@ export const profile = {
     'IT support professional with experience since 2022 across K-12 schools, a university research lab, and summer programs. Hands-on with Mac and Windows support, Jamf, networks, AV and video conferencing, ticketing, and end-user training.',
     'He also builds things: he co-founded GradAisle, a free graduate school discovery platform, and runs home labs for Windows Server, Active Directory and Microsoft 365 administration.',
     'Away from the keyboard, Mark is a musician, a chess player, and a writer with published poems. He reads (last finished: Never Split the Difference by Chris Voss), plays video games, goes to the gym, and follows basketball and football while learning more about the American football game. He is also an audiophile. More in the Interests folder.',
-    'B.S. in Computer Information Technology (Cyber Security and Information Assurance) from Methodist University. "Learn a little about a lot."',
+    'Before college in the U.S., Mark spent two years at the United World College of the Adriatic in Italy studying the International Baccalaureate. He then earned a B.S. in Computer Information Technology (Cyber Security and Information Assurance) from Methodist University. "Learn a little about a lot."',
   ],
   // Mark's public contact details, as listed on his resume.
   email: 'mlpplowright@gmail.com',
@@ -100,10 +102,21 @@ export const profile = {
       ],
     },
   ] satisfies Job[],
-  education: {
-    degree: 'B.S. Computer Information Technology, Cyber Security and Information Assurance concentration',
-    school: 'Methodist University',
-    location: 'Fayetteville, NC',
-    period: 'Jan 2021 – Dec 2024',
-  },
+  // Newest first.
+  education: [
+    {
+      degree: 'B.S. Computer Information Technology, Cyber Security and Information Assurance concentration',
+      short: 'B.S. Computer Information Technology',
+      school: 'Methodist University',
+      location: 'Fayetteville, NC',
+      period: 'Jan 2021 – Dec 2024',
+    },
+    {
+      degree: 'International Baccalaureate (IB) Diploma Programme, two years',
+      short: 'International Baccalaureate',
+      school: 'United World College of the Adriatic (UWC Adriatic)',
+      location: 'Duino, Italy',
+      period: '[add years]',
+    },
+  ] satisfies Education[],
 };

@@ -157,6 +157,14 @@ function MobileApp({ id }: { id: MobileApp }) {
               <div className="m-muted">{j.company} · {j.period}</div>
             </Card>
           ))}
+          <h3>Education</h3>
+          {profile.education.map((e) => (
+            <Card key={e.school}>
+              <strong>{e.school}</strong>
+              <div className="m-muted">{e.degree}</div>
+              <div className="m-muted">{e.location} · {e.period}</div>
+            </Card>
+          ))}
           <h3>Interests</h3>
           {[...interests, writing].map((i) => (
             <Card key={i.title}>

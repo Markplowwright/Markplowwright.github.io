@@ -14,7 +14,7 @@ describe('fileTree', () => {
 
   it('has the files the architecture asks for', () => {
     const about = fileTree.about.kids ?? [];
-    for (const id of ['bio', 'resume', 'skills', 'contact', 'work', 'pres', 'interests']) expect(about).toContain(id);
+    for (const id of ['bio', 'resume', 'education', 'skills', 'contact', 'work', 'pres', 'interests']) expect(about).toContain(id);
     expect(pathTo('poems')).toEqual(['about', 'interests', 'writing', 'poems']);
     for (const id of fileTree.work.kids ?? []) {
       if (id === 'earlier') continue;

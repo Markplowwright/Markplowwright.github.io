@@ -52,6 +52,10 @@ describe('runCommand', () => {
     expect(runCommand('open interests', mac).open).toBe('interests');
   });
 
+  it('lists education', () => {
+    expect(runCommand('education', win).lines.join('\n')).toContain('United World College of the Adriatic');
+  });
+
   it('has the easter egg', () => {
     const r = runCommand('sudo hire mark', linux);
     expect(r.lines[1]).toBe('Permission granted.');

@@ -13,6 +13,7 @@ export const terminalText = {
   skills: skillsOneLine,
   contact: [`Email:    ${profile.email}`, `LinkedIn: ${profile.links.linkedin}`, `GitHub:   ${profile.links.github}`],
   interests: [...interests.map((i) => `${i.title.padEnd(20)} ${i.summary}`), `${writing.title.padEnd(20)} ${writing.summary}`, 'Try: open interests'],
+  education: profile.education.map((e) => `${e.school}: ${e.short} (${e.location})`),
   ls: ['About Mark/', 'Work & Projects/', 'Presentations/', 'Interests/', 'Resume.pdf'],
   hire: ['[sudo] password for recruiter: ********', 'Permission granted.', `Opening ${profile.name}'s resume and contact details...`],
   exit: 'Session closed. (demo, nothing really ended)',

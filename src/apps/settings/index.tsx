@@ -90,7 +90,7 @@ export default function SettingsApp() {
               <dt>Name</dt><dd>{profile.fullName}</dd>
               <dt>Role</dt><dd>{profile.role}</dd>
               <dt>Location</dt><dd>{profile.location}</dd>
-              <dt>Education</dt><dd>{profile.education.school}, B.S. Computer Information Technology</dd>
+              <dt>Education</dt><dd>{profile.education.map((e) => `${e.school}, ${e.short}`).join('; ')}</dd>
               <dt>Building</dt><dd>{profile.building.join(', ')}</dd>
               <dt>Interests</dt><dd>{interestsOneLine}</dd>
               <dt>Time zone</dt><dd>{tz}</dd>

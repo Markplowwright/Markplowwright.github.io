@@ -13,7 +13,7 @@ const OPEN_TARGETS: Record<string, string> = {
   files: 'files', explorer: 'files', finder: 'files', terminal: 'terminal', browser: 'browser',
   taskmgr: 'taskmgr', monitor: 'taskmgr', events: 'eventlog', logs: 'eventlog', network: 'network',
   settings: 'settings', resume: 'resume', projects: 'work', contact: 'contact', presentations: 'pres',
-  interests: 'interests', hobbies: 'interests', poems: 'poems',
+  education: 'education', interests: 'interests', hobbies: 'interests', poems: 'poems',
 };
 
 export function runCommand(raw: string, ctx: TermContext): CommandResult {
@@ -31,7 +31,7 @@ export function runCommand(raw: string, ctx: TermContext): CommandResult {
     case 'help':
       return {
         lines: [
-          `Commands: help, whoami, hostname, projects, skills, interests, contact, ${win ? 'dir' : 'ls'}, pwd, ping <host>, ${win ? 'ipconfig' : 'ifconfig'}, open <app>, clear`,
+          `Commands: help, whoami, hostname, projects, skills, education, interests, contact, ${win ? 'dir' : 'ls'}, pwd, ping <host>, ${win ? 'ipconfig' : 'ifconfig'}, open <app>, clear`,
           'Try: open resume, open projects, ping plowvm',
         ],
       };
@@ -43,6 +43,8 @@ export function runCommand(raw: string, ctx: TermContext): CommandResult {
       return { lines: T.projects };
     case 'skills':
       return { lines: [T.skills] };
+    case 'education':
+      return { lines: T.education };
     case 'interests':
     case 'hobbies':
       return { lines: T.interests };
