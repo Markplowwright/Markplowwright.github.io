@@ -1,0 +1,338 @@
+/* macOS style: translucent menu bar, floating "liquid glass" dock, rounded
+   windows with three dots on the left. Original CSS recipe: a translucent
+   background, backdrop blur and saturation, and inset light edges. */
+
+[data-skin='mac'] {
+  --font: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif;
+  --inset-top: 28px;
+  --inset-left: 0px;
+  --root-bg: #1c2670;
+  --win-radius: 26px;
+  --tb-height: 54px;
+  --r-sm: 10px;
+  --r-card: 14px;
+  --r-btn: 14px;
+  --r-cell: 12px;
+  --pill-radius: 999px;
+  --menu-radius: 12px;
+  --panel-radius: 22px;
+  --toast-radius: 18px;
+  --tile-radius: 14px;
+  --nav-radius: 50%;
+  --field-radius: 999px;
+  --lock-btn-bg: rgba(255, 255, 255, 0.3);
+  --lock-btn-radius: 999px;
+  --toolbar-pad: 2px 16px 10px;
+  --widget-radius: 22px;
+  --widget-bg: rgba(255, 255, 255, 0.18);
+
+  --fg: rgba(0, 0, 0, 0.87);
+  --muted: rgba(0, 0, 0, 0.6);
+  --line: rgba(0, 0, 0, 0.1);
+  --accent: #0068d6;
+  --accent-2: #8250df;
+  --on-accent: #ffffff;
+  --focus: #0068d6;
+  --body-bg: #ffffff;
+  --win-border: rgba(255, 255, 255, 0.7);
+  --win-border-active: rgba(255, 255, 255, 0.85);
+  --win-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.3), 0 14px 36px rgba(0, 0, 0, 0.3);
+  --win-shadow-active: 0 0 0 0.5px rgba(0, 0, 0, 0.35), 0 26px 64px rgba(0, 0, 0, 0.42);
+  --tb-bg: rgba(246, 248, 252, 0.95);
+  --tb-fg: rgba(0, 0, 0, 0.85);
+  --tb-fg-inactive: rgba(0, 0, 0, 0.55);
+  --toolbar-bg: rgba(246, 248, 252, 0.95);
+  --toolbar-border: transparent;
+  --side-bg: rgba(242, 244, 249, 0.9);
+  --side-border: transparent;
+  --field-bg: rgba(0, 0, 0, 0.05);
+  --field-border: transparent;
+  --nav-bg: rgba(0, 0, 0, 0.06);
+  --tool-bg: rgba(127, 127, 127, 0.14);
+  --hover: rgba(0, 0, 0, 0.05);
+  --hl: rgba(0, 122, 255, 0.16);
+  --btn-bg: rgba(0, 0, 0, 0.05);
+  --btn-border: transparent;
+  --btn-on-bg: rgba(0, 122, 255, 0.14);
+  --btn-on-shadow: inset 0 0 0 1.5px #0068d6;
+  --soft-bg: rgba(127, 127, 127, 0.18);
+  --term-bg: #1e1e20;
+  --term-fg: #f2f2f2;
+  --term-acc: #7ee787;
+  --term-btn-bg: rgba(255, 255, 255, 0.16);
+  --term-btn-border: transparent;
+  --term-btn-radius: 999px;
+  --viewer-bg: #eceef3;
+  --graph-bg: rgba(127, 127, 127, 0.1);
+  --paper-bg: #ffffff;
+  --paper-fg: #1b1b1b;
+  --paper-muted: #5c5c5c;
+  --preview-bg: #ffffff;
+
+  --menu-bg: rgba(246, 248, 252, 0.82);
+  --menu-fg: rgba(0, 0, 0, 0.87);
+  --menu-border: rgba(0, 0, 0, 0.08);
+  --menu-hover: #0068d6;
+  --panel-bg: rgba(246, 248, 252, 0.8);
+  --panel-fg: rgba(0, 0, 0, 0.87);
+  --switch-bg: transparent;
+  --switch-fg: #ffffff;
+  --switch-border: rgba(255, 255, 255, 0.6);
+  --switch-on-bg: rgba(255, 255, 255, 0.92);
+  --switch-on-fg: #1d1d1f;
+  color-scheme: light;
+}
+
+[data-skin='mac'][data-mode='dark'] {
+  --root-bg: #050816;
+  --fg: rgba(255, 255, 255, 0.9);
+  --muted: rgba(255, 255, 255, 0.62);
+  --line: rgba(255, 255, 255, 0.12);
+  --accent: #3b9bff;
+  --on-accent: #ffffff;
+  --focus: #3b9bff;
+  --body-bg: #1e1e20;
+  --win-border: rgba(255, 255, 255, 0.14);
+  --win-border-active: rgba(255, 255, 255, 0.22);
+  --tb-bg: rgba(40, 40, 44, 0.96);
+  --tb-fg: rgba(255, 255, 255, 0.9);
+  --tb-fg-inactive: rgba(255, 255, 255, 0.55);
+  --toolbar-bg: rgba(40, 40, 44, 0.96);
+  --side-bg: rgba(34, 34, 38, 0.95);
+  --field-bg: rgba(255, 255, 255, 0.08);
+  --nav-bg: rgba(255, 255, 255, 0.1);
+  --hover: rgba(255, 255, 255, 0.07);
+  --hl: rgba(59, 155, 255, 0.28);
+  --btn-bg: rgba(255, 255, 255, 0.08);
+  --btn-on-bg: rgba(59, 155, 255, 0.24);
+  --btn-on-shadow: inset 0 0 0 1.5px #3b9bff;
+  --viewer-bg: #141416;
+  --preview-bg: #1e1e20;
+  --menu-bg: rgba(40, 40, 44, 0.82);
+  --menu-fg: rgba(255, 255, 255, 0.9);
+  --menu-border: rgba(255, 255, 255, 0.1);
+  --menu-hover: #2a7de1;
+  --panel-bg: rgba(40, 40, 44, 0.8);
+  --panel-fg: rgba(255, 255, 255, 0.9);
+  color-scheme: dark;
+}
+
+/* ---------- window frame: three dots on the left ---------- */
+[data-skin='mac'] .titlebar {
+  padding: 0 22px;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+[data-skin='mac'] .tb-title {
+  order: 1;
+  text-align: center;
+  padding: 0 56px 0 8px;
+}
+
+[data-skin='mac'] .tb-controls {
+  order: 0;
+  gap: 8px;
+}
+
+[data-skin='mac'] .dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.25);
+}
+
+[data-skin='mac'] .dot-close {
+  background: #ff5f57;
+}
+
+[data-skin='mac'] .dot-min {
+  background: #febc2e;
+}
+
+[data-skin='mac'] .dot-max {
+  background: #28c840;
+}
+
+[data-skin='mac'] .window:not(.is-active) .dot {
+  background: rgba(127, 127, 127, 0.4);
+}
+
+[data-skin='mac'] .ctx-menu button:hover,
+[data-skin='mac'] .ctx-menu button:focus-visible {
+  color: #fff;
+}
+
+/* ---------- menu bar ---------- */
+.mac-menubar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 28px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 18px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+  background: rgba(0, 0, 0, 0.16);
+  backdrop-filter: blur(18px) saturate(170%);
+}
+
+.mac-menubar button {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-shadow: inherit;
+}
+
+.mac-menubar .skin-switch button {
+  padding: 1px 10px;
+  border: 1px solid var(--switch-border);
+  text-shadow: none;
+}
+
+.mac-menubar .skin-switch button[aria-pressed='true'] {
+  color: var(--switch-on-fg);
+  background: var(--switch-on-bg);
+}
+
+.mb-brand {
+  font-weight: 700;
+}
+
+.mb-app {
+  font-weight: 600;
+}
+
+.mb-clock {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- dock ---------- */
+.mac-dock {
+  position: absolute;
+  left: 50%;
+  bottom: 12px;
+  transform: translateX(-50%);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px;
+  border-radius: 30px;
+  background-color: rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(14px) saturate(190%) brightness(1.04);
+  box-shadow:
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.35),
+    inset 1.5px 1.5px 0 -0.5px rgba(255, 255, 255, 0.95),
+    inset -1px -1px 0 -0.5px rgba(255, 255, 255, 0.55),
+    inset 0 1px 12px -4px rgba(255, 255, 255, 0.45),
+    0 0 0 0.5px rgba(0, 0, 0, 0.06),
+    0 8px 28px rgba(0, 0, 0, 0.2);
+}
+
+.mac-dock .dock-item {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  transition: transform 0.15s ease;
+}
+
+.mac-dock .dock-item:hover {
+  transform: translateY(-6px) scale(1.08);
+}
+
+.dock-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+}
+
+.dock-dot.is-open {
+  background: #fff;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+}
+
+.mac-dock .dock-sep {
+  width: 1px;
+  height: 46px;
+  margin: 0 4px;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* ---------- Spotlight ---------- */
+.spot-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 3200;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.mac-spotlight {
+  position: absolute;
+  left: 50%;
+  top: 150px;
+  transform: translateX(-50%);
+  width: 560px;
+  z-index: 3201;
+  border-radius: 22px;
+  padding: 12px;
+  background-color: var(--panel-bg);
+  color: var(--panel-fg);
+  backdrop-filter: blur(30px) saturate(190%);
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.2), 0 24px 60px rgba(0, 0, 0, 0.35);
+  font-size: 14px;
+  animation: pop 0.14s ease-out;
+}
+
+.spot-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px;
+  color: var(--muted);
+}
+
+.spot-input,
+.spot-input:focus-visible {
+  flex: 1;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font-size: 20px;
+  color: var(--panel-fg);
+}
+
+.spot-results .search-result {
+  border-radius: 12px;
+}
+
+/* ---------- panel and toast positions ---------- */
+[data-skin='mac'] .quick-panel {
+  right: 12px;
+  top: 34px;
+}
+
+[data-skin='mac'] .toast {
+  right: 14px;
+  top: 36px;
+}
+
+@media (max-width: 960px) {
+  .mb-app {
+    display: none;
+  }
+}

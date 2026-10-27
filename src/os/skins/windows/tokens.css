@@ -1,0 +1,391 @@
+/* Windows style: Mica-like title bars, centered taskbar, flat icons.
+   Light values first, then the dark overrides. */
+
+[data-skin='windows'] {
+  --font: 'Segoe UI Variable', 'Segoe UI', system-ui, sans-serif;
+  --inset-top: 0px;
+  --inset-left: 0px;
+  --root-bg: #b4d0f7;
+  --win-radius: 8px;
+  --tb-height: 36px;
+  --r-sm: 5px;
+  --r-card: 8px;
+  --r-btn: 5px;
+  --pill-radius: 5px;
+  --menu-radius: 8px;
+  --panel-radius: 10px;
+  --toast-radius: 8px;
+  --tile-radius: 6px;
+  --lock-btn-bg: #0f6cbd;
+  --lock-btn-radius: 6px;
+
+  --fg: #1b1b1b;
+  --muted: #5c5c5c;
+  --line: #e0e0e0;
+  --accent: #0f6cbd;
+  --accent-2: #8250df;
+  --on-accent: #ffffff;
+  --focus: #0f6cbd;
+  --body-bg: #fafafa;
+  --win-border: rgba(0, 0, 0, 0.14);
+  --win-border-active: rgba(0, 0, 0, 0.3);
+  --win-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
+  --win-shadow-active: 0 18px 44px rgba(0, 0, 0, 0.38);
+  --tb-bg: #f3f3f3;
+  --tb-fg: #1b1b1b;
+  --tb-fg-inactive: #6b6b6b;
+  --toolbar-bg: #f3f3f3;
+  --side-bg: #f3f3f3;
+  --side-border: #e0e0e0;
+  --field-bg: #ffffff;
+  --field-border: #d1d1d1;
+  --hover: rgba(0, 0, 0, 0.05);
+  --hl: #dbe8f7;
+  --list-on-shadow: inset 3px 0 0 #0f6cbd;
+  --btn-bg: #fdfdfd;
+  --btn-border: #d1d1d1;
+  --btn-on-bg: #e8f1fb;
+  --soft-bg: rgba(127, 127, 127, 0.16);
+  --term-bg: #0c0c0c;
+  --term-fg: #cccccc;
+  --term-acc: #f9f1a5;
+  --term-btn-bg: #1f1f1f;
+  --term-btn-border: #4a4a4a;
+  --viewer-bg: #e6e9ef;
+  --graph-bg: rgba(127, 127, 127, 0.1);
+  --paper-bg: #ffffff;
+  --paper-fg: #1b1b1b;
+  --paper-muted: #5c5c5c;
+
+  --menu-bg: #f9f9f9;
+  --menu-fg: #1b1b1b;
+  --menu-border: rgba(0, 0, 0, 0.12);
+  --menu-hover: rgba(0, 0, 0, 0.06);
+  --panel-bg: rgba(243, 246, 251, 0.94);
+  --panel-fg: #1b1b1b;
+  --taskbar-bg: rgba(240, 244, 250, 0.82);
+  --taskbar-bg-solid: #f0f4fa;
+  --taskbar-fg: #1b1b1b;
+  --start-bg: rgba(243, 246, 251, 0.92);
+  --switch-bg: rgba(255, 255, 255, 0.6);
+  --switch-fg: #1b1b1b;
+  --switch-border: #c9c9c9;
+  --switch-on-bg: #0f6cbd;
+  --switch-on-fg: #ffffff;
+  --widget-bg: rgba(20, 30, 60, 0.42);
+  color-scheme: light;
+}
+
+[data-skin='windows'][data-mode='dark'] {
+  --root-bg: #0b1226;
+  --fg: #f3f3f3;
+  --muted: #c2c2c2;
+  --line: #3a3a3a;
+  --accent: #4cc2ff;
+  --accent-2: #c4a7ff;
+  --on-accent: #0b1226;
+  --focus: #4cc2ff;
+  --body-bg: #202020;
+  --win-border: rgba(255, 255, 255, 0.1);
+  --win-border-active: rgba(255, 255, 255, 0.22);
+  --tb-bg: #2b2b2b;
+  --tb-fg: #ffffff;
+  --tb-fg-inactive: #a8a8a8;
+  --toolbar-bg: #2b2b2b;
+  --side-bg: #272727;
+  --side-border: #3a3a3a;
+  --field-bg: #1c1c1c;
+  --field-border: #4a4a4a;
+  --hover: rgba(255, 255, 255, 0.07);
+  --hl: #2f3d4f;
+  --list-on-shadow: inset 3px 0 0 #4cc2ff;
+  --btn-bg: #2d2d2d;
+  --btn-border: #4a4a4a;
+  --btn-on-bg: #24384d;
+  --viewer-bg: #161616;
+  --menu-bg: #2c2c2c;
+  --menu-fg: #ffffff;
+  --menu-border: rgba(255, 255, 255, 0.1);
+  --menu-hover: rgba(255, 255, 255, 0.08);
+  --panel-bg: rgba(36, 36, 36, 0.94);
+  --panel-fg: #ffffff;
+  --taskbar-bg: rgba(28, 28, 28, 0.85);
+  --taskbar-bg-solid: #1c1c1c;
+  --taskbar-fg: #ffffff;
+  --start-bg: rgba(36, 36, 36, 0.94);
+  --switch-bg: rgba(255, 255, 255, 0.08);
+  --switch-fg: #ffffff;
+  --switch-border: #5a5a5a;
+  --switch-on-bg: #4cc2ff;
+  --switch-on-fg: #0b1226;
+  color-scheme: dark;
+}
+
+/* ---------- window frame: controls on the right ---------- */
+[data-skin='windows'] .titlebar {
+  padding-left: 12px;
+}
+
+[data-skin='windows'] .tb-icon {
+  margin-right: 8px;
+  display: flex;
+}
+
+[data-skin='windows'] .tb-controls button {
+  width: 46px;
+  height: 36px;
+}
+
+[data-skin='windows'] .tb-controls button:hover {
+  background: var(--hover);
+}
+
+[data-skin='windows'] .tb-controls .tb-close:hover {
+  background: #c42b1c;
+  color: #fff;
+}
+
+/* ---------- taskbar ---------- */
+.win-taskbar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 48px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  background: var(--taskbar-bg);
+  backdrop-filter: saturate(2.4) blur(20px);
+  border-top: 1px solid var(--line);
+  color: var(--taskbar-fg);
+  font-size: 12px;
+}
+
+.tb-btn {
+  width: 44px;
+  height: 40px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 0;
+  color: inherit;
+}
+
+.tb-btn:hover,
+.tb-btn.is-on {
+  background: rgba(127, 127, 127, 0.2);
+}
+
+.tb-bar {
+  height: 3px;
+  width: 6px;
+  border-radius: 2px;
+  background: transparent;
+}
+
+.tb-bar.is-open {
+  background: var(--muted);
+}
+
+.tb-bar.is-active {
+  width: 16px;
+  background: var(--accent);
+}
+
+.win-tray {
+  position: absolute;
+  right: 10px;
+  bottom: 0;
+  height: 48px;
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--taskbar-fg);
+  font-size: 12px;
+}
+
+.tray-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 40px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+}
+
+.tray-btn:hover {
+  background: rgba(127, 127, 127, 0.2);
+}
+
+.tray-clock {
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0;
+  line-height: 1.25;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- start menu ---------- */
+.win-start {
+  position: absolute;
+  left: 50%;
+  bottom: 58px;
+  transform: translateX(-50%);
+  width: 620px;
+  max-width: calc(100vw - 20px);
+  z-index: 1002;
+  border-radius: 8px;
+  background: var(--start-bg);
+  color: var(--fg);
+  backdrop-filter: saturate(2.2) blur(40px);
+  border: 1px solid var(--menu-border);
+  box-shadow: 0 20px 56px rgba(0, 0, 0, 0.35);
+  font-size: 13px;
+  overflow: hidden;
+  animation: fade-up 0.15s ease-out;
+}
+
+.start-search {
+  margin: 22px 28px 0;
+  height: 38px;
+  border-radius: 19px;
+  background: var(--field-bg);
+  border: 1px solid var(--field-border);
+  border-bottom: 2px solid var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 16px;
+  color: var(--muted);
+}
+
+.start-input,
+.start-input:focus-visible {
+  flex: 1;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--fg);
+}
+
+.start-results {
+  padding: 14px 24px 18px;
+  min-height: 300px;
+}
+
+.start-heading {
+  padding: 0 8px 6px;
+  font-weight: 700;
+}
+
+.start-row {
+  padding: 18px 32px 6px;
+  font-size: 14px;
+}
+
+.start-grid {
+  padding: 4px 24px 8px;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.start-grid button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 4px 10px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  font-size: 12px;
+  text-align: center;
+}
+
+.start-grid button:hover {
+  background: var(--hover);
+}
+
+.start-recs {
+  padding: 2px 24px 18px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2px 8px;
+  font-size: 12px;
+}
+
+.start-foot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 32px;
+  background: rgba(127, 127, 127, 0.1);
+  border-top: 1px solid var(--line);
+}
+
+.start-foot .avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--on-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.start-name {
+  font-weight: 600;
+}
+
+.start-foot button {
+  padding: 5px 14px;
+  border-radius: 5px;
+  border: 1px solid var(--btn-border);
+  background: var(--btn-bg);
+  font-size: 12px;
+}
+
+/* ---------- panel and toast positions ---------- */
+[data-skin='windows'] .quick-panel {
+  right: 10px;
+  bottom: 58px;
+}
+
+[data-skin='windows'] .toast {
+  right: 14px;
+  bottom: 62px;
+}
+
+/* Narrow screens: the tray would cover centered icons, so align them left. */
+@media (max-width: 1360px) {
+  .win-taskbar {
+    justify-content: flex-start;
+    padding-left: 8px;
+  }
+
+  .win-start {
+    left: 8px;
+    transform: none;
+  }
+}
+
+@media (max-width: 1040px) {
+  .win-tray .skin-switch {
+    display: none;
+  }
+}
