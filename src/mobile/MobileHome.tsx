@@ -15,6 +15,7 @@ import { events } from '../content/events';
 import { terminalText } from '../content/terminal';
 import { skills } from '../content/skills';
 import { interests, writing } from '../content/interests';
+import { MobileGallery } from './MobileGallery';
 import './mobile.css';
 
 type MobileApp = 'about' | 'projects' | 'slides' | 'resume' | 'contact' | 'browser' | 'terminal' | 'network' | 'activity' | 'logs' | 'settings';
@@ -137,6 +138,33 @@ function Card({ children }: { children: ReactNode }) {
   return <div className="m-card">{children}</div>;
 }
 
+function ProjectsApp() {
+  const [gallery, setGallery] = useState<string | null>(null);
+  const open = projects.find((p) => p.id === gallery);
+  return (
+    <>
+      {projects.map((p) => (
+        <Card key={p.id}>
+          <strong className="m-card-title">{p.name}</strong>
+          <div className="m-muted">{p.category}{p.earlier ? ' · earlier project' : ''}</div>
+          <p>{p.blurb}</p>
+          <p className="m-muted">{p.outcome}</p>
+          <div className="m-links">
+            {p.links.map((l) => <a key={l.url} href={l.url} target="_blank" rel="noopener noreferrer">{l.label}</a>)}
+          </div>
+          {p.gallery && (
+            <button type="button" className="m-gal-open" onClick={() => setGallery(p.id)}>
+              <span>Screenshots{p.gallery.some((s) => s.kind === 'video') ? ' and video' : ''}</span>
+              <span className="m-muted">{new Set(p.gallery.map((s) => s.folder[0]).filter(Boolean)).size} folders · {p.gallery.length} items ›</span>
+            </button>
+          )}
+        </Card>
+      ))}
+      {open && <MobileGallery rootId={`${open.id}-shots`} project={open.name} onClose={() => setGallery(null)} />}
+    </>
+  );
+}
+
 function MobileApp({ id }: { id: MobileApp }) {
   switch (id) {
     case 'about':
@@ -183,36 +211,7 @@ function MobileApp({ id }: { id: MobileApp }) {
         </>
       );
     case 'projects':
-      return (
-        <>
-          {projects.map((p) => (
-            <Card key={p.id}>
-              <strong className="m-card-title">{p.name}</strong>
-              <div className="m-muted">{p.category}{p.earlier ? ' · earlier project' : ''}</div>
-              <p>{p.blurb}</p>
-              <p className="m-muted">{p.outcome}</p>
-              <div className="m-links">
-                {p.links.map((l) => <a key={l.url} href={l.url} target="_blank" rel="noopener noreferrer">{l.label}</a>)}
-              </div>
-              {p.gallery && (
-                <details className="m-gallery">
-                  <summary>Screenshots ({p.gallery.length})</summary>
-                  {p.gallery.map((s) => (
-                    <figure key={s.src}>
-                      {s.kind === 'video' ? (
-                        <video src={s.src} poster={s.poster} controls playsInline preload="none" aria-label={s.caption} />
-                      ) : (
-                        <img src={s.src} alt={s.caption} loading="lazy" />
-                      )}
-                      <figcaption><strong>{s.folder.length ? s.folder.map((f) => f.replace(/^\d+ /, '')).join(' › ') : s.name.replace(/\.\w+$/, '')}</strong> {s.caption}</figcaption>
-                    </figure>
-                  ))}
-                </details>
-              )}
-            </Card>
-          ))}
-        </>
-      );
+      return <ProjectsApp />;
     case 'slides':
       return (
         <>

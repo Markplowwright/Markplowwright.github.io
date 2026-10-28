@@ -455,33 +455,204 @@
   pointer-events: none;
 }
 
-.m-gallery summary {
-  min-height: 44px;
+.m-gal-open {
+  width: 100%;
+  min-height: 52px;
+  margin-top: 10px;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--sheet-bg);
+  color: var(--accent);
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.m-gal-open .m-muted {
+  font-size: 13px;
+  font-weight: 400;
+}
+
+/* The gallery covers the Projects sheet. */
+.m-gal {
+  z-index: 21;
+}
+
+.m-gal-crumbs {
+  padding: 8px 16px;
+  font-size: 12px;
+  color: var(--muted);
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.m-gal-feature,
+.m-gal-folder,
+.m-gal-tile {
+  border: 0;
+  background: var(--card);
+  color: var(--fg);
+  font: inherit;
+  text-align: left;
+}
+
+.m-gal-feature {
+  width: 100%;
+  margin-bottom: 14px;
+  padding: 10px;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.m-gal-thumb {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--line);
+}
+
+.m-gal-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top left;
+  display: block;
+}
+
+.m-gal-thumb.is-video::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 56px;
+  height: 56px;
+  margin: -28px 0 0 -28px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.6) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 6.5v11l9-5.5z' fill='white'/%3E%3C/svg%3E") center / 30px no-repeat;
+}
+
+.m-gal-folders {
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--card);
+  margin-bottom: 16px;
+}
+
+.m-gal-folder {
+  width: 100%;
+  min-height: 64px;
+  padding: 10px 12px;
   display: flex;
   align-items: center;
-  color: var(--accent);
-  font-weight: 600;
-  cursor: pointer;
+  gap: 12px;
+  border-bottom: 1px solid var(--line);
 }
 
-.m-gallery figure {
-  margin: 10px 0 16px;
+.m-gal-folder:last-child {
+  border-bottom: 0;
 }
 
-.m-gallery img,
-.m-gallery video {
-  width: 100%;
-  border-radius: 8px;
+.m-gal-fthumb {
+  flex: none;
+  width: 64px;
+  height: 44px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--line);
   border: 1px solid var(--line);
 }
 
-.m-gallery figcaption {
-  margin-top: 4px;
+.m-gal-fthumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top left;
+  display: block;
+}
+
+.m-gal-ftext {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.m-gal-ftext .m-muted {
   font-size: 13px;
+}
+
+.m-gal-chev {
+  flex: none;
+  color: var(--muted);
+  font-size: 22px;
+}
+
+.m-gal-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.m-gal-tile {
+  padding: 6px 6px 10px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.m-gal-name {
+  font-size: 13px;
+  line-height: 1.3;
+}
+
+.m-gal-big {
+  display: block;
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: #000;
+}
+
+img.m-gal-big {
+  background: transparent;
+}
+
+.m-gal-caption {
+  margin: 12px 0 4px;
+}
+
+.m-gal-full {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.m-gal-nav {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 14px;
   color: var(--muted);
 }
 
-.m-gallery figcaption strong {
-  display: block;
-  color: var(--fg);
+.m-gal-nav .m-btn-soft:disabled {
+  opacity: 0.4;
 }
