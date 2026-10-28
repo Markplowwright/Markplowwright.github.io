@@ -24,6 +24,6 @@ export const macSkin: Skin = {
     unlock: 'Enter',
     aboutPc: 'About This Mac',
     focus: 'Focus',
-    types: { folder: 'Folder', doc: 'Plain Text', pdf: 'PDF Document', slides: 'Presentation', image: 'Image', link: 'Web Location' },
+    types: { folder: 'Folder', doc: 'Plain Text', pdf: 'PDF Document', slides: 'Presentation', image: 'Image', video: 'MPEG-4 Movie', link: 'Web Location' },
   },
 };

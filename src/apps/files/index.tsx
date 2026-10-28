@@ -137,6 +137,7 @@ export default function FilesApp() {
               <div className="pv-name">{name(sel)}</div>
               <div className="pv-type">{typeOf(sel)}</div>
               {sel.kind === 'image' && sel.src && <img className="pv-img" src={sel.src} alt={sel.body ?? ''} loading="lazy" />}
+              {sel.kind === 'video' && sel.poster && <img className="pv-img" src={sel.poster} alt="" loading="lazy" />}
               <p className="pv-body">{sel.kids ? sel.body ?? `${sel.kids.length} items` : sel.body}</p>
               <button type="button" className="btn-accent" onClick={() => open(sel)}>Open</button>
             </>

@@ -2,6 +2,7 @@
 // Mark's old portfolio site. Missing details use visible [add ...] placeholders.
 
 import { homeLabShots, type LabShot } from './homelabScreenshots';
+import { adminLabShots } from './adminLabScreenshots';
 
 export type ProjectLink = { label: string; url: string };
 
@@ -58,7 +59,7 @@ export const projects: Project[] = [
       'While learning Microsoft 365 admin work, Mark kept turning to YouTube to figure out how to do things. He wanted somewhere to just practice, and realized many other learners had the same problem.',
     built: [
       'A browser simulator of Windows Server Active Directory, the Microsoft 365 admin center, Entra ID, Intune, Exchange and a virtual Windows laptop, all linked together.',
-      'A five-level path with 18 guided missions and 64 guided steps, plus 10 real-world ticket-style scenarios.',
+      'A five-level path with 28 guided missions and 74 guided steps, plus real-world ticket-style scenarios.',
       'Realistic failures: enrollment can fail with a blocked account, a user outside MDM scope, a missing license (80180018) or device join disabled (801c0003).',
       'Hybrid identity: AD users and groups, OU sync scope, Entra Connect, Group Policy, hybrid join and dsregcmd /status.',
     ],
@@ -69,7 +70,7 @@ export const projects: Project[] = [
       { label: 'Live demo', url: 'https://markplowwright.github.io/admin-practice-lab/' },
       { label: 'GitHub repository', url: gh('admin-practice-lab') },
     ],
-    screenshot: { src: '/screenshots/admin-practice-lab.png', alt: 'Admin Practice Lab running in the browser' },
+    gallery: adminLabShots,
   },
   {
     id: 'p-endpoint',

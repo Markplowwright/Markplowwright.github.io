@@ -34,7 +34,7 @@ Each one was tried on its own with React 19 before use. The licenses and release
 | Start button, tray and window control glyphs | Original inline SVG | MIT | Used. The start button is four rounded squares, not a trademarked logo. |
 | Wallpapers (9: Bloom, Midnight Bloom, Glow, Dusk, Dawn, Night, Sunset, Aubergine, Teal) | Original SVG artwork in `src/os/shared/Wallpaper.tsx` | MIT | Used. No copied or default OS wallpapers. |
 | `public/favicon.svg`, `public/og-image.png` | Made for this site (the OG image is a screenshot of the site itself) | MIT | Used. |
-| `public/screenshots/admin-practice-lab.png` | Mark's `admin-practice-lab` repo (`docs/screenshot.png`) | Mark's own work (MIT repo) | Used. |
+| `public/screenshots/admin-lab/` | Mark's own screenshots and screen recording of the Admin Practice Lab | Mark's own work | Used. All names, emails and passwords shown are the lab's fake data. |
 | `public/screenshots/home-lab/` (50 images) | Mark's own captures of the lab, plus 14 from his `windows-server-home-lab` repo (`docs/images`) to fill gaps | Mark's own work | Used. Converted to JPG. Two full-desktop captures were cropped to just the lab window to remove a private chat, browser tabs and desktop files; two others were dropped. |
 | `public/screenshots/gradaisle.jpg`, `sanare.jpg` | Mark's old portfolio (`Resume` repo, gh-pages branch) | Mark's own work | Used. `sanare.jpg` was converted from PNG to make it smaller. |
 | Pexels photos used on the old portfolio | pexels.com | Pexels license | Not carried over. |

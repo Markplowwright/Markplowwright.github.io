@@ -5,12 +5,12 @@
 import { useId } from 'react';
 import type { SkinId } from './types';
 
-type Shape = 'folder' | 'term' | 'net' | 'gear' | 'mon' | 'globe' | 'shield' | 'trash' | 'doc' | 'slides' | 'image';
+type Shape = 'folder' | 'term' | 'net' | 'gear' | 'mon' | 'globe' | 'shield' | 'trash' | 'doc' | 'slides' | 'image' | 'video';
 
 const SHAPE: Record<string, Shape> = {
   files: 'folder', folder: 'folder', terminal: 'term', network: 'net', settings: 'gear', taskmgr: 'mon',
   browser: 'globe', link: 'globe', eventlog: 'shield', trash: 'trash', doc: 'doc', pdf: 'doc', viewer: 'doc',
-  slides: 'slides', image: 'image',
+  slides: 'slides', image: 'image', video: 'video',
 };
 const APPS = ['files', 'terminal', 'network', 'settings', 'taskmgr', 'browser', 'eventlog'];
 
@@ -70,7 +70,7 @@ function palette(skin: SkinId, g: (name: string) => string): Record<string, Colo
 export function AppIcon({ app, skin, size = 48 }: { app: string; skin: SkinId; size?: number }) {
   const uid = useId().replace(/:/g, '');
   const g = (name: string) => `url(#${uid}${name})`;
-  const key = app === 'viewer' ? 'doc' : app === 'link' ? 'browser' : app;
+  const key = app === 'viewer' ? 'doc' : app === 'link' ? 'browser' : app === 'video' ? 'image' : app;
   const all = palette(skin, g);
   const [f1, f2, f3, f4, st, box, hasBar, hasStrip] = all[key] || all.doc;
   const shape = SHAPE[app] || 'doc';
@@ -163,6 +163,13 @@ export function AppIcon({ app, skin, size = 48 }: { app: string; skin: SkinId; s
             <rect x="5.5" y="7.5" width="21" height="17" rx="1" fill={f2} />
             <path d="M5.5 24.5l7-8 5 5 3-3 6 6z" fill={f3} />
             <circle cx="21.5" cy="12" r="2.4" fill={f4} />
+          </>
+        )}
+        {shape === 'video' && (
+          <>
+            <rect x="3" y="5" width="26" height="22" rx="2.5" fill={f1} stroke={st} strokeWidth="1.2" />
+            <rect x="5.5" y="7.5" width="21" height="17" rx="1" fill={f2} />
+            <path d="M13.5 11.5v9l7.5-4.5z" fill={f1} />
           </>
         )}
         {shape === 'mon' && (

@@ -199,8 +199,12 @@ function MobileApp({ id }: { id: MobileApp }) {
                   <summary>Screenshots ({p.gallery.length})</summary>
                   {p.gallery.map((s) => (
                     <figure key={s.src}>
-                      <img src={s.src} alt={s.caption} loading="lazy" />
-                      <figcaption><strong>{s.folder.map((f) => f.replace(/^\d+ /, '')).join(' › ')}</strong> {s.caption}</figcaption>
+                      {s.kind === 'video' ? (
+                        <video src={s.src} poster={s.poster} controls playsInline preload="none" aria-label={s.caption} />
+                      ) : (
+                        <img src={s.src} alt={s.caption} loading="lazy" />
+                      )}
+                      <figcaption><strong>{s.folder.length ? s.folder.map((f) => f.replace(/^\d+ /, '')).join(' › ') : s.name.replace(/\.\w+$/, '')}</strong> {s.caption}</figcaption>
                     </figure>
                   ))}
                 </details>

@@ -3,7 +3,16 @@
 // public/screenshots/home-lab. Mixed from Mark's own captures and the
 // windows-server-home-lab repo. Folder names are numbered so they sort in order.
 
-export type LabShot = { folder: string[]; name: string; src: string; caption: string };
+export type LabShot = {
+  folder: string[];
+  name: string;
+  src: string;
+  caption: string;
+  /** Set for a video; images leave it out. */
+  kind?: 'video';
+  /** Still frame shown before a video plays. */
+  poster?: string;
+};
 
 export const homeLabShots: LabShot[] = [
   {"folder": ["1 Active Directory"], "name": "01 AD DS role install.jpg", "src": "/screenshots/home-lab/1-active-directory/01-ad-ds-role-install.jpg", "caption": "Installing the Active Directory Domain Services role and its management tools on PlowVM."},

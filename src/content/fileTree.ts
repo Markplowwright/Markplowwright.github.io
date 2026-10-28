@@ -6,7 +6,7 @@ import { projects, type Project } from './projects';
 import { presentations, research } from './presentations';
 import { interests, writing } from './interests';
 
-export type FileKind = 'folder' | 'doc' | 'pdf' | 'slides' | 'image' | 'link';
+export type FileKind = 'folder' | 'doc' | 'pdf' | 'slides' | 'image' | 'video' | 'link';
 
 export type FsNode = {
   id: string;
@@ -16,8 +16,10 @@ export type FsNode = {
   kids?: string[];
   /** Text shown in the preview pane and the Viewer. */
   body?: string;
-  /** File URL (PDF, image) or outside link. */
+  /** File URL (PDF, image, video) or outside link. */
   src?: string;
+  /** Still frame for a video. */
+  poster?: string;
   /** Special Viewer layouts. */
   special?: 'contact' | 'slides';
   /** For slides: which presentation. */
@@ -62,7 +64,9 @@ function buildTree(): Record<string, FsNode> {
   // A project's Screenshots folder: each shot's folder path becomes nested folders.
   const addGallery = (projectId: string, shots: NonNullable<Project['gallery']>) => {
     const rootId = `${projectId}-shots`;
-    add({ id: rootId, name: 'Screenshots', kind: 'folder', kids: [], body: `${shots.length} screenshots, grouped by part of the project.` });
+    const videos = shots.filter((s) => s.kind === 'video').length;
+    const count = `${shots.length - videos} screenshots${videos ? ` and ${videos === 1 ? 'a video' : `${videos} videos`}` : ''}`;
+    add({ id: rootId, name: 'Screenshots', kind: 'folder', kids: [], body: `${count}, grouped by part of the project.` });
     shots.forEach((s, i) => {
       let parent = rootId;
       s.folder.forEach((f, depth) => {
@@ -74,7 +78,7 @@ function buildTree(): Record<string, FsNode> {
         parent = id;
       });
       const id = `${rootId}#${i}`;
-      add({ id, name: s.name, kind: 'image', src: s.src, body: s.caption });
+      add({ id, name: s.name, kind: s.kind ?? 'image', src: s.src, poster: s.poster, body: s.caption });
       nodes[parent].kids!.push(id);
     });
     // Folder previews show how many items they hold.

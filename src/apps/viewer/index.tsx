@@ -103,16 +103,21 @@ export default function ViewerApp() {
     );
   }
 
-  if (node.kind === 'image' && node.src) {
-    // Previous / Next walk through the other images in the same folder.
+  if ((node.kind === 'image' || node.kind === 'video') && node.src) {
+    // Previous / Next walk through the other images and videos in the same folder.
     const parent = fileTree[pathTo(node.id).slice(-2)[0]];
-    const siblings = (parent?.kids ?? []).filter((id) => fileTree[id]?.kind === 'image');
+    const isMedia = (id: string) => fileTree[id]?.kind === 'image' || fileTree[id]?.kind === 'video';
+    const siblings = (parent?.kids ?? []).filter(isMedia);
     const i = siblings.indexOf(node.id);
     const open = useViewerStore.getState().open;
     return (
       <div className="viewer">
         <div className="viewer-stage">
-          <img className="viewer-img" src={node.src} alt={node.body ?? node.name} />
+          {node.kind === 'video' ? (
+            <video key={node.src} className="viewer-img" src={node.src} poster={node.poster} controls playsInline preload="metadata" aria-label={node.body ?? node.name} />
+          ) : (
+            <img className="viewer-img" src={node.src} alt={node.body ?? node.name} />
+          )}
         </div>
         {node.body && <p className="viewer-caption">{node.body}</p>}
         {siblings.length > 1 && (

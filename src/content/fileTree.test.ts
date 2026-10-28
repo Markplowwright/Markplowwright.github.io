@@ -34,3 +34,17 @@ describe('home lab screenshots', () => {
     expect(pathTo('p-homelab-shots#0')).toEqual(['about', 'work', 'p-homelab', 'p-homelab-shots', 'p-homelab-shots/1 Active Directory', 'p-homelab-shots#0']);
   });
 });
+
+describe('admin lab screenshots', () => {
+  it('replaces the single screenshot with a Screenshots folder and a video', () => {
+    const kids = fileTree['p-admin'].kids ?? [];
+    expect(kids).toContain('p-admin-shots');
+    expect(kids).not.toContain('p-admin-shot');
+    const all = Object.values(fileTree).filter((n) => n.id.startsWith('p-admin-shots#'));
+    expect(all.filter((n) => n.kind === 'image')).toHaveLength(14);
+    const video = all.find((n) => n.kind === 'video');
+    expect(video?.src).toMatch(/\.mp4$/);
+    expect(video?.poster).toBeTruthy();
+    expect(fileTree['p-homelab'].kids).not.toContain('p-homelab-shot');
+  });
+});

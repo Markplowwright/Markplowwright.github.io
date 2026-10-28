@@ -468,7 +468,8 @@
   margin: 10px 0 16px;
 }
 
-.m-gallery img {
+.m-gallery img,
+.m-gallery video {
   width: 100%;
   border-radius: 8px;
   border: 1px solid var(--line);
