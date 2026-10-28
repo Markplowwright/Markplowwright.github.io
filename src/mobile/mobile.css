@@ -656,3 +656,56 @@ img.m-gal-big {
 .m-gal-nav .m-btn-soft:disabled {
   opacity: 0.4;
 }
+
+/* Phone Browser: a small address bar above the search page. */
+.m-browser {
+  margin: -16px -16px 0;
+  padding: 0 16px;
+}
+
+.m-browser-bar {
+  position: sticky;
+  top: 0;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0 -16px;
+  padding: 8px 12px;
+  background: var(--sheet-bg);
+  border-bottom: 1px solid var(--line);
+}
+
+.m-browser-btn {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--accent);
+  font-size: 26px;
+  line-height: 1;
+}
+
+.m-browser-btn:disabled {
+  color: var(--muted);
+  opacity: 0.4;
+}
+
+.m-browser-address {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: var(--chip-bg);
+  color: var(--muted);
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.m-browser .sx {
+  overflow: visible;
+}

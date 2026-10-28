@@ -9,13 +9,17 @@ import { runCommand } from '../apps/terminal/commands';
 import { profile } from '../content/profile';
 import { projects } from '../content/projects';
 import { presentations, research } from '../content/presentations';
-import { links } from '../content/links';
 import { lab } from '../content/lab';
 import { events } from '../content/events';
 import { terminalText } from '../content/terminal';
 import { skills } from '../content/skills';
 import { interests, writing } from '../content/interests';
 import { MobileGallery } from './MobileGallery';
+import { fileTree } from '../content/fileTree';
+import type { Target } from '../content/search';
+import { SearchView } from '../apps/browser/SearchView';
+import { useBrowserEntry, useBrowserStore } from '../apps/browser/store';
+import { queryParam } from '../os/storage';
 import './mobile.css';
 
 type MobileApp = 'about' | 'projects' | 'slides' | 'resume' | 'contact' | 'browser' | 'terminal' | 'network' | 'activity' | 'logs' | 'settings';
@@ -35,9 +39,10 @@ const DEFS: { id: MobileApp; label: string; icon: string; tile?: string }[] = [
 ];
 const DOCK: MobileApp[] = ['projects', 'contact', 'browser', 'settings'];
 
-const BANNERS: { title: string; body: string; label: string; app: MobileApp }[] = [
+const BANNERS: { title: string; body: string; label: string; app: MobileApp; q?: string }[] = [
   { title: "Start with Mark's projects", body: 'Each build has the problem, what he built and links.', label: 'Open Projects', app: 'projects' },
-  { title: 'Get to know Mark outside of work', body: 'Music, chess, writing and poems, books, sports, games and audio.', label: 'Open About Mark', app: 'about' },
+  { title: 'Search Mark’s portfolio in the Browser', body: 'Look up a skill like Group Policy or Intune and jump to the proof.', label: 'Search in the Browser', app: 'browser', q: 'Group Policy' },
+  { title: 'Get to know Mark outside of work', body: 'Music, chess, writing, books, sports, games and audio.', label: 'Open About Mark', app: 'about' },
   { title: "Here are Mark's presentations", body: 'Seminars on network security and ML in computational chemistry.', label: 'Open Presentations', app: 'slides' },
   { title: 'Want to get in touch with Mark?', body: 'Email him, or read his resume.', label: 'Open Contact', app: 'contact' },
 ];
@@ -57,6 +62,69 @@ export function MobileHome() {
   const now = useNow();
   const [app, setApp] = useState<MobileApp | null>(null);
   const [banner, setBanner] = useState(-1);
+  // Where a search result sent us: the app to return to, a section to scroll to,
+  // and a Screenshots folder or file to show.
+  const [from, setFrom] = useState<MobileApp | null>(null);
+  const [focus, setFocus] = useState<string | null>(null);
+  const [gallery, setGallery] = useState<{ rootId: string; project: string; start: string } | null>(null);
+
+  // ?q=intune opens the Browser on that search.
+  useEffect(() => {
+    const q = queryParam('q');
+    if (q !== null) {
+      useBrowserStore.getState().go(q);
+      setApp('browser');
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!focus) return;
+    const t = setTimeout(() => document.getElementById(focus)?.scrollIntoView({ block: 'start' }), 60);
+    return () => clearTimeout(t);
+  }, [app, focus]);
+
+  const openApp = (id: MobileApp | null) => {
+    setApp(id);
+    setFrom(null);
+    setFocus(null);
+  };
+
+  /** Opens a search result on the phone: the matching app, section or screenshot. */
+  const openResult = (t: Target) => {
+    if ('href' in t) {
+      window.open(t.href, '_blank', 'noopener');
+      return;
+    }
+    const id = t.node;
+    const project = projects.find((p) => id === p.id || id.startsWith(`${p.id}-`));
+    if (project && id.startsWith(`${project.id}-shots`)) {
+      setGallery({ rootId: `${project.id}-shots`, project: project.name, start: id });
+      return;
+    }
+    const node = fileTree[id];
+    if (node?.kind === 'pdf' && node.src && id !== 'resume') {
+      window.open(node.src, '_blank', 'noopener');
+      return;
+    }
+    const sections: Record<string, [MobileApp, string?]> = {
+      resume: ['resume'],
+      contact: ['contact'],
+      bio: ['about'],
+      experience: ['about', 'm-sec-experience'],
+      education: ['about', 'm-sec-education'],
+      skills: ['about', 'm-sec-skills'],
+      interests: ['about', 'm-sec-interests'],
+      pres: ['slides'],
+      research: ['slides', 'm-sec-research'],
+    };
+    let dest: [MobileApp, string?] = sections[id] ?? ['about'];
+    if (project) dest = ['projects', `m-p-${project.id}`];
+    else if (id.startsWith('int-')) dest = ['about', 'm-sec-interests'];
+    else if (presentations.some((p) => p.id === id)) dest = ['slides', `m-pres-${id}`];
+    setFrom(app);
+    setApp(dest[0]);
+    setFocus(dest[1] ?? null);
+  };
 
   useEffect(() => {
     document.documentElement.dataset.mode = mode;
@@ -66,7 +134,7 @@ export function MobileHome() {
   // Tip banners at the top of the home screen.
   useEffect(() => {
     if (!tipsOn) return;
-    const timers = [6000, 26000, 46000, 66000].map((ms, i) => setTimeout(() => setBanner(i), ms));
+    const timers = [6000, 26000, 46000, 66000, 86000].map((ms, i) => setTimeout(() => setBanner(i), ms));
     return () => timers.forEach(clearTimeout);
   }, [tipsOn]);
 
@@ -88,7 +156,7 @@ export function MobileHome() {
         </div>
         <div className="m-grid">
           {DEFS.filter((d) => !DOCK.includes(d.id)).map((d) => (
-            <button key={d.id} type="button" className="m-app" onClick={() => setApp(d.id)}>
+            <button key={d.id} type="button" className="m-app" onClick={() => openApp(d.id)}>
               <Icon d={d} />
               <span>{d.label}</span>
             </button>
@@ -98,7 +166,7 @@ export function MobileHome() {
           {DOCK.map((id) => {
             const d = DEFS.find((x) => x.id === id)!;
             return (
-              <button key={id} type="button" className="m-app" aria-label={d.label} onClick={() => setApp(id)}>
+              <button key={id} type="button" className="m-app" aria-label={d.label} onClick={() => openApp(id)}>
                 <Icon d={d} />
               </button>
             );
@@ -111,7 +179,7 @@ export function MobileHome() {
           <strong>{BANNERS[banner].title}</strong>
           <span>{BANNERS[banner].body}</span>
           <div className="m-banner-actions">
-            <button type="button" className="m-btn" onClick={() => { setApp(BANNERS[banner].app); setBanner(-1); }}>{BANNERS[banner].label}</button>
+            <button type="button" className="m-btn" onClick={() => { const b = BANNERS[banner]; if (b.q) useBrowserStore.getState().go(b.q); openApp(b.app); setBanner(-1); }}>{BANNERS[banner].label}</button>
             <button type="button" className="m-btn-soft" onClick={() => setBanner(-1)}>Dismiss</button>
             <button type="button" className="m-btn-soft" onClick={() => { setBanner(-1); useSkinStore.getState().set({ tipsOn: false }); }}>Stop tips</button>
           </div>
@@ -121,21 +189,26 @@ export function MobileHome() {
       {app && def && (
         <div className="m-sheet" role="dialog" aria-label={def.label}>
           <div className="m-sheet-head">
-            <button type="button" className="m-back" onClick={() => setApp(null)}>‹ Home</button>
+            {from ? (
+              <button type="button" className="m-back" onClick={() => { setApp(from); setFrom(null); setFocus(null); }}>‹ {DEFS.find((d) => d.id === from)?.label}</button>
+            ) : (
+              <button type="button" className="m-back" onClick={() => openApp(null)}>‹ Home</button>
+            )}
             <h2>{def.label}</h2>
           </div>
           <div className="m-sheet-body">
-            <MobileApp id={app} />
+            <MobileApp id={app} onOpen={openResult} />
           </div>
         </div>
       )}
+      {gallery && <MobileGallery key={gallery.start} rootId={gallery.rootId} project={gallery.project} start={gallery.start} closeLabel={DEFS.find((d) => d.id === app)?.label} onClose={() => setGallery(null)} />}
       <div className="m-indicator" aria-hidden="true" />
     </div>
   );
 }
 
-function Card({ children }: { children: ReactNode }) {
-  return <div className="m-card">{children}</div>;
+function Card({ children, id }: { children: ReactNode; id?: string }) {
+  return <div className="m-card" id={id}>{children}</div>;
 }
 
 function ProjectsApp() {
@@ -144,7 +217,7 @@ function ProjectsApp() {
   return (
     <>
       {projects.map((p) => (
-        <Card key={p.id}>
+        <Card key={p.id} id={`m-p-${p.id}`}>
           <strong className="m-card-title">{p.name}</strong>
           <div className="m-muted">{p.category}{p.earlier ? ' · earlier project' : ''}</div>
           <p>{p.blurb}</p>
@@ -165,7 +238,7 @@ function ProjectsApp() {
   );
 }
 
-function MobileApp({ id }: { id: MobileApp }) {
+function MobileApp({ id, onOpen }: { id: MobileApp; onOpen: (t: Target) => void }) {
   switch (id) {
     case 'about':
       return (
@@ -178,14 +251,14 @@ function MobileApp({ id }: { id: MobileApp }) {
             </div>
           </div>
           {profile.bio.map((p) => <p key={p}>{p}</p>)}
-          <h3>Experience</h3>
+          <h3 id="m-sec-experience">Experience</h3>
           {profile.experience.map((j) => (
             <Card key={j.company + j.title}>
               <strong>{j.title}</strong>
               <div className="m-muted">{j.company} · {j.period}</div>
             </Card>
           ))}
-          <h3>Education</h3>
+          <h3 id="m-sec-education">Education</h3>
           {profile.education.map((e) => (
             <Card key={e.school}>
               <strong>{e.school}</strong>
@@ -193,14 +266,14 @@ function MobileApp({ id }: { id: MobileApp }) {
               <div className="m-muted">{e.location} · {e.period}</div>
             </Card>
           ))}
-          <h3>Interests</h3>
+          <h3 id="m-sec-interests">Interests</h3>
           {[...interests, writing].map((i) => (
             <Card key={i.title}>
               <strong>{i.title}</strong>
               {i.body.map((line) => <p key={line} className="m-muted">{line}</p>)}
             </Card>
           ))}
-          <h3>Skills</h3>
+          <h3 id="m-sec-skills">Skills</h3>
           {skills.map((s) => (
             <Card key={s.group}>
               <strong>{s.group}</strong>
@@ -216,14 +289,14 @@ function MobileApp({ id }: { id: MobileApp }) {
       return (
         <>
           {presentations.map((p) => (
-            <Card key={p.id}>
+            <Card key={p.id} id={`m-pres-${p.id}`}>
               <strong className="m-card-title">{p.title}</strong>
               <div className="m-muted">{p.context} · {p.slides} slides</div>
               <p>{p.summary}</p>
               <div className="m-links"><a href={p.pdf} target="_blank" rel="noopener noreferrer">Open the deck (PDF)</a></div>
             </Card>
           ))}
-          <h3>Research</h3>
+          <h3 id="m-sec-research">Research</h3>
           {research.map((r) => (
             <Card key={r.id}>
               <strong>{r.name.replace(/\.(pdf|url)$/, '')}</strong>
@@ -250,16 +323,7 @@ function MobileApp({ id }: { id: MobileApp }) {
     case 'contact':
       return <MobileContact />;
     case 'browser':
-      return (
-        <>
-          {links.map((l) => (
-            <a key={l.name} className="m-card m-link" href={l.url} target="_blank" rel="noopener noreferrer">
-              <strong>{l.name}</strong>
-              <span className="m-muted">{l.note}</span>
-            </a>
-          ))}
-        </>
-      );
+      return <MobileBrowser onOpen={onOpen} />;
     case 'terminal':
       return <MobileTerminal />;
     case 'network':
@@ -271,6 +335,21 @@ function MobileApp({ id }: { id: MobileApp }) {
     case 'settings':
       return <MobileSettings />;
   }
+}
+
+function MobileBrowser({ onOpen }: { onOpen: (t: Target) => void }) {
+  const entry = useBrowserEntry();
+  const { i, stack, go, back, forward } = useBrowserStore();
+  return (
+    <div className="m-browser">
+      <div className="m-browser-bar">
+        <button type="button" className="m-browser-btn" aria-label="Back" disabled={i === 0} onClick={back}>‹</button>
+        <button type="button" className="m-browser-btn" aria-label="Forward" disabled={i >= stack.length - 1} onClick={forward}>›</button>
+        <span className="m-browser-address">{entry.q ? `markplowwright.github.io/?q=${encodeURIComponent(entry.q)}` : 'markplowwright.github.io'}</span>
+      </div>
+      <SearchView entry={entry} onSearch={(q, tab) => go(q, tab)} onOpen={onOpen} phone />
+    </div>
+  );
 }
 
 function MobileContact() {
@@ -308,7 +387,7 @@ function MobileTerminal() {
         {lines.map((l, i) => <div key={i} className={l.cmd ? 'm-term-cmd' : ''}>{l.cmd ? `$ ${l.text}` : l.text}</div>)}
       </div>
       <div className="m-chips">
-        {['help', 'whoami', 'projects', 'skills', 'contact', 'clear'].map((c) => (
+        {['help', 'whoami', 'projects', 'skills', 'search intune', 'contact', 'clear'].map((c) => (
           <button key={c} type="button" className="m-chip" onClick={() => run(c)}>{c}</button>
         ))}
       </div>

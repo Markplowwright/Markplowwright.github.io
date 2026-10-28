@@ -12,7 +12,6 @@ export const interests: Interest[] = [
     summary: 'Musician and composer',
     body: [
       'Mark is a musician who composes his own music.',
-      'He received the Young Musician Scholarship in the Cayman Islands (2017 to 2020) for musical excellence and winning performances, and performed at events throughout.',
     ],
   },
   {
@@ -68,10 +67,13 @@ export const writing = {
     'Mark writes, and has published poems.',
     'He founded Writers Ink, a creative writing club at Methodist University (2022 to 2024): it ran writing workshops and critique sessions and published 3 student anthologies with 50+ contributors.',
   ],
-  /** Mark's poems go here: { id, name: 'Title.txt', body: 'the poem' }. */
-  poems: [] as { id: string; name: string; body: string }[],
-  poemsPlaceholder: '[add Mark’s published poems: title, where it was published, and the poem or a link]',
 };
+
+/**
+ * Mark's poems and music live on their own site. Put its address in url and a
+ * "See poems and music of Mark" link appears in Interests. Hidden while empty.
+ */
+export const creativeSite = { name: 'See poems and music of Mark', url: '' };
 
 /** One line used by the terminal and short summaries. */
 export const interestsOneLine = 'Musician, chess player, writer and published poet, reader, gym, ultimate frisbee, basketball and football, video games, audiophile';

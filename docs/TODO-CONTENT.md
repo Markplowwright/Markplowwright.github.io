@@ -11,7 +11,7 @@ Find them all with: `grep -rn "\[add" src/content`
 - [ ] `src/content/presentations.ts`: Adaptive Basis Sets Seminar. `[add date and audience]`.
 - [ ] `src/content/projects.ts`: disk-usage-monitor outcome. `[add results after the first scheduled runs]`, which matches the repo README's own placeholder.
 
-- [ ] `src/content/interests.ts`: your published poems. Add each one to `writing.poems` (`{ id, name: 'Title.txt', body }`); they appear in About Mark/Interests/Writing/Poems and the "Poems coming soon" file disappears.
+- [ ] `src/content/interests.ts`: when the poems and music site is live, put its address in `creativeSite.url`. A "See poems and music of Mark" link then appears in About Mark/Interests (and in search).
 
 - [ ] Home lab screenshots still missing: **00 Create the Azure VM** and **02 Promote to a domain controller**. Add them to `src/content/homelabScreenshots.ts` (and the images to `public/screenshots/home-lab/`).
 

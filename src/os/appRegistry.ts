@@ -33,7 +33,7 @@ export const apps: AppDefinition[] = [
     title: { windows: 'Browser', mac: 'Browser', linux: 'Browser' },
     icon: 'browser',
     component: lazy(() => import('../apps/browser')),
-    defaultSize: { w: 740, h: 480 },
+    defaultSize: { w: 880, h: 580 },
     singleInstance: true,
     pinned: true,
   },

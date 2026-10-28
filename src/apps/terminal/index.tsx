@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { create } from 'zustand';
 import { useSkin } from '../../os/skins';
-import { openTarget } from '../../os/actions';
+import { openSearch, openTarget } from '../../os/actions';
 import { terminalText } from '../../content/terminal';
 import { runCommand } from './commands';
 
@@ -41,6 +41,7 @@ export default function TerminalApp() {
     const next = result.clear ? [] : [...lines, { cmd: true, prompt, text }, ...result.lines.map((t) => ({ cmd: false, text: t }))];
     set({ lines: next, history: [text, ...history].slice(0, 50) });
     if (result.open) openTarget(result.open);
+    if (result.search) openSearch(result.search);
   };
 
   return (

@@ -6,6 +6,7 @@ import { useWindowStore } from './windowStore';
 import { useUiStore } from './uiStore';
 import { useFilesStore } from '../apps/files/store';
 import { useViewerStore } from '../apps/viewer/store';
+import { useBrowserStore } from '../apps/browser/store';
 import { isAppId } from './appRegistry';
 import type { AppId } from './types';
 
@@ -29,6 +30,12 @@ export function openNode(id: string) {
   }
 }
 
+/** Opens the Browser on a search (used by tips, the Terminal and ?q= links). */
+export function openSearch(q: string) {
+  useBrowserStore.getState().go(q);
+  openApp('browser');
+}
+
 /** Opens an app id or a file tree id (used by ?open= and tips). */
 export function openTarget(target: string): boolean {
   if (isAppId(target)) {
@@ -47,5 +54,6 @@ export function runTip(index: number) {
   if (!t) return;
   useUiStore.getState().set({ toast: null });
   if ('app' in t.target) openTarget(t.target.app);
+  else if ('search' in t.target) openSearch(t.target.search);
   else openNode(t.target.node);
 }

@@ -4,7 +4,7 @@ import { profile } from './profile';
 import { skills } from './skills';
 import { projects, type Project } from './projects';
 import { presentations, research } from './presentations';
-import { interests, writing } from './interests';
+import { creativeSite, interests, writing } from './interests';
 
 export type FileKind = 'folder' | 'doc' | 'pdf' | 'slides' | 'image' | 'video' | 'link';
 
@@ -122,22 +122,20 @@ function buildTree(): Record<string, FsNode> {
   add({ id: 'research', name: 'Research', kind: 'folder', kids: research.map((r) => r.id), body: 'Papers and publications.' });
   add({ id: 'pres', name: 'Presentations', kind: 'folder', kids: [...presentations.map((p) => p.id), 'research'] });
 
-  // Interests: one text file per hobby, plus a Writing folder with the poems.
+  // Interests: one text file per hobby. Poems and music get their own site,
+  // linked here once it exists.
   interests.forEach((i) => add({ id: i.id, name: i.name, kind: 'doc', body: i.body.join('\n\n') }));
-  writing.poems.forEach((poem) => add({ id: poem.id, name: poem.name, kind: 'doc', body: poem.body }));
-  const poemIds = writing.poems.map((poem) => poem.id);
-  if (poemIds.length === 0) {
-    add({ id: 'poems-todo', name: 'Poems coming soon.txt', kind: 'doc', body: `Mark's published poems will be here.\n\n${writing.poemsPlaceholder}` });
-    poemIds.push('poems-todo');
-  }
-  add({ id: 'poems', name: 'Poems', kind: 'folder', kids: poemIds, body: "Mark's published poems." });
   add({ id: 'int-writing', name: 'Writing.txt', kind: 'doc', body: writing.body.join('\n\n') });
-  add({ id: 'writing', name: 'Writing', kind: 'folder', kids: ['int-writing', 'poems'], body: writing.summary });
+  const interestKids = [...interests.map((i) => i.id), 'int-writing'];
+  if (creativeSite.url) {
+    add({ id: 'creative', name: creativeSite.name, kind: 'link', src: creativeSite.url, body: "Mark's poems and music, on their own site." });
+    interestKids.push('creative');
+  }
   add({
     id: 'interests',
     name: 'Interests',
     kind: 'folder',
-    kids: [...interests.map((i) => i.id), 'writing'],
+    kids: interestKids,
     body: 'Mark outside of work: music, chess, writing, reading, sports, games and audio.',
   });
 

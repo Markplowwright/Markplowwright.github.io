@@ -70,3 +70,16 @@ describe('runCommand', () => {
     expect(runCommand('foo', linux).lines[0]).toBe('bash: foo: command not found');
   });
 });
+
+describe('search command', () => {
+  const ctx = { skin: 'linux' as const, shell: 0 as const };
+  it('lists results and opens the Browser', () => {
+    const r = runCommand('search group policy', ctx);
+    expect(r.search).toBe('group policy');
+    expect(r.lines.join('\n')).toContain('Windows Server Home Lab');
+  });
+  it('explains itself without words, and handles no results', () => {
+    expect(runCommand('search', ctx).lines[0]).toContain('Usage');
+    expect(runCommand('search qqqzzz', ctx).search).toBeUndefined();
+  });
+});

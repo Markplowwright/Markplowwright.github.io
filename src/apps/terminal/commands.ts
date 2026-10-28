@@ -4,16 +4,17 @@
 // All the words it prints come from src/content/terminal.ts.
 import { terminalText as T } from '../../content/terminal';
 import type { SkinId } from '../../os/types';
+import { engineName, popularSearches, search } from '../../content/search';
 
 export type TermContext = { skin: SkinId; shell: 0 | 1 };
-export type CommandResult = { lines: string[]; clear?: boolean; open?: string };
+export type CommandResult = { lines: string[]; clear?: boolean; open?: string; search?: string };
 
 /** Names you can type after "open", mapped to app or file ids. */
 const OPEN_TARGETS: Record<string, string> = {
   files: 'files', explorer: 'files', finder: 'files', terminal: 'terminal', browser: 'browser',
   taskmgr: 'taskmgr', monitor: 'taskmgr', events: 'eventlog', logs: 'eventlog', network: 'network',
   settings: 'settings', resume: 'resume', projects: 'work', contact: 'contact', presentations: 'pres',
-  education: 'education', interests: 'interests', hobbies: 'interests', poems: 'poems',
+  education: 'education', interests: 'interests', hobbies: 'interests',
 };
 
 export function runCommand(raw: string, ctx: TermContext): CommandResult {
@@ -31,8 +32,8 @@ export function runCommand(raw: string, ctx: TermContext): CommandResult {
     case 'help':
       return {
         lines: [
-          `Commands: help, whoami, hostname, projects, skills, education, interests, contact, ${win ? 'dir' : 'ls'}, pwd, ping <host>, ${win ? 'ipconfig' : 'ifconfig'}, open <app>, clear`,
-          'Try: open resume, open projects, ping plowvm',
+          `Commands: help, whoami, hostname, projects, skills, education, interests, contact, search <words>, ${win ? 'dir' : 'ls'}, pwd, ping <host>, ${win ? 'ipconfig' : 'ifconfig'}, open <app>, clear`,
+          'Try: search group policy, open resume, ping plowvm',
         ],
       };
     case 'whoami':
@@ -83,6 +84,22 @@ export function runCommand(raw: string, ctx: TermContext): CommandResult {
       const target = OPEN_TARGETS[arg.toLowerCase()];
       if (!target) return { lines: [`Unknown app. Try: ${Object.keys(OPEN_TARGETS).join(', ')}`] };
       return { lines: [`Opening ${arg}...`], open: target };
+    }
+    case 'search':
+    case 'find': {
+      if (!arg) return { lines: [`Usage: search <words>. Try: search ${popularSearches[1].toLowerCase()}`] };
+      const r = search(arg);
+      if (!r.results.length) return { lines: [`No results for "${arg}" in Mark's portfolio.`, `Try: ${popularSearches.slice(0, 5).join(', ')}`] };
+      const top = r.results.filter((d) => d.type !== 'image').slice(0, 5);
+      return {
+        lines: [
+          ...(r.answer ? [`${r.answer.title}: ${r.answer.answer}`, ''] : []),
+          `${r.results.length} result${r.results.length === 1 ? '' : 's'} for "${arg}":`,
+          ...top.map((d) => `  ${d.title}  (${d.where})`),
+          `Opening all results in ${engineName}...`,
+        ],
+        search: arg,
+      };
     }
     case 'exit':
       return { lines: [T.exit] };

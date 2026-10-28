@@ -2,42 +2,18 @@
 // as the desktop Files app: folders first, then a grid of screenshots, then
 // one screenshot full width with its caption and Previous / Next.
 import { useRef, useState } from 'react';
-import { fileTree, type FsNode } from '../content/fileTree';
+import { fileTree, pathTo } from '../content/fileTree';
+import { countText, firstThumb, isMedia, label, subfolders } from '../content/gallery';
 
-const isMedia = (n?: FsNode) => n?.kind === 'image' || n?.kind === 'video';
-// "2 Group Policy" -> "Group Policy", "03 Map SHARED as S.jpg" -> "Map SHARED as S"
-const label = (n: FsNode) => n.name.replace(/^\d+ /, '').replace(/\.(jpg|png|mp4)$/i, '');
-const subfolders = (n: FsNode) => (n.kids ?? []).filter((k) => fileTree[k].kind === 'folder').length;
-const thumbOf =(n: FsNode) => (n.kind === 'video' ? n.poster : n.src);
-
-function firstThumb(id: string): string | undefined {
-  const n = fileTree[id];
-  if (isMedia(n)) return thumbOf(n);
-  for (const kid of n.kids ?? []) {
-    const t = firstThumb(kid);
-    if (t) return t;
-  }
-  return undefined;
-}
-
-function countMedia(id: string): { shots: number; videos: number } {
-  const n = fileTree[id];
-  if (n.kind === 'image') return { shots: 1, videos: 0 };
-  if (n.kind === 'video') return { shots: 0, videos: 1 };
-  return (n.kids ?? []).map(countMedia).reduce((a, b) => ({ shots: a.shots + b.shots, videos: a.videos + b.videos }), { shots: 0, videos: 0 });
-}
-
-function countText(id: string) {
-  const { shots, videos } = countMedia(id);
-  const parts = [];
-  if (shots) parts.push(`${shots} screenshot${shots === 1 ? '' : 's'}`);
-  if (videos) parts.push(`${videos} video${videos === 1 ? '' : 's'}`);
-  return parts.join(' · ');
-}
-
-export function MobileGallery({ rootId, project, onClose }: { rootId: string; project: string; onClose: () => void }) {
-  const [path, setPath] = useState<string[]>([rootId]);
-  const [view, setView] = useState<string | null>(null);
+/** start: a folder or file inside the gallery to open first (from search). */
+export function MobileGallery({ rootId, project, start, closeLabel = 'Projects', onClose }: { rootId: string; project: string; start?: string; closeLabel?: string; onClose: () => void }) {
+  const [path, setPath] = useState<string[]>(() => {
+    if (!start) return [rootId];
+    const p = pathTo(start);
+    const inside = p.slice(p.indexOf(rootId));
+    return isMedia(fileTree[start]) ? inside.slice(0, -1) : inside;
+  });
+  const [view, setView] = useState<string | null>(() => (start && isMedia(fileTree[start]) ? start : null));
   const swipe = useRef<number | null>(null);
 
   const folder = fileTree[path[path.length - 1]];
@@ -52,7 +28,7 @@ export function MobileGallery({ rootId, project, onClose }: { rootId: string; pr
     else if (path.length > 1) setPath(path.slice(0, -1));
     else onClose();
   };
-  const backText = view ? label(folder) : path.length > 1 ? label(fileTree[path[path.length - 2]]) : 'Projects';
+  const backText = view ? label(folder) : path.length > 1 ? label(fileTree[path[path.length - 2]]) : closeLabel;
   const crumbs = [project, ...path.map((id) => label(fileTree[id]))];
   const go = (d: number) => {
     const next = media[i + d];

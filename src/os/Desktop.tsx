@@ -10,7 +10,7 @@ import { Wallpaper } from './shared/Wallpaper';
 import { DesktopIcons } from './shared/DesktopIcons';
 import { ContextMenu, Dimmer, QuickSettings, SnapPreview, Switcher, Toast, Widget } from './shared/Overlays';
 import { BootScreen, LockScreen } from './shared/BootAndLock';
-import { openTarget } from './actions';
+import { openSearch, openTarget } from './actions';
 import { queryParam } from './storage';
 import { tipTimes, tips, welcome } from '../content/tips';
 
@@ -73,7 +73,11 @@ export function Desktop() {
   // ?open=<app or file id> is a deep link: skip the boot and lock screens and open it.
   useEffect(() => {
     const target = queryParam('open');
-    if (target && openTarget(target)) useUiStore.getState().set({ booted: true, lockStage: 2 });
+    const q = queryParam('q');
+    if (q !== null) {
+      openSearch(q);
+      useUiStore.getState().set({ booted: true, lockStage: 2 });
+    } else if (target && openTarget(target)) useUiStore.getState().set({ booted: true, lockStage: 2 });
   }, []);
 
   // Clicking anywhere outside a menu or panel closes it. Elements marked

@@ -1,36 +1,59 @@
-// Browser app: a links page. It does not embed other sites; links open in a new tab.
+// Browser app: MarkSearch, a search engine for this portfolio. Back and
+// Forward walk through earlier searches. Results open inside the OS; outside
+// links (LinkedIn, GitHub, live sites) open in a new tab.
+import { useState } from 'react';
 import { useSkinStore } from '../../os/skinStore';
-import { browserText, links } from '../../content/links';
+import { openNode } from '../../os/actions';
+import { browserText } from '../../content/links';
+import { shareUrl, type Target } from '../../content/search';
+import { useBrowserEntry, useBrowserStore } from './store';
+import { SearchView } from './SearchView';
+
+export function openTargetOnDesktop(t: Target) {
+  if ('href' in t) window.open(t.href, '_blank', 'noopener');
+  else openNode(t.node);
+}
 
 export default function BrowserApp() {
   const wifi = useSkinStore((s) => s.wifi);
+  const entry = useBrowserEntry();
+  const { i, stack, go, back, forward } = useBrowserStore();
+  const [copied, setCopied] = useState(false);
+  const link = entry.q ? shareUrl(entry.q) : 'https://markplowwright.github.io/';
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(link);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1600);
+    } catch {
+      setCopied(false);
+    }
+  };
+
   return (
-    <div className="browser">
+    <div className="browser sx-host">
       <div className="toolbar">
-        <span className="tool-btn" aria-hidden="true">Home</span>
-        <div className="address" aria-label="Address">{browserText.address}</div>
-      </div>
-      <div className="browser-page">
-        {wifi ? (
-          <>
-            <h2>{browserText.heading}</h2>
-            <p className="muted">{browserText.intro}</p>
-            <div className="link-grid">
-              {links.map((l) => (
-                <a key={l.name} className="link-card" href={l.url} target="_blank" rel="noopener noreferrer">
-                  <strong>{l.name}</strong>
-                  <span className="muted">{l.note}</span>
-                </a>
-              ))}
-            </div>
-          </>
-        ) : (
-          <>
-            <h2>{browserText.offlineTitle}</h2>
-            <p className="muted">{browserText.offlineBody}</p>
-          </>
+        <button type="button" className="nav-btn" aria-label="Back" disabled={i === 0} onClick={back}>‹</button>
+        <button type="button" className="nav-btn" aria-label="Forward" disabled={i >= stack.length - 1} onClick={forward}>›</button>
+        <button type="button" className="nav-btn" aria-label="Search home" onClick={() => go('')}>⌂</button>
+        <div className="address" aria-label="Address">
+          <span className="address-text">{link.replace(/^https:\/\//, '')}</span>
+        </div>
+        {entry.q && (
+          <button type="button" className="tool-btn" onClick={copy} aria-live="polite">
+            {copied ? 'Copied' : 'Copy link'}
+          </button>
         )}
       </div>
+      {wifi ? (
+        <SearchView entry={entry} onSearch={(q, tab) => go(q, tab)} onOpen={openTargetOnDesktop} />
+      ) : (
+        <div className="browser-page">
+          <h2>{browserText.offlineTitle}</h2>
+          <p className="muted">{browserText.offlineBody}</p>
+        </div>
+      )}
     </div>
   );
 }
