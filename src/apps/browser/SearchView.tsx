@@ -43,7 +43,7 @@ const TYPE_LABEL: Record<SearchDoc['type'], string> = {
 function Logo({ big }: { big?: boolean }) {
   return (
     <span className={`sx-logo${big ? ' is-big' : ''}`} aria-hidden={!big}>
-      <span className="sx-logo-a">Mark</span>
+      <span className="sx-logo-a">Plowright</span>{' '}
       <span className="sx-logo-b">Search</span>
     </span>
   );
@@ -99,7 +99,7 @@ function SearchBox({ initial, onSearch, onOpen, autoFocus }: { initial: string; 
         ref={input}
         type="search"
         value={text}
-        placeholder="Search Mark's projects, skills and screenshots"
+        placeholder="Search Mark's portfolio"
         aria-label={`Search with ${engineName}`}
         role="combobox"
         aria-expanded={open && list.length > 0}

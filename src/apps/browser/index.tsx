@@ -1,4 +1,4 @@
-// Browser app: MarkSearch, a search engine for this portfolio. Back and
+// Browser app: Plowright Search, a search engine for this portfolio. Back and
 // Forward walk through earlier searches. Results open inside the OS; outside
 // links (LinkedIn, GitHub, live sites) open in a new tab.
 import { useState } from 'react';

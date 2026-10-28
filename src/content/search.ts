@@ -11,7 +11,7 @@ import { skills } from './skills';
 import { creativeSite, interests, writing } from './interests';
 import { firstThumb, countText, label } from './gallery';
 
-export const engineName = 'MarkSearch';
+export const engineName = 'Plowright Search';
 
 export type Target = { node: string } | { href: string };
 export type DocType = 'project' | 'folder' | 'page' | 'link' | 'image' | 'video';

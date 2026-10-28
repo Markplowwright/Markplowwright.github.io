@@ -1,4 +1,4 @@
-/* MarkSearch, the Browser's search page. Colors come from the skin's
+/* Plowright Search, the Browser's search page. Colors come from the skin's
    variables (desktop) or the phone's, so it follows light and dark mode. */
 
 .sx {
@@ -557,7 +557,7 @@
 }
 
 .sx-home.is-phone .sx-logo.is-big {
-  font-size: 36px;
+  font-size: 32px;
 }
 
 .sx-results.is-phone .sx-head {
