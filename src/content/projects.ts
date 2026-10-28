@@ -47,7 +47,6 @@ export const projects: Project[] = [
     outcome:
       'A working domain with a joined client and verified policies. Every step is a runbook, and a troubleshooting log records real problems and fixes, for example the client failing to resolve plowlab.local until the VNet DNS pointed at the domain controller. Next: DNS records, WSUS, backups and imaging.',
     links: [{ label: 'GitHub repository', url: gh('windows-server-home-lab') }],
-    screenshot: { src: '/screenshots/home-lab-gpmc.png', alt: 'Group Policy Management showing the plowlab.local forest' },
     gallery: homeLabShots,
   },
   {
