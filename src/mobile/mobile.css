@@ -60,12 +60,167 @@
   color: var(--fg);
 }
 
+/* No pull-to-refresh or bounce on the phone home screen; pull down opens search instead. */
+html[data-skin='mobile'],
+[data-skin='mobile'] body {
+  overscroll-behavior: none;
+}
+
 .m-home {
   position: absolute;
   inset: 52px 0 0 0;
-  padding: 10px 18px;
-  overflow: auto;
-  padding-bottom: 130px;
+  overflow: hidden;
+}
+
+/* Home screen pages: swipe sideways, each page snaps into place. */
+.m-pages {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
+.m-pages::-webkit-scrollbar {
+  display: none;
+}
+
+.m-page {
+  flex: 0 0 100%;
+  height: 100%;
+  overflow-y: auto;
+  padding: 10px 18px 220px;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  transition: transform 0.2s ease-out;
+}
+
+.m-hint {
+  margin-top: 4px;
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+/* Page dots in a small rounded pill above the dock. */
+.m-dots {
+  position: fixed;
+  left: 50%;
+  bottom: calc(122px + env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%);
+  display: flex;
+  padding: 0 4px;
+  border-radius: 999px;
+  background-color: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(14px) saturate(160%);
+  z-index: 2;
+}
+
+.m-dot {
+  width: 24px;
+  height: 24px;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.m-dot span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.45);
+  transition: background 0.2s;
+}
+
+.m-dot.is-on span {
+  background: #fff;
+}
+
+/* "Save as an app" note, small and centered above the page dots. */
+.m-install {
+  position: fixed;
+  left: 50%;
+  bottom: calc(156px + env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: calc(100% - 48px);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #fff;
+  font: inherit;
+  font-size: 12px;
+  text-align: center;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
+  opacity: 0.9;
+  z-index: 2;
+}
+
+button.m-install {
+  min-height: 32px;
+  text-decoration: underline;
+}
+
+/* Pull-down to search indicator. */
+.m-pull {
+  position: absolute;
+  left: 50%;
+  top: 2px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background-color: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(14px);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.m-pull-icon {
+  width: 14px;
+  height: 14px;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M10 3a7 7 0 1 0 4.2 12.6l5.1 5.1 1.4-1.4-5.1-5.1A7 7 0 0 0 10 3zm0 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10z'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M10 3a7 7 0 1 0 4.2 12.6l5.1 5.1 1.4-1.4-5.1-5.1A7 7 0 0 0 10 3zm0 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10z'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+/* Contact app: LinkedIn, GitHub and Email buttons. */
+.m-social-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.m-social {
+  min-height: 88px;
+  padding: 12px 6px;
+  border-radius: 14px;
+  background: var(--card);
+  color: var(--fg);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.m-social .m-tile {
+  border-radius: 11px;
 }
 
 .m-clock {
@@ -111,6 +266,11 @@
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
 }
 
+a.m-app {
+  color: #fff;
+  text-decoration: none;
+}
+
 .m-tile {
   width: 60px;
   height: 60px;
@@ -125,7 +285,7 @@
   position: fixed;
   left: 14px;
   right: 14px;
-  bottom: 26px;
+  bottom: calc(26px + env(safe-area-inset-bottom, 0px));
   height: 84px;
   border-radius: 30px;
   background-color: rgba(255, 255, 255, 0.22);
@@ -706,4 +866,31 @@ img.m-gal-big {
 
 .m-browser .sx {
   overflow: visible;
+}
+
+/* Saved to the home screen as an app: the phone shows its own status bar
+   and home indicator, so the fake ones hide and the layout clears them. */
+[data-standalone] .m-status,
+[data-standalone] .m-indicator {
+  display: none;
+}
+
+[data-standalone] .m-home {
+  top: calc(env(safe-area-inset-top, 0px) + 8px);
+}
+
+[data-standalone] .m-sheet-head {
+  padding-top: calc(env(safe-area-inset-top, 0px) + 8px);
+}
+
+[data-standalone] .m-banner {
+  top: calc(env(safe-area-inset-top, 0px) + 8px);
+}
+
+[data-standalone] .m-dock {
+  bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+}
+
+[data-standalone] .m-dots {
+  bottom: calc(106px + env(safe-area-inset-bottom, 0px));
 }

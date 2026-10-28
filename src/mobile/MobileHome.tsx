@@ -1,6 +1,7 @@
 // Phone layout (below 768px): a home screen of app icons. Tapping one opens
 // it full screen with a Home button. Same content as the desktop.
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { flushSync } from 'react-dom';
 import { AppIcon } from '../os/AppIcon';
 import { useSkinStore } from '../os/skinStore';
 import { fmt, timeZone, useNow } from '../os/shared/hooks';
@@ -20,6 +21,7 @@ import type { Target } from '../content/search';
 import { SearchView } from '../apps/browser/SearchView';
 import { useBrowserEntry, useBrowserStore } from '../apps/browser/store';
 import { queryParam } from '../os/storage';
+import { SOCIALS, SocialTile, type SocialId } from './SocialTiles';
 import './mobile.css';
 
 type MobileApp = 'about' | 'projects' | 'slides' | 'resume' | 'contact' | 'browser' | 'terminal' | 'network' | 'activity' | 'logs' | 'settings';
@@ -38,6 +40,43 @@ const DEFS: { id: MobileApp; label: string; icon: string; tile?: string }[] = [
   { id: 'settings', label: 'Settings', icon: 'settings' },
 ];
 const DOCK: MobileApp[] = ['projects', 'contact', 'browser', 'settings'];
+/** The home screen pages, left to right. The dock shows on every page. */
+const PAGES: (MobileApp | SocialId)[][] = [
+  ['about', 'slides', 'resume', 'terminal', 'linkedin', 'github', 'email'],
+  ['activity', 'logs', 'network'],
+];
+const PULL = 80; // pixels to pull down before releasing opens search
+
+/** True when the site runs as an app saved to the home screen. */
+const isStandalone = () =>
+  window.matchMedia?.('(display-mode: standalone)').matches || (navigator as Navigator & { standalone?: boolean }).standalone === true;
+
+type InstallPrompt = Event & { prompt: () => Promise<void> };
+
+/** Small text above the dock: how to save the portfolio as an app. */
+function InstallHint() {
+  const [prompt, setPrompt] = useState<InstallPrompt | null>(null);
+  useEffect(() => {
+    const onPrompt = (e: Event) => {
+      e.preventDefault();
+      setPrompt(e as InstallPrompt);
+    };
+    window.addEventListener('beforeinstallprompt', onPrompt);
+    return () => window.removeEventListener('beforeinstallprompt', onPrompt);
+  }, []);
+  if (prompt)
+    return (
+      <button type="button" className="m-install" onClick={() => prompt.prompt().catch(() => {})}>
+        Save Mark's portfolio as an app: tap to install
+      </button>
+    );
+  const apple = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  return (
+    <p className="m-install">
+      {apple ? 'Save as an app: tap Share, then Add to Home Screen' : 'Save as an app: open the browser menu, then Add to Home screen'}
+    </p>
+  );
+}
 
 const BANNERS: { title: string; body: string; label: string; app: MobileApp; q?: string }[] = [
   { title: "Start with Mark's projects", body: 'Each build has the problem, what he built and links.', label: 'Open Projects', app: 'projects' },
@@ -67,6 +106,47 @@ export function MobileHome() {
   const [from, setFrom] = useState<MobileApp | null>(null);
   const [focus, setFocus] = useState<string | null>(null);
   const [gallery, setGallery] = useState<{ rootId: string; project: string; start: string } | null>(null);
+  const [page, setPage] = useState(0);
+  const [pull, setPull] = useState(0);
+  const [standalone] = useState(isStandalone);
+  const pager = useRef<HTMLDivElement>(null);
+  const touch = useRef<{ x: number; y: number; top: number } | null>(null);
+
+  useEffect(() => {
+    if (standalone) document.documentElement.dataset.standalone = 'true';
+  }, [standalone]);
+
+  const goPage = (i: number) => {
+    const el = pager.current;
+    if (el) el.scrollTo({ left: i * el.clientWidth, behavior: 'smooth' });
+  };
+
+  // Pull down on the home screen to search, like an iPhone. The Browser opens
+  // in the same tap so the keyboard can come up.
+  const openSearch = () => {
+    flushSync(() => {
+      useBrowserStore.getState().go('');
+      openApp('browser');
+    });
+    document.querySelector<HTMLInputElement>('.m-browser .sx-box input')?.focus();
+  };
+  const onTouchStart = (e: React.TouchEvent<HTMLElement>) => {
+    const t = e.touches[0];
+    touch.current = { x: t.clientX, y: t.clientY, top: e.currentTarget.scrollTop };
+  };
+  const onTouchMove = (e: React.TouchEvent<HTMLElement>) => {
+    const s = touch.current;
+    if (!s || s.top > 0) return;
+    const dx = e.touches[0].clientX - s.x;
+    const dy = e.touches[0].clientY - s.y;
+    setPull(dy > 0 && Math.abs(dy) > Math.abs(dx) * 1.5 ? Math.min(dy, PULL * 1.5) : 0);
+  };
+  const onTouchEnd = () => {
+    const ready = pull >= PULL;
+    touch.current = null;
+    setPull(0);
+    if (ready) openSearch();
+  };
 
   // ?q=intune opens the Browser on that search.
   useEffect(() => {
@@ -149,16 +229,72 @@ export function MobileHome() {
       </div>
 
       <main className="m-home" aria-hidden={!!app}>
-        <div className="m-clock">
-          <div className="m-time">{fmt.time(now)}</div>
-          <div className="m-date">{fmt.dateLong(now)}</div>
-          <div className="m-who">{profile.name} · {profile.role}</div>
+        <div className="m-pull" aria-hidden="true" style={{ opacity: Math.min(1, pull / PULL), transform: `translate(-50%, ${pull / 3}px)` }}>
+          <span className="m-pull-icon" />
+          {pull >= PULL ? 'Release to search' : 'Pull down to search'}
         </div>
-        <div className="m-grid">
-          {DEFS.filter((d) => !DOCK.includes(d.id)).map((d) => (
-            <button key={d.id} type="button" className="m-app" onClick={() => openApp(d.id)}>
-              <Icon d={d} />
-              <span>{d.label}</span>
+        <div
+          className="m-pages"
+          ref={pager}
+          onScroll={(e) => setPage(Math.round(e.currentTarget.scrollLeft / Math.max(1, e.currentTarget.clientWidth)))}
+        >
+          {PAGES.map((items, i) => (
+            <section
+              key={i}
+              className="m-page"
+              aria-label={`Home screen, page ${i + 1} of ${PAGES.length}`}
+              onTouchStart={onTouchStart}
+              onTouchMove={onTouchMove}
+              onTouchEnd={onTouchEnd}
+              style={pull && page === i ? { transform: `translateY(${pull / 3}px)` } : undefined}
+            >
+              {i === 0 && (
+                <div className="m-clock">
+                  <div className="m-time">{fmt.time(now)}</div>
+                  <div className="m-date">{fmt.dateLong(now)}</div>
+                  <div className="m-who">{profile.name} · {profile.role}</div>
+                  <div className="m-hint">Pull down to search · Swipe for more apps</div>
+                </div>
+              )}
+              <div className="m-grid">
+                {items.map((id) => {
+                  const social = SOCIALS.find((x) => x.id === id);
+                  if (social)
+                    return (
+                      <a
+                        key={id}
+                        className="m-app"
+                        href={social.href}
+                        {...(social.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                      >
+                        <SocialTile id={social.id} />
+                        <span>{social.label}</span>
+                      </a>
+                    );
+                  const d = DEFS.find((x) => x.id === id)!;
+                  return (
+                    <button key={id} type="button" className="m-app" onClick={() => openApp(d.id)}>
+                      <Icon d={d} />
+                      <span>{d.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </section>
+          ))}
+        </div>
+        {!standalone && <InstallHint />}
+        <div className="m-dots" aria-label="Home screen pages">
+          {PAGES.map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              className={`m-dot${page === i ? ' is-on' : ''}`}
+              aria-label={`Page ${i + 1} of ${PAGES.length}`}
+              aria-current={page === i ? 'page' : undefined}
+              onClick={() => goPage(i)}
+            >
+              <span />
             </button>
           ))}
         </div>
@@ -358,10 +494,15 @@ function MobileContact() {
   const href = `mailto:${profile.email}?subject=${encodeURIComponent(subject || 'Hello Mark')}&body=${encodeURIComponent(body)}`;
   return (
     <>
-      <Card>
-        Email: {profile.email}<br />
-        <a href={profile.links.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a> · <a href={profile.links.github} target="_blank" rel="noopener noreferrer">GitHub</a>
-      </Card>
+      <div className="m-social-row">
+        {SOCIALS.map((x) => (
+          <a key={x.id} className="m-social" href={x.href} {...(x.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
+            <SocialTile id={x.id} size={44} />
+            <span>{x.label}</span>
+          </a>
+        ))}
+      </div>
+      <Card>Email: {profile.email}</Card>
       <h3>Write Mark an email</h3>
       <label className="sr-only" htmlFor="m-sub">Subject</label>
       <input id="m-sub" className="m-input" placeholder="Subject" value={subject} onChange={(e) => setSubject(e.target.value)} />
