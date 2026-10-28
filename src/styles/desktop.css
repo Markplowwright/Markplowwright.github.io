@@ -54,11 +54,6 @@
   background: rgba(255, 255, 255, 0.14);
 }
 
-.desk-icon.is-selected {
-  background: rgba(255, 255, 255, 0.24);
-  border-color: rgba(255, 255, 255, 0.45);
-}
-
 .desk-label {
   padding: 1px 5px;
   color: #fff;

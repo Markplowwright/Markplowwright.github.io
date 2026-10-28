@@ -1,12 +1,10 @@
-// Icons on the desktop. Click selects, double-click (or Enter) opens.
-import { useState } from 'react';
+// Icons on the desktop. One click opens (visitors may not think to double-click).
 import { AppIcon } from '../AppIcon';
 import { useSkin } from '../skins';
 import { openApp, openNode } from '../actions';
 
 export function DesktopIcons() {
   const skin = useSkin();
-  const [selected, setSelected] = useState<string | null>(null);
   const items: { key: string; icon: string; label: string; open: () => void }[] = [
     { key: 'about', icon: 'folder', label: 'About Mark', open: () => openNode('about') },
     { key: 'resume', icon: 'pdf', label: 'Resume.pdf', open: () => openNode('resume') },
@@ -23,16 +21,8 @@ export function DesktopIcons() {
         <button
           key={i.key}
           type="button"
-          className={`desk-icon${selected === i.key ? ' is-selected' : ''}`}
-          title="Double-click to open"
-          onClick={() => setSelected(i.key)}
-          onDoubleClick={i.open}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              e.preventDefault();
-              i.open();
-            }
-          }}
+          className="desk-icon"
+          onClick={i.open}
         >
           <AppIcon app={i.icon} skin={skin.id} size={size} />
           <span className="desk-label">{i.label}</span>

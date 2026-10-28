@@ -27,7 +27,8 @@ Screenshots live in `docs/screenshots/`. The design mock-up references are in `d
 - **`Desktop.tsx`** draws the wallpaper, desktop icons, widget, windows, the skin's shell and the shared overlays: context menu, quick settings and calendar, toasts, window switcher, boot and lock screens.
 - State is saved to `localStorage` under one versioned key, `mp-portfolio-v1` (see `storage.ts`). Saved values are checked when loaded. The lock screen is never saved.
 - URL parameters: `?skin=windows|mac|linux` picks a look; `?open=<app or file id>` skips the lock screen and opens something directly, for example `?open=resume`, `?open=network` or `?open=p-homelab`.
-- Keyboard: `Alt` + `` ` `` opens the window switcher, `Esc` closes menus, and in Files `Enter` opens the selected item.
+- Everything opens with a single click (desktop icons, files and folders), since visitors may not think to double-click. Double-clicking a title bar still maximizes.
+- Keyboard: `Alt` + `` ` `` opens the window switcher and `Esc` closes menus. Every icon and file is a button, so `Tab` and `Enter` work too.
 
 ### Skins (`src/os/skins/`)
 

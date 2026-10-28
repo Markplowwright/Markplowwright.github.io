@@ -38,14 +38,15 @@ export default function FilesApp() {
     });
   const sel = selected ? fileTree[selected] : null;
 
-  const open = (n: FsNode) => (n.kids ? go([...path, n.id]) : openNode(n.id));
-  const up = () => path.length > 1 && go(path.slice(0, -1));
-  const onItemKey = (e: React.KeyboardEvent, n: FsNode) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      open(n);
+  // One click opens: folders open in place, files open in the Viewer (and show in the preview pane).
+  const open = (n: FsNode) => {
+    if (n.kids) go([...path, n.id]);
+    else {
+      select(n.id);
+      openNode(n.id);
     }
   };
+  const up = () => path.length > 1 && go(path.slice(0, -1));
   const onCtx = (e: React.MouseEvent, n: FsNode) => {
     e.preventDefault();
     e.stopPropagation();
@@ -97,9 +98,7 @@ export default function FilesApp() {
                   key={n.id}
                   type="button"
                   className={`row${selected === n.id ? ' is-sel' : ''}`}
-                  onClick={() => select(n.id)}
-                  onDoubleClick={() => open(n)}
-                  onKeyDown={(e) => onItemKey(e, n)}
+                  onClick={() => open(n)}
                   onContextMenu={(e) => onCtx(e, n)}
                 >
                   <AppIcon app={n.kind} skin={skin.id} size={20} />
@@ -115,9 +114,7 @@ export default function FilesApp() {
                   key={n.id}
                   type="button"
                   className={`cell${selected === n.id ? ' is-sel' : ''}`}
-                  onClick={() => select(n.id)}
-                  onDoubleClick={() => open(n)}
-                  onKeyDown={(e) => onItemKey(e, n)}
+                  onClick={() => open(n)}
                   onContextMenu={(e) => onCtx(e, n)}
                 >
                   <AppIcon app={n.kind} skin={skin.id} size={52} />
@@ -141,7 +138,7 @@ export default function FilesApp() {
           ) : (
             <>
               <div className="pv-name">{items.length} {items.length === 1 ? 'item' : 'items'}</div>
-              <p className="pv-body muted">Double-click a folder to look inside, or select a file to preview it here. Right-click for more.</p>
+              <p className="pv-body muted">Click a folder to look inside, or a file to open it. Right-click a file to preview it here.</p>
             </>
           )}
         </aside>
