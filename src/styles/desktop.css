@@ -43,6 +43,11 @@
   flex-wrap: wrap-reverse;
 }
 
+/* macOS overflow column, lined up under the clock widget's right edge. */
+[data-skin='mac'] .desk-icons-more {
+  right: 120px;
+}
+
 /* LinkedIn, GitHub and Email tiles keep the icons' height so labels line up. */
 .desk-social {
   margin: 3px 0;
