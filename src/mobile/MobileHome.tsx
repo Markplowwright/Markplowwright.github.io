@@ -22,6 +22,7 @@ import { SearchView } from '../apps/browser/SearchView';
 import { useBrowserEntry, useBrowserStore } from '../apps/browser/store';
 import { queryParam } from '../os/storage';
 import { SOCIALS, SocialTile, type SocialId } from '../os/SocialIcon';
+import { ProjectTile, projectShort } from './ProjectIcons';
 import './mobile.css';
 
 type MobileApp = 'about' | 'projects' | 'slides' | 'resume' | 'contact' | 'browser' | 'terminal' | 'network' | 'activity' | 'logs' | 'settings';
@@ -41,8 +42,8 @@ const DEFS: { id: MobileApp; label: string; icon: string; tile?: string }[] = [
 ];
 const DOCK: MobileApp[] = ['projects', 'contact', 'browser', 'settings'];
 /** The home screen pages, left to right. The dock shows on every page. */
-const PAGES: (MobileApp | SocialId)[][] = [
-  ['about', 'slides', 'resume', 'terminal', 'linkedin', 'github', 'email'],
+const PAGES: (MobileApp | SocialId | 'group-projects')[][] = [
+  ['group-projects', 'about', 'slides', 'resume', 'terminal', 'linkedin', 'github', 'email'],
   ['activity', 'logs', 'network'],
 ];
 const PULL = 80; // pixels to pull down before releasing opens search
@@ -52,6 +53,36 @@ const isStandalone = () =>
   window.matchMedia?.('(display-mode: standalone)').matches || (navigator as Navigator & { standalone?: boolean }).standalone === true;
 
 type InstallPrompt = Event & { prompt: () => Promise<void> };
+
+/** A project's main link: its live site if it has one, otherwise GitHub. */
+const projectLink = (p: (typeof projects)[number]) => p.links[0]?.url;
+
+/** The Projects group: opens like an iPhone folder, one icon per project. */
+function ProjectsGroup({ onClose, onDetails }: { onClose: () => void; onDetails: () => void }) {
+  const first = useRef<HTMLAnchorElement>(null);
+  useEffect(() => {
+    first.current?.focus();
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onClose]);
+  return (
+    <div className="m-group-layer" role="dialog" aria-modal="true" aria-label="Projects group" onClick={onClose}>
+      <h2 className="m-group-title">Projects</h2>
+      <div className="m-group-panel" onClick={(e) => e.stopPropagation()}>
+        {projects.map((p, i) => (
+          <a key={p.id} ref={i === 0 ? first : undefined} className="m-app" href={projectLink(p)} target="_blank" rel="noopener noreferrer" aria-label={`${p.name} (opens ${p.links[0]?.label ?? 'link'})`}>
+            <ProjectTile id={p.id} name={p.name} />
+            <span>{projectShort(p.id, p.name)}</span>
+          </a>
+        ))}
+      </div>
+      <button type="button" className="m-group-more" onClick={(e) => { e.stopPropagation(); onDetails(); }}>
+        See details for every project ›
+      </button>
+    </div>
+  );
+}
 
 /** Small text above the dock: how to save the portfolio as an app. */
 function InstallHint() {
@@ -107,6 +138,7 @@ export function MobileHome() {
   const [focus, setFocus] = useState<string | null>(null);
   const [gallery, setGallery] = useState<{ rootId: string; project: string; start: string } | null>(null);
   const [page, setPage] = useState(0);
+  const [groupOpen, setGroupOpen] = useState(false);
   const [pull, setPull] = useState(0);
   const [standalone] = useState(isStandalone);
   const pager = useRef<HTMLDivElement>(null);
@@ -258,6 +290,17 @@ export function MobileHome() {
               )}
               <div className="m-grid">
                 {items.map((id) => {
+                  if (id === 'group-projects')
+                    return (
+                      <button key={id} type="button" className="m-app" aria-haspopup="dialog" onClick={() => setGroupOpen(true)}>
+                        <span className="m-folder" aria-hidden="true">
+                          {projects.slice(0, 9).map((p) => (
+                            <ProjectTile key={p.id} id={p.id} name={p.name} size={13} />
+                          ))}
+                        </span>
+                        <span>Projects</span>
+                      </button>
+                    );
                   const social = SOCIALS.find((x) => x.id === id);
                   if (social)
                     return (
@@ -336,6 +379,15 @@ export function MobileHome() {
             <MobileApp id={app} onOpen={openResult} />
           </div>
         </div>
+      )}
+      {groupOpen && !app && (
+        <ProjectsGroup
+          onClose={() => setGroupOpen(false)}
+          onDetails={() => {
+            setGroupOpen(false);
+            openApp('projects');
+          }}
+        />
       )}
       {gallery && <MobileGallery key={gallery.start} rootId={gallery.rootId} project={gallery.project} start={gallery.start} closeLabel={DEFS.find((d) => d.id === app)?.label} onClose={() => setGallery(null)} />}
       <div className="m-indicator" aria-hidden="true" />
@@ -452,7 +504,7 @@ function MobileApp({ id, onOpen }: { id: MobileApp; onOpen: (t: Target) => void 
               <p key={j.company + j.title}><strong>{j.title}</strong>, {j.company}<br /><span className="m-muted">{j.period}</span></p>
             ))}
           </div>
-          <a className="m-btn m-btn-block" href="/resume.pdf" download>Download resume (PDF)</a>
+          <ResumeDownload />
           <a className="m-btn-soft m-btn-block" href="/resume.pdf" target="_blank" rel="noopener noreferrer">Open resume</a>
         </>
       );
@@ -471,6 +523,57 @@ function MobileApp({ id, onOpen }: { id: MobileApp; onOpen: (t: Target) => void 
     case 'settings':
       return <MobileSettings />;
   }
+}
+
+/**
+ * Downloads the resume as a file. Phones often ignore a plain download link,
+ * and a site saved to the home screen can't download links at all, so the
+ * file is fetched first. Saved as an app on an iPhone, it opens the share
+ * sheet (Save to Files); otherwise it saves like any download.
+ */
+function ResumeDownload() {
+  const NAME = 'Mark-Plowright-Resume.pdf';
+  const [file, setFile] = useState<File | null>(null);
+  const [state, setState] = useState<'idle' | 'done'>('idle');
+  useEffect(() => {
+    let live = true;
+    fetch('/resume.pdf')
+      .then((r) => (r.ok ? r.blob() : Promise.reject(new Error(String(r.status)))))
+      .then((b) => live && setFile(new File([b], NAME, { type: 'application/pdf' })))
+      .catch(() => {});
+    return () => {
+      live = false;
+    };
+  }, []);
+  const download = async () => {
+    if (!file) {
+      window.open('/resume.pdf', '_blank', 'noopener');
+      return;
+    }
+    if (isStandalone() && navigator.canShare?.({ files: [file] })) {
+      try {
+        await navigator.share({ files: [file], title: 'Mark Plowright resume' });
+        setState('done');
+      } catch {
+        /* closed the share sheet */
+      }
+      return;
+    }
+    const url = URL.createObjectURL(file);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = NAME;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
+    setState('done');
+  };
+  return (
+    <button type="button" className="m-btn m-btn-block" onClick={download} aria-live="polite">
+      {state === 'done' ? 'Downloaded: Mark-Plowright-Resume.pdf' : 'Download resume (PDF)'}
+    </button>
+  );
 }
 
 function MobileBrowser({ onOpen }: { onOpen: (t: Target) => void }) {
