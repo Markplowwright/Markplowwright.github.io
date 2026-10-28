@@ -13,6 +13,8 @@ Find them all with: `grep -rn "\[add" src/content`
 
 - [ ] `src/content/interests.ts`: your published poems. Add each one to `writing.poems` (`{ id, name: 'Title.txt', body }`); they appear in About Mark/Interests/Writing/Poems and the "Poems coming soon" file disappears.
 
+- [ ] Home lab screenshots still missing: **00 Create the Azure VM** and **02 Promote to a domain controller**. Add them to `src/content/homelabScreenshots.ts` (and the images to `public/screenshots/home-lab/`).
+
 ## Decisions for Mark
 
 - [ ] **Email.** The site uses `mlpplowright@gmail.com`, the address on your resume and old portfolio. To use a different one, change `email` in `src/content/profile.ts`.

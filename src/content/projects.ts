@@ -1,6 +1,8 @@
 // Portfolio projects. Facts come from each GitHub repository's README and from
 // Mark's old portfolio site. Missing details use visible [add ...] placeholders.
 
+import { homeLabShots, type LabShot } from './homelabScreenshots';
+
 export type ProjectLink = { label: string; url: string };
 
 export type Project = {
@@ -17,6 +19,8 @@ export type Project = {
   screenshot?: { src: string; alt: string };
   /** Extra files shown in the project's folder (for example a paper). */
   extraFiles?: { id: string; name: string; kind: 'pdf'; src: string; body: string }[];
+  /** A Screenshots folder (with subfolders) inside the project folder. */
+  gallery?: LabShot[];
   /** Older projects sit in an "Earlier projects" folder. */
   earlier?: boolean;
 };
@@ -44,6 +48,7 @@ export const projects: Project[] = [
       'A working domain with a joined client and verified policies. Every step is a runbook, and a troubleshooting log records real problems and fixes, for example the client failing to resolve plowlab.local until the VNet DNS pointed at the domain controller. Next: DNS records, WSUS, backups and imaging.',
     links: [{ label: 'GitHub repository', url: gh('windows-server-home-lab') }],
     screenshot: { src: '/screenshots/home-lab-gpmc.png', alt: 'Group Policy Management showing the plowlab.local forest' },
+    gallery: homeLabShots,
   },
   {
     id: 'p-admin',

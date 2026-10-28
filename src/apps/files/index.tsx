@@ -60,14 +60,19 @@ export default function FilesApp() {
         <button type="button" className="nav-btn" aria-label="Back" disabled={path.length < 2} onClick={up}>‹</button>
         <button type="button" className="nav-btn" aria-label="Up one level" disabled={path.length < 2} onClick={up}>↑</button>
         <nav className="crumbs" aria-label="Folder path">
-          {path.map((id, i) => (
+          {path.map((id, i) => {
+            // Deep paths keep the first folder and the last two, so the current folder always shows.
+            const hidden = path.length > 3 && i > 0 && i < path.length - 2;
+            if (hidden) return i === 1 ? <span key="more" className="crumb-sep">› … ›</span> : null;
+            return (
             <span key={id} className="crumb-wrap">
-              {i > 0 && <span className="crumb-sep" aria-hidden="true">›</span>}
+              {i > 0 && !(path.length > 3 && i === path.length - 2) && <span className="crumb-sep" aria-hidden="true">›</span>}
               <button type="button" className={`crumb${i === path.length - 1 ? ' is-current' : ''}`} aria-current={i === path.length - 1 ? 'page' : undefined} onClick={() => go(path.slice(0, i + 1))}>
                 {name(fileTree[id])}
               </button>
             </span>
-          ))}
+            );
+          })}
         </nav>
         <button type="button" className="tool-btn" onClick={toggleSort}>{sortDesc ? 'Name Z-A' : 'Name A-Z'}</button>
         <div className="seg" role="group" aria-label="View">
@@ -138,7 +143,7 @@ export default function FilesApp() {
           ) : (
             <>
               <div className="pv-name">{items.length} {items.length === 1 ? 'item' : 'items'}</div>
-              <p className="pv-body muted">Click a folder to look inside, or a file to open it. Right-click a file to preview it here.</p>
+              <p className="pv-body muted">Click a folder to look inside, or a file to open it. The file also shows here.</p>
             </>
           )}
         </aside>

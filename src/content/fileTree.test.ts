@@ -23,3 +23,14 @@ describe('fileTree', () => {
     }
   });
 });
+
+describe('home lab screenshots', () => {
+  it('builds a nested Screenshots folder with every image', () => {
+    const shots = fileTree['p-homelab-shots'];
+    expect(fileTree['p-homelab'].kids).toContain('p-homelab-shots');
+    expect(shots.kids?.length).toBe(6);
+    const images = Object.values(fileTree).filter((n) => n.id.startsWith('p-homelab-shots#'));
+    expect(images.length).toBe(50);
+    expect(pathTo('p-homelab-shots#0')).toEqual(['about', 'work', 'p-homelab', 'p-homelab-shots', 'p-homelab-shots/1 Active Directory', 'p-homelab-shots#0']);
+  });
+});

@@ -59,6 +59,31 @@ function buildTree(): Record<string, FsNode> {
     body: `Email: ${profile.email}\nLinkedIn: ${profile.links.linkedin.replace('https://www.', '')}\nGitHub: ${profile.links.github.replace('https://', '')}`,
   });
 
+  // A project's Screenshots folder: each shot's folder path becomes nested folders.
+  const addGallery = (projectId: string, shots: NonNullable<Project['gallery']>) => {
+    const rootId = `${projectId}-shots`;
+    add({ id: rootId, name: 'Screenshots', kind: 'folder', kids: [], body: `${shots.length} screenshots, grouped by part of the project.` });
+    shots.forEach((s, i) => {
+      let parent = rootId;
+      s.folder.forEach((f, depth) => {
+        const id = `${rootId}/${s.folder.slice(0, depth + 1).join('/')}`;
+        if (!nodes[id]) {
+          add({ id, name: f, kind: 'folder', kids: [] });
+          nodes[parent].kids!.push(id);
+        }
+        parent = id;
+      });
+      const id = `${rootId}#${i}`;
+      add({ id, name: s.name, kind: 'image', src: s.src, body: s.caption });
+      nodes[parent].kids!.push(id);
+    });
+    // Folder previews show how many items they hold.
+    Object.values(nodes).forEach((n) => {
+      if (n.id.startsWith(`${rootId}/`) && !n.body) n.body = `${n.kids!.length} items`;
+    });
+    return rootId;
+  };
+
   const addProject = (p: Project) => {
     const kids = [`${p.id}-ov`, `${p.id}-built`, `${p.id}-links`];
     add({ id: `${p.id}-ov`, name: 'Overview.txt', kind: 'doc', body: `${p.blurb}\n\nProblem\n${p.problem}\n\nOutcome\n${p.outcome}` });
@@ -73,6 +98,7 @@ function buildTree(): Record<string, FsNode> {
       kids.push(`${p.id}-shot`);
       add({ id: `${p.id}-shot`, name: 'Screenshot.png', kind: 'image', src: p.screenshot.src, body: p.screenshot.alt });
     }
+    if (p.gallery?.length) kids.push(addGallery(p.id, p.gallery));
     (p.extraFiles || []).forEach((f) => {
       kids.push(f.id);
       add({ id: f.id, name: f.name, kind: f.kind, src: f.src, body: f.body });

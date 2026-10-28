@@ -454,3 +454,33 @@
   z-index: 30;
   pointer-events: none;
 }
+
+.m-gallery summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  color: var(--accent);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.m-gallery figure {
+  margin: 10px 0 16px;
+}
+
+.m-gallery img {
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+}
+
+.m-gallery figcaption {
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.m-gallery figcaption strong {
+  display: block;
+  color: var(--fg);
+}

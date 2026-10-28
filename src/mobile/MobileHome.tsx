@@ -194,6 +194,17 @@ function MobileApp({ id }: { id: MobileApp }) {
               <div className="m-links">
                 {p.links.map((l) => <a key={l.url} href={l.url} target="_blank" rel="noopener noreferrer">{l.label}</a>)}
               </div>
+              {p.gallery && (
+                <details className="m-gallery">
+                  <summary>Screenshots ({p.gallery.length})</summary>
+                  {p.gallery.map((s) => (
+                    <figure key={s.src}>
+                      <img src={s.src} alt={s.caption} loading="lazy" />
+                      <figcaption><strong>{s.folder.map((f) => f.replace(/^\d+ /, '')).join(' › ')}</strong> {s.caption}</figcaption>
+                    </figure>
+                  ))}
+                </details>
+              )}
             </Card>
           ))}
         </>

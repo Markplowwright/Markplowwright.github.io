@@ -36,6 +36,7 @@ Each one was tried on its own with React 19 before use. The licenses and release
 | `public/favicon.svg`, `public/og-image.png` | Made for this site (the OG image is a screenshot of the site itself) | MIT | Used. |
 | `public/screenshots/admin-practice-lab.png` | Mark's `admin-practice-lab` repo (`docs/screenshot.png`) | Mark's own work (MIT repo) | Used. |
 | `public/screenshots/home-lab-gpmc.png` | Mark's `windows-server-home-lab` repo (`docs/images/04-gpmc-forest.png`) | Mark's own work | Used. Shows his lab, cropped by him to hide private details. |
+| `public/screenshots/home-lab/` (50 images) | Mark's own captures of the lab, plus 14 from his `windows-server-home-lab` repo (`docs/images`) to fill gaps | Mark's own work | Used. Converted to JPG. Two full-desktop captures were cropped to just the lab window to remove a private chat, browser tabs and desktop files; two others were dropped. |
 | `public/screenshots/gradaisle.jpg`, `sanare.jpg` | Mark's old portfolio (`Resume` repo, gh-pages branch) | Mark's own work | Used. `sanare.jpg` was converted from PNG to make it smaller. |
 | Pexels photos used on the old portfolio | pexels.com | Pexels license | Not carried over. |
 

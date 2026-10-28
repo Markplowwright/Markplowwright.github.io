@@ -24,6 +24,6 @@ export const linuxSkin: Skin = {
     unlock: 'Unlock',
     aboutPc: 'About',
     focus: 'Do not disturb',
-    types: { folder: 'Folder', doc: 'Text', pdf: 'PDF document', slides: 'Presentation', image: 'PNG image', link: 'Link' },
+    types: { folder: 'Folder', doc: 'Text', pdf: 'PDF document', slides: 'Presentation', image: 'Image', link: 'Link' },
   },
 };

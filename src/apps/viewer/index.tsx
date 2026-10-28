@@ -1,6 +1,6 @@
 // Viewer app (Viewer / Preview / Document Viewer): PDFs, slides, images,
 // text files, and the Contact file with an email form.
-import { fileTree } from '../../content/fileTree';
+import { fileTree, pathTo } from '../../content/fileTree';
 import { presentations } from '../../content/presentations';
 import { profile } from '../../content/profile';
 import { useViewerStore } from './store';
@@ -104,11 +104,24 @@ export default function ViewerApp() {
   }
 
   if (node.kind === 'image' && node.src) {
+    // Previous / Next walk through the other images in the same folder.
+    const parent = fileTree[pathTo(node.id).slice(-2)[0]];
+    const siblings = (parent?.kids ?? []).filter((id) => fileTree[id]?.kind === 'image');
+    const i = siblings.indexOf(node.id);
+    const open = useViewerStore.getState().open;
     return (
       <div className="viewer">
         <div className="viewer-stage">
           <img className="viewer-img" src={node.src} alt={node.body ?? node.name} />
         </div>
+        {node.body && <p className="viewer-caption">{node.body}</p>}
+        {siblings.length > 1 && (
+          <div className="viewer-bar">
+            <button type="button" className="tool-btn" disabled={i <= 0} onClick={() => open(siblings[i - 1])}>Previous</button>
+            <span aria-live="polite">{i + 1} of {siblings.length}</span>
+            <button type="button" className="tool-btn" disabled={i >= siblings.length - 1} onClick={() => open(siblings[i + 1])}>Next</button>
+          </div>
+        )}
       </div>
     );
   }

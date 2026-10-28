@@ -24,6 +24,6 @@ export const windowsSkin: Skin = {
     unlock: 'Sign in',
     aboutPc: 'About your PC',
     focus: 'Do not disturb',
-    types: { folder: 'File folder', doc: 'Text Document', pdf: 'PDF Document', slides: 'Presentation', image: 'PNG File', link: 'Internet Shortcut' },
+    types: { folder: 'File folder', doc: 'Text Document', pdf: 'PDF Document', slides: 'Presentation', image: 'Image file', link: 'Internet Shortcut' },
   },
 };
