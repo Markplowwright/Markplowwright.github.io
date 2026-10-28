@@ -21,7 +21,7 @@ import type { Target } from '../content/search';
 import { SearchView } from '../apps/browser/SearchView';
 import { useBrowserEntry, useBrowserStore } from '../apps/browser/store';
 import { queryParam } from '../os/storage';
-import { SOCIALS, SocialTile, type SocialId } from './SocialTiles';
+import { SOCIALS, SocialTile, type SocialId } from '../os/SocialIcon';
 import './mobile.css';
 
 type MobileApp = 'about' | 'projects' | 'slides' | 'resume' | 'contact' | 'browser' | 'terminal' | 'network' | 'activity' | 'logs' | 'settings';

@@ -27,8 +27,12 @@
   position: absolute;
   top: calc(var(--inset-top) + 14px);
   left: calc(var(--inset-left) + 12px);
+  /* Wrap into a second column on short screens instead of running off the bottom. */
+  max-height: calc(100% - var(--inset-top) - var(--inset-bottom, 0px) - 28px);
   display: flex;
   flex-direction: column;
+  flex-wrap: wrap;
+  align-content: flex-start;
   gap: 10px;
   z-index: 5;
 }
@@ -36,6 +40,13 @@
 [data-skin='mac'] .desk-icons {
   left: auto;
   right: 14px;
+  flex-wrap: wrap-reverse;
+}
+
+/* LinkedIn, GitHub and Email tiles keep the icons' height so labels line up. */
+.desk-social {
+  margin: 3px 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .desk-icon {

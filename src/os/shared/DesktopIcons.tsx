@@ -2,10 +2,11 @@
 import { AppIcon } from '../AppIcon';
 import { useSkin } from '../skins';
 import { openApp, openNode } from '../actions';
+import { SOCIALS, SocialTile, openSocial } from '../SocialIcon';
 
 export function DesktopIcons() {
   const skin = useSkin();
-  const items: { key: string; icon: string; label: string; open: () => void }[] = [
+  const items: { key: string; icon: string; label: string; open: () => void; social?: (typeof SOCIALS)[number]['id'] }[] = [
     { key: 'about', icon: 'folder', label: 'About Mark', open: () => openNode('about') },
     { key: 'resume', icon: 'pdf', label: 'Resume.pdf', open: () => openNode('resume') },
   ];
@@ -13,6 +14,8 @@ export function DesktopIcons() {
   if (skin.id !== 'mac') items.push({ key: 'trash', icon: 'trash', label: skin.words.trash, open: () => openNode('trash') });
   items.push({ key: 'browser', icon: 'browser', label: 'Browser', open: () => openApp('browser') });
   items.push({ key: 'network', icon: 'network', label: 'Network Map', open: () => openApp('network') });
+  // Mark's profiles and email, the same as on the phone.
+  for (const x of SOCIALS) items.push({ key: x.id, icon: '', label: x.label, open: () => openSocial(x.id), social: x.id });
   const size = skin.id === 'mac' ? 58 : skin.id === 'linux' ? 52 : 46;
 
   return (
@@ -24,7 +27,7 @@ export function DesktopIcons() {
           className="desk-icon"
           onClick={i.open}
         >
-          <AppIcon app={i.icon} skin={skin.id} size={size} />
+          {i.social ? <SocialTile id={i.social} size={Math.round(size * 0.86)} className="desk-social" /> : <AppIcon app={i.icon} skin={skin.id} size={size} />}
           <span className="desk-label">{i.label}</span>
         </button>
       ))}

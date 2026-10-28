@@ -5,6 +5,7 @@
   --font: Cantarell, 'Inter', 'Noto Sans', system-ui, sans-serif;
   --inset-top: 32px;
   --inset-left: 68px;
+  --inset-bottom: 0px;
   --root-bg: #2a1a4d;
   --win-radius: 12px;
   --tb-height: 46px;

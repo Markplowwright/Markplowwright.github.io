@@ -1,5 +1,6 @@
 // Windows style shell: centered taskbar, start menu with search, tray and clock.
 import { AppIcon } from '../../AppIcon';
+import { SOCIALS, SocialTile, openSocial } from '../../SocialIcon';
 import { useUiStore } from '../../uiStore';
 import { useSkinStore } from '../../skinStore';
 import { openApp, openNode } from '../../actions';
@@ -88,6 +89,12 @@ export function Shell() {
                   <AppIcon app="folder" skin="windows" size={36} />
                   About Mark
                 </button>
+                {SOCIALS.map((x) => (
+                  <button key={x.id} type="button" onClick={() => openSocial(x.id)}>
+                    <SocialTile id={x.id} size={34} className="" />
+                    {x.label}
+                  </button>
+                ))}
               </div>
               <div className="start-row">
                 <strong>Recommended</strong>
