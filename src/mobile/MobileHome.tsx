@@ -380,7 +380,7 @@ function MobileApp({ id, onOpen }: { id: MobileApp; onOpen: (t: Target) => void 
       return (
         <>
           <div className="m-profile">
-            <span className="m-avatar" aria-hidden="true">{profile.name[0]}</span>
+            <img className="m-avatar" src="/brand/avatar.webp" alt="" width="64" height="64" />
             <div>
               <div className="m-name">{profile.name}</div>
               <div className="m-muted">{profile.role}</div>

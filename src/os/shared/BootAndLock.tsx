@@ -15,7 +15,7 @@ export function BootScreen() {
   }, [booted]);
   return (
     <div className={`boot${booted ? ' is-done' : ''}`} aria-hidden={booted}>
-      <div className="boot-logo">{profile.initials}</div>
+      <img className="boot-logo" src="/brand/logo-mark.webp" alt="" width="320" height="191" />
       <div className="boot-name">{profile.osName}</div>
       <div className="boot-bar">
         <div />
@@ -42,7 +42,7 @@ export function LockScreen() {
     <div className={`lock${stage === 1 ? ' is-leaving' : ''}`} role="dialog" aria-label="Lock screen">
       <div className="lock-time">{fmt.time(now)}</div>
       <div className="lock-date">{fmt.dateLong(now)}</div>
-      <div className="lock-avatar" aria-hidden="true">{profile.name[0]}</div>
+      <img className="lock-avatar" src="/brand/avatar.webp" alt="" width="84" height="84" />
       <div className="lock-name">{profile.fullName}</div>
       <button ref={btnRef} type="button" className="lock-btn" onClick={unlock}>
         {skin.words.unlock}
