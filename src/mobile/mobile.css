@@ -657,16 +657,14 @@ img.m-gal-big {
   opacity: 0.4;
 }
 
-/* Phone Browser: a small address bar above the search page. */
+/* Phone Browser: a small address bar above the search page. It scrolls
+   away with the page. */
 .m-browser {
   margin: -16px -16px 0;
   padding: 0 16px;
 }
 
 .m-browser-bar {
-  position: sticky;
-  top: 0;
-  z-index: 6;
   display: flex;
   align-items: center;
   gap: 4px;
