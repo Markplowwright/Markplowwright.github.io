@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { create } from 'zustand';
 import { useSkin } from '../../os/skins';
+import { useSkinStore } from '../../os/skinStore';
 import { openSearch, openTarget } from '../../os/actions';
 import { terminalText } from '../../content/terminal';
 import { runCommand } from './commands';
@@ -24,12 +25,14 @@ const useTerm = create<{ lines: Line[]; shell: 0 | 1; history: string[]; set: (p
 export default function TerminalApp() {
   const skin = useSkin();
   const { lines, shell, history, set } = useTerm();
+  const online = useSkinStore((s) => s.wifi);
   const [input, setInput] = useState('');
   const [histIdx, setHistIdx] = useState(-1);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const prompt = skin.shells[shell].prompt(terminalText.user);
-  const quick = ['help', 'whoami', 'projects', 'skills', skin.id === 'windows' ? 'ipconfig' : 'ifconfig', 'clear'];
+  const net = { windows: 'ipconfig /all', mac: 'ifconfig', linux: 'ip a' }[skin.id];
+  const quick = ['help', 'whoami', 'projects', 'skills', net, 'nslookup google.com', skin.id === 'windows' ? 'cls' : 'clear'];
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ block: 'end' });
@@ -37,9 +40,14 @@ export default function TerminalApp() {
 
   const run = (text: string) => {
     if (!text.trim()) return;
-    const result = runCommand(text, { skin: skin.id, shell });
+    const result = runCommand(text, { skin: skin.id, shell, online });
     const next = result.clear ? [] : [...lines, { cmd: true, prompt, text }, ...result.lines.map((t) => ({ cmd: false, text: t }))];
     set({ lines: next, history: [text, ...history].slice(0, 50) });
+    // nslookup, ping and tracert print once the lookup answers.
+    result.later?.then((more) => {
+      const now = useTerm.getState().lines;
+      set({ lines: [...now, ...more.map((t) => ({ cmd: false, text: t }))] });
+    });
     if (result.open) openTarget(result.open);
     if (result.search) openSearch(result.search);
   };
@@ -56,7 +64,7 @@ export default function TerminalApp() {
       <div className="term-out" role="log" aria-live="polite" aria-label="Terminal output">
         {lines.map((l, i) => (
           <div key={i} className={l.cmd ? 'term-cmd' : 'term-line'}>
-            {l.cmd ? `${l.prompt || prompt} ${l.text}` : l.text}
+            {l.cmd ? `${l.prompt || prompt} ${l.text}` : l.text || '\u00a0'}
           </div>
         ))}
         <div ref={bottomRef} />

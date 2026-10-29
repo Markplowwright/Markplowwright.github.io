@@ -30,15 +30,46 @@ describe('runCommand', () => {
     expect(out).toContain('GradAisle');
   });
 
-  it('labels network output as sample output', () => {
-    expect(runCommand('ping 10.0.0.4', win).lines.at(-1)).toBe('(sample output)');
-    expect(runCommand('ifconfig', linux).lines.at(-1)).toBe('(sample output)');
-    expect(runCommand('ping', mac).lines[0]).toContain('plowvm');
+  it('prints ipconfig /all with every field Windows shows', () => {
+    const out = runCommand('ipconfig /all', win).lines.join('\n');
+    for (const f of ['Host Name . . . . . . . . . . . . : MARK-PORTFOLIO', 'Physical Address', 'DHCP Enabled', 'IPv4 Address. . . . . . . . . . . : 10.0.0.25(Preferred)', 'Subnet Mask', 'Lease Obtained', 'Lease Expires', 'Default Gateway', 'DHCP Server', 'DHCPv6 Client DUID', 'DNS Servers . . . . . . . . . . . : 10.0.0.4', 'NetBIOS over Tcpip'])
+      expect(out).toContain(f);
+    expect(runCommand('IPCONFIG /ALL', win).lines.join('\n')).toContain('Host Name');
+    expect(runCommand('ipconfig /flushdns', win).lines.at(-1)).toBe('Successfully flushed the DNS Resolver Cache.');
   });
 
-  it('only knows ipconfig on Windows and ifconfig elsewhere', () => {
+  it('shows each OS its own network command', () => {
+    expect(runCommand('ifconfig', mac).lines.join('\n')).toContain('inet 10.0.0.25 netmask 0xffffff00');
+    expect(runCommand('ip a', linux).lines.join('\n')).toContain('inet 10.0.0.25/24');
+    expect(runCommand('ipconfig getifaddr en0', mac).lines).toEqual(['10.0.0.25']);
+  });
+
+  it('points to the right command when it belongs to another OS', () => {
+    const tip = (c: string, ctx: typeof win | typeof mac | typeof linux) => runCommand(c, ctx).lines.at(-1);
     expect(runCommand('ifconfig', win).lines[0]).toContain('not recognized');
-    expect(runCommand('ipconfig', mac).lines[0]).toBe('zsh: command not found: ipconfig');
+    expect(tip('ifconfig', win)).toBe('Tip: ifconfig is a macOS and older Linux command. On Windows, type: ipconfig /all');
+    expect(runCommand('ipconfig', linux).lines[0]).toBe('bash: ipconfig: command not found');
+    expect(tip('ipconfig', linux)).toBe('Tip: ipconfig is a Windows command. On Linux, type: ip a');
+    expect(tip('ipconfig /all', mac)).toContain('On macOS, type: ifconfig');
+    expect(tip('ip a', mac)).toBe('Tip: ip is a Linux command. On macOS, type: ifconfig');
+    expect(tip('tracert google.com', mac)).toBe('Tip: tracert is a Windows command. On macOS, type: traceroute google.com');
+    expect(tip('traceroute google.com', win)).toContain('On Windows, type: tracert google.com');
+    expect(tip('ifconfig', linux)).toBe('Tip: modern Linux uses the ip command. Type: ip a');
+    expect(tip('cls', mac)).toBe('Tip: cls is a Windows command. On macOS, type: clear');
+  });
+
+  it('answers nslookup and ping like the real commands', async () => {
+    const lookup = async (n: string) => (n === 'google.com' ? { name: 'google.com', a: ['142.250.80.46'], aaaa: ['2607:f8b0:4006:80f::200e'], aliases: [], internal: false } : null);
+    const w = await runCommand('nslookup google.com', { ...win, lookup }).later!;
+    expect(w).toEqual(['Server:  PLOWVM.plowlab.local', 'Address:  10.0.0.4', '', 'Non-authoritative answer:', 'Name:    google.com', 'Addresses:  2607:f8b0:4006:80f::200e', '          142.250.80.46', '']);
+    const m = await runCommand('nslookup google.com', { ...mac, lookup }).later!;
+    expect(m).toContain('Address: 142.250.80.46');
+    expect(m).toContain('Address:\t10.0.0.4#53');
+    expect((await runCommand('nslookup nope.invalid', { ...linux, lookup }).later!).join('\n')).toContain("** server can't find nope.invalid: NXDOMAIN");
+    expect((await runCommand('nslookup plowvm', win).later!).join('\n')).toContain('Name:    plowvm.plowlab.local');
+    expect((await runCommand('ping google.com', { ...win, lookup }).later!)[1]).toBe('Pinging google.com [142.250.80.46] with 32 bytes of data:');
+    expect((await runCommand('ping -c 4 google.com', { ...linux, lookup }).later!)[0]).toBe('PING google.com (142.250.80.46) 56(84) bytes of data.');
+    expect((await runCommand('nslookup google.com', { ...win, online: false, lookup }).later!)[0]).toBe('DNS request timed out.');
   });
 
   it('opens apps and files', () => {

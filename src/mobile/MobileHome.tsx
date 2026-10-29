@@ -665,6 +665,11 @@ function MobileTerminal({ onOpen, onSearch }: { onOpen: (target: string) => void
     if (!c.trim()) return;
     const r = runCommand(c, { skin: 'linux', shell: 0 });
     set({ lines: r.clear ? [] : [...lines, { cmd: true, text: c }, ...r.lines.map((t) => ({ cmd: false, text: t }))], history: [c, ...history].slice(0, 50) });
+    // nslookup, ping and traceroute print once the lookup answers.
+    r.later?.then((more) => {
+      const now = useMobileTerm.getState().lines;
+      useMobileTerm.getState().set({ lines: [...now, ...more.map((t) => ({ cmd: false, text: t }))] });
+    });
     // Commands that open something (open resume, search intune, sudo hire mark)
     // open the matching phone screen after a moment, so the output is seen first.
     if (r.open) setTimeout(() => onOpen(r.open!), 700);
@@ -681,7 +686,7 @@ function MobileTerminal({ onOpen, onSearch }: { onOpen: (target: string) => void
   return (
     <>
       <div className="m-term" role="log" aria-live="polite" aria-label="Terminal output" onClick={() => field.current?.focus()}>
-        {lines.map((l, i) => <div key={i} className={l.cmd ? 'm-term-cmd' : ''}>{l.cmd ? `$ ${l.text}` : l.text}</div>)}
+        {lines.map((l, i) => <div key={i} className={l.cmd ? 'm-term-cmd' : ''}>{l.cmd ? `$ ${l.text}` : l.text || '\u00a0'}</div>)}
         <form
           className="m-term-input"
           onSubmit={(e) => {
@@ -712,7 +717,7 @@ function MobileTerminal({ onOpen, onSearch }: { onOpen: (target: string) => void
       </div>
       <div className="m-chips">
         <button type="button" className="m-chip" aria-label="Previous command" disabled={!history.length} onClick={() => recall(1)}>↑</button>
-        {['help', 'whoami', 'projects', 'skills', 'search intune', 'contact', 'clear'].map((c) => (
+        {['help', 'whoami', 'projects', 'skills', 'ip a', 'nslookup google.com', 'search intune', 'contact', 'clear'].map((c) => (
           <button key={c} type="button" className="m-chip" onClick={() => run(c)}>{c}</button>
         ))}
       </div>
