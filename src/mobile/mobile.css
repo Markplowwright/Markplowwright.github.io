@@ -508,6 +508,46 @@ a.m-app {
   color: #7ee787;
 }
 
+/* The typing line at the bottom of the phone Terminal. */
+.m-term-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.m-term-input input {
+  flex: 1;
+  min-width: 0;
+  min-height: 40px;
+  padding: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: #fff;
+  caret-color: #7ee787;
+  font: 16px/1.4 ui-monospace, Menlo, Consolas, monospace; /* 16px stops iPhones zooming in */
+}
+
+.m-term-input input::placeholder {
+  color: #6b6b6b;
+}
+
+.m-term-run {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border: 1px solid #333;
+  border-radius: 10px;
+  background: #1c1c1c;
+  color: #7ee787;
+  font-size: 18px;
+}
+
+.m-chip:disabled {
+  opacity: 0.4;
+}
+
 .m-chips {
   margin: 10px 0;
   display: flex;

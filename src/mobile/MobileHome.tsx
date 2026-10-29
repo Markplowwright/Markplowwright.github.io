@@ -2,6 +2,7 @@
 // it full screen with a Home button. Same content as the desktop.
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { flushSync } from 'react-dom';
+import { create } from 'zustand';
 import { AppIcon } from '../os/AppIcon';
 import { useSkinStore } from '../os/skinStore';
 import { fmt, timeZone, useNow } from '../os/shared/hooks';
@@ -201,6 +202,25 @@ export function MobileHome() {
     setFocus(null);
   };
 
+  /** "open resume" and friends from the Terminal: desktop app names mapped to phone screens. */
+  const openTerminalTarget = (target: string) => {
+    const apps: Record<string, MobileApp> = {
+      files: 'projects', work: 'projects', terminal: 'terminal', browser: 'browser', taskmgr: 'activity', eventlog: 'logs',
+      network: 'network', settings: 'settings', resume: 'resume', contact: 'contact', pres: 'slides',
+    };
+    if (apps[target]) {
+      setFrom(app);
+      setApp(apps[target]);
+      setFocus(null);
+    } else openResult({ node: target });
+  };
+  const searchFromApp = (q: string) => {
+    useBrowserStore.getState().go(q);
+    setFrom(app);
+    setApp('browser');
+    setFocus(null);
+  };
+
   /** Opens a search result on the phone: the matching app, section or screenshot. */
   const openResult = (t: Target) => {
     if ('href' in t) {
@@ -376,7 +396,7 @@ export function MobileHome() {
             <h2>{def.label}</h2>
           </div>
           <div className="m-sheet-body">
-            <MobileApp id={app} onOpen={openResult} />
+            <MobileApp id={app} onOpen={openResult} onOpenTarget={openTerminalTarget} onSearch={searchFromApp} />
           </div>
         </div>
       )}
@@ -426,7 +446,7 @@ function ProjectsApp() {
   );
 }
 
-function MobileApp({ id, onOpen }: { id: MobileApp; onOpen: (t: Target) => void }) {
+function MobileApp({ id, onOpen, onOpenTarget, onSearch }: { id: MobileApp; onOpen: (t: Target) => void; onOpenTarget: (target: string) => void; onSearch: (q: string) => void }) {
   switch (id) {
     case 'about':
       return (
@@ -513,7 +533,7 @@ function MobileApp({ id, onOpen }: { id: MobileApp; onOpen: (t: Target) => void 
     case 'browser':
       return <MobileBrowser onOpen={onOpen} />;
     case 'terminal':
-      return <MobileTerminal />;
+      return <MobileTerminal onOpen={onOpenTarget} onSearch={onSearch} />;
     case 'network':
       return <MobileNetwork />;
     case 'activity':
@@ -616,21 +636,82 @@ function MobileContact() {
   );
 }
 
-function MobileTerminal() {
-  const [lines, setLines] = useState<{ cmd: boolean; text: string }[]>([
+type TermLine = { cmd: boolean; text: string };
+
+// Terminal history lives outside the component, so it survives leaving the app.
+const useMobileTerm = create<{ lines: TermLine[]; history: string[]; set: (p: Partial<{ lines: TermLine[]; history: string[] }>) => void }>((set) => ({
+  lines: [
     { cmd: true, text: 'whoami' },
     { cmd: false, text: terminalText.whoami },
-  ]);
+    { cmd: false, text: terminalText.intro },
+  ],
+  history: [],
+  set: (p) => set(p),
+}));
+
+/** The phone Terminal: type a command, or tap one. Same commands as the desktop. */
+function MobileTerminal({ onOpen, onSearch }: { onOpen: (target: string) => void; onSearch: (q: string) => void }) {
+  const { lines, history, set } = useMobileTerm();
+  const [input, setInput] = useState('');
+  const [histIdx, setHistIdx] = useState(-1);
+  const bottom = useRef<HTMLDivElement>(null);
+  const field = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    bottom.current?.scrollIntoView({ block: 'end' });
+  }, [lines]);
+
   const run = (c: string) => {
+    if (!c.trim()) return;
     const r = runCommand(c, { skin: 'linux', shell: 0 });
-    setLines(r.clear ? [] : [...lines, { cmd: true, text: c }, ...r.lines.map((t) => ({ cmd: false, text: t }))]);
+    set({ lines: r.clear ? [] : [...lines, { cmd: true, text: c }, ...r.lines.map((t) => ({ cmd: false, text: t }))], history: [c, ...history].slice(0, 50) });
+    // Commands that open something (open resume, search intune, sudo hire mark)
+    // open the matching phone screen after a moment, so the output is seen first.
+    if (r.open) setTimeout(() => onOpen(r.open!), 700);
+    if (r.search) setTimeout(() => onSearch(r.search!), 700);
   };
+  const recall = (step: 1 | -1) => {
+    if (!history.length) return;
+    const i = Math.max(-1, Math.min(history.length - 1, histIdx + step));
+    setHistIdx(i);
+    setInput(i < 0 ? '' : history[i]);
+    field.current?.focus();
+  };
+
   return (
     <>
-      <div className="m-term" role="log" aria-live="polite">
+      <div className="m-term" role="log" aria-live="polite" aria-label="Terminal output" onClick={() => field.current?.focus()}>
         {lines.map((l, i) => <div key={i} className={l.cmd ? 'm-term-cmd' : ''}>{l.cmd ? `$ ${l.text}` : l.text}</div>)}
+        <form
+          className="m-term-input"
+          onSubmit={(e) => {
+            e.preventDefault();
+            run(input);
+            setInput('');
+            setHistIdx(-1);
+          }}
+        >
+          <label htmlFor="m-term-in" className="m-term-cmd">$</label>
+          <input
+            id="m-term-in"
+            ref={field}
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="type a command"
+            autoComplete="off"
+            autoCorrect="off"
+            autoCapitalize="off"
+            spellCheck={false}
+            enterKeyHint="go"
+            aria-label="Command"
+          />
+          <button type="submit" className="m-term-run" aria-label="Run command">↵</button>
+        </form>
+        <div ref={bottom} />
       </div>
       <div className="m-chips">
+        <button type="button" className="m-chip" aria-label="Previous command" disabled={!history.length} onClick={() => recall(1)}>↑</button>
         {['help', 'whoami', 'projects', 'skills', 'search intune', 'contact', 'clear'].map((c) => (
           <button key={c} type="button" className="m-chip" onClick={() => run(c)}>{c}</button>
         ))}
