@@ -114,3 +114,25 @@ describe('search command', () => {
     expect(runCommand('search qqqzzz', ctx).search).toBeUndefined();
   });
 });
+
+describe('command guide', () => {
+  it('lists only commands that really work on their OS', async () => {
+    const { commandGuide } = await import('../../content/commandGuide');
+    for (const e of commandGuide)
+      for (const os of e.os) {
+        const r = runCommand(e.cmd, { skin: os, shell: 0, lookup: async () => null });
+        const out = r.lines.join('\n');
+        expect(out, `${e.cmd} on ${os}`).not.toMatch(/not recognized|command not found|Tip:|No manual entry|No help found|Unknown app|Nice try/);
+      }
+  });
+
+  it('opens the guide and explains single commands', () => {
+    expect(runCommand('commands', mac).guide).toBe(true);
+    expect(runCommand('man ifconfig', mac).lines[1]).toContain("network interface's IP");
+    expect(runCommand('help ipconfig', win).lines[1]).toContain('IP address');
+    expect(runCommand('man ipconfig', linux).lines.join('\n')).toContain('This is a Windows command. On Linux, use: ip a');
+    expect(runCommand('help ip', win).lines.join('\n')).toContain('On Windows, use: ipconfig /all');
+    expect(runCommand('man nothing', linux).lines[0]).toBe('No manual entry for nothing');
+    expect(runCommand('man ipconfig', { skin: 'windows', shell: 1 }).lines.at(-1)).toContain('help ipconfig');
+  });
+});

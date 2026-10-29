@@ -485,6 +485,7 @@
 
 /* ---------- Terminal ---------- */
 .terminal {
+  position: relative; /* the command guide covers it */
   display: flex;
   flex-direction: column;
   height: 100%;

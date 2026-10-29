@@ -1,0 +1,188 @@
+/* The Terminal's command guide. Always dark, like the terminal itself. */
+.cg {
+  --cg-bg: #101114;
+  --cg-fg: #e6e6e6;
+  --cg-muted: #9aa0a6;
+  --cg-line: #2a2c31;
+  --cg-acc: #7ee787;
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  background: var(--cg-bg);
+  color: var(--cg-fg);
+  font: 13px/1.45 system-ui, -apple-system, 'Segoe UI', sans-serif;
+  animation: cg-in 0.16s ease-out;
+}
+
+@keyframes cg-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+.cg-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px 6px;
+}
+
+.cg-head h2 {
+  margin: 0;
+  font-size: 16px;
+  outline: none;
+}
+
+.cg-close {
+  min-width: 32px;
+  min-height: 32px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--cg-fg);
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.cg-close:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.cg-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--cg-line);
+}
+
+.cg-tab {
+  min-height: 34px;
+  padding: 6px 12px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: none;
+  color: var(--cg-muted);
+  font: inherit;
+  cursor: pointer;
+}
+
+.cg-tab[aria-selected='true'] {
+  color: var(--cg-fg);
+  border-bottom-color: var(--cg-acc);
+  font-weight: 600;
+}
+
+.cg-now {
+  font-weight: 400;
+  color: var(--cg-acc);
+  font-size: 11px;
+}
+
+.cg-hint {
+  margin: 8px 16px 0;
+  color: var(--cg-muted);
+  font-size: 12px;
+}
+
+.cg-body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 4px 16px 20px;
+}
+
+.cg-section h3 {
+  margin: 14px 0 6px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--cg-muted);
+}
+
+.cg-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.cg-table th,
+.cg-table td {
+  padding: 6px 0;
+  border-top: 1px solid var(--cg-line);
+  text-align: left;
+  vertical-align: top;
+  font-weight: 400;
+}
+
+.cg-table th {
+  width: 36%;
+  padding-right: 14px;
+}
+
+.cg-cmd {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--cg-acc);
+  font: 13px/1.45 ui-monospace, Menlo, Consolas, monospace;
+  text-align: left;
+  cursor: pointer;
+}
+
+.cg-cmd:hover {
+  text-decoration: underline;
+}
+
+/* Phone: full screen, rows stacked (command, then what it does). */
+.cg.is-phone {
+  z-index: 22;
+  font-size: 14px;
+}
+
+.cg.is-phone .cg-head {
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 50px 8px 6px;
+}
+
+[data-standalone] .cg.is-phone .cg-head {
+  padding-top: calc(env(safe-area-inset-top, 0px) + 8px);
+}
+
+.cg.is-phone .cg-close {
+  min-height: 44px;
+  color: var(--cg-acc);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.cg.is-phone .cg-tab {
+  flex: 1;
+  min-height: 44px;
+}
+
+.cg.is-phone .cg-table tr,
+.cg.is-phone .cg-table th,
+.cg.is-phone .cg-table td {
+  display: block;
+  width: auto;
+}
+
+.cg.is-phone .cg-table th {
+  padding: 10px 0 2px;
+}
+
+.cg.is-phone .cg-table td {
+  border-top: 0;
+  padding: 0 0 10px;
+  color: #c9cdd2;
+}
+
+.cg.is-phone .cg-cmd {
+  min-height: 32px;
+  font-size: 15px;
+}

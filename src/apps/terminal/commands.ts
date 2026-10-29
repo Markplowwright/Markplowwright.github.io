@@ -5,12 +5,13 @@
 import { terminalText as T } from '../../content/terminal';
 import type { SkinId } from '../../os/types';
 import { engineName, popularSearches, search } from '../../content/search';
+import { commandGuide, explain, osLabel } from '../../content/commandGuide';
 import { NET, dnsLookup, ipconfig, isHostName, linuxIpAddr, macIfconfig, nslookup, ping, trace, type Lookup } from './network';
 
 /** online: the desktop's Wi-Fi toggle. lookup: swapped out in tests. */
 export type TermContext = { skin: SkinId; shell: 0 | 1; online?: boolean; lookup?: Lookup };
 /** later: more lines that arrive after a network lookup (nslookup, ping). */
-export type CommandResult = { lines: string[]; clear?: boolean; open?: string; search?: string; later?: Promise<string[]> };
+export type CommandResult = { lines: string[]; clear?: boolean; open?: string; search?: string; later?: Promise<string[]>; guide?: boolean };
 
 const OS_NAME: Record<SkinId, string> = { windows: 'Windows', mac: 'macOS', linux: 'Linux' };
 /** The right command on each OS, for the "wrong OS" tips. */
@@ -56,11 +57,19 @@ export function runCommand(raw: string, ctx: TermContext): CommandResult {
     case 'cls':
       if (!win) return wrongOs(cmd, 'Windows', EQUIV.clear[ctx.skin], ctx);
       return { lines: [], clear: true };
+    case 'commands':
+      return { lines: ['Opening the command guide...'], guide: true };
+    case 'man':
+      if (cmdExe) return wrongOs(cmd, 'macOS and Linux', `help ${parts[1] ?? 'ipconfig'}`, ctx);
+      if (!arg) return { lines: [win ? 'Usage: help <command>, for example: help ipconfig' : 'What manual page do you want? For example: man ifconfig'] };
+      return manPage(parts[1], ctx);
     case 'help':
+      if (arg) return manPage(parts[1], ctx);
       return {
         lines: [
           `Commands: help, whoami, hostname, projects, skills, education, interests, contact, search <words>, ${win ? 'dir' : 'ls'}, pwd, ${EQUIV.netconfig[ctx.skin]}, nslookup <name>, ping <host>, ${win ? 'tracert' : 'traceroute'} <host>, ${win ? 'ipconfig /flushdns, ' : ctx.skin === 'linux' ? 'ip route, ' : ''}open <app>, ${win ? 'cls' : 'clear'}`,
           'Try: nslookup google.com, search group policy, open resume, ping plowvm',
+          `Type commands to see every command with what it does, or ${win ? 'help' : 'man'} <command> for one.`,
         ],
       };
     case 'whoami':
@@ -85,9 +94,19 @@ export function runCommand(raw: string, ctx: TermContext): CommandResult {
       if (ctx.skin === 'mac') return wrongOs(cmd, 'Windows', 'ls', ctx);
       return { lines: T.ls };
     case 'pwd':
-      return { lines: [win ? 'Path: C:\\Users\\mark' : '/home/mark'] };
+      if (win) return { lines: ['', 'Path', '----', 'C:\\Users\\mark', ''] };
+      return { lines: [ctx.skin === 'mac' ? '/Users/mark' : '/home/mark'] };
     case 'uname':
-      return { lines: [ctx.skin === 'mac' ? 'Darwin' : ctx.skin === 'linux' ? 'Linux' : 'uname is not a Windows command. Try: help'] };
+      if (win) return wrongOs(cmd, 'macOS and Linux', 'hostname', ctx);
+      if (/-a\b/.test(arg))
+        return {
+          lines: [
+            ctx.skin === 'mac'
+              ? `Darwin ${NET.host.mac}.local 24.1.0 Darwin Kernel Version 24.1.0: Thu Oct 10 21:03:15 PDT 2024; root:xnu-11215.41.3~2/RELEASE_ARM64_T6000 arm64`
+              : `Linux ${NET.host.linux} 6.8.0-45-generic #45-Ubuntu SMP PREEMPT_DYNAMIC Fri Aug 30 12:02:04 UTC 2024 x86_64 x86_64 x86_64 GNU/Linux`,
+          ],
+        };
+      return { lines: [ctx.skin === 'mac' ? 'Darwin' : 'Linux'] };
     case 'ipconfig': {
       const opt = (parts[1] ?? '').toLowerCase().replace(/^-/, '/');
       if (ctx.skin === 'mac') {
@@ -192,6 +211,28 @@ export function runCommand(raw: string, ctx: TermContext): CommandResult {
     default:
       return notFound(cmd, ctx);
   }
+}
+
+/** man ipconfig / help ipconfig: the guide's line for one command. */
+function manPage(name: string, ctx: TermContext): CommandResult {
+  const e = explain(name, ctx.skin);
+  if (!e) return { lines: [ctx.skin === 'windows' ? `No help found for ${name}. Type commands to see every command.` : `No manual entry for ${name}`] };
+  const here = e.os.includes(ctx.skin);
+  // The same job on this OS: an identical guide line, or the matching command family.
+  const family: Record<string, keyof typeof EQUIV> = {
+    ip: 'netconfig', ifconfig: 'netconfig', ipconfig: 'netconfig', tracert: 'trace', traceroute: 'trace',
+    cls: 'clear', clear: 'clear', ls: 'list', dir: 'list', dscacheutil: 'flushdns', resolvectl: 'flushdns',
+  };
+  const same = commandGuide.find((g) => g.section === e.section && g.does === e.does && g.os.includes(ctx.skin))?.cmd;
+  const alt = here ? undefined : same ?? (family[name.toLowerCase()] ? EQUIV[family[name.toLowerCase()]][ctx.skin] : undefined);
+  return {
+    lines: [
+      e.cmd,
+      `    ${e.does}`,
+      ...(here ? [] : [`    This is a ${e.os.map((o) => osLabel[o]).join(' and ')} command.${alt ? ` On ${osLabel[ctx.skin]}, use: ${alt}` : ''}`]),
+      'Type commands to see every command.',
+    ],
+  };
 }
 
 function notFound(cmd: string, ctx: TermContext): CommandResult {

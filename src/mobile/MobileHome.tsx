@@ -20,6 +20,7 @@ import { MobileGallery } from './MobileGallery';
 import { fileTree } from '../content/fileTree';
 import type { Target } from '../content/search';
 import { SearchView } from '../apps/browser/SearchView';
+import { CommandGuide } from '../apps/terminal/CommandGuide';
 import { useBrowserEntry, useBrowserStore } from '../apps/browser/store';
 import { queryParam } from '../os/storage';
 import { SOCIALS, SocialTile, type SocialId } from '../os/SocialIcon';
@@ -636,39 +637,46 @@ function MobileContact() {
   );
 }
 
-type TermLine = { cmd: boolean; text: string };
+type TermLine = { cmd: boolean; text: string; prompt?: string };
+type TermOs = 'windows' | 'mac' | 'linux';
+const PROMPTS: Record<TermOs, string> = { windows: 'PS C:\\Users\\mark>', mac: 'mark@portfolio ~ %', linux: 'mark@linux:~$' };
 
 // Terminal history lives outside the component, so it survives leaving the app.
-const useMobileTerm = create<{ lines: TermLine[]; history: string[]; set: (p: Partial<{ lines: TermLine[]; history: string[] }>) => void }>((set) => ({
+const useMobileTerm = create<{ lines: TermLine[]; history: string[]; os: TermOs; set: (p: Partial<{ lines: TermLine[]; history: string[]; os: TermOs }>) => void }>((set) => ({
   lines: [
-    { cmd: true, text: 'whoami' },
+    { cmd: true, text: 'whoami', prompt: PROMPTS.linux },
     { cmd: false, text: terminalText.whoami },
     { cmd: false, text: terminalText.intro },
   ],
   history: [],
+  os: 'linux',
   set: (p) => set(p),
 }));
 
-/** The phone Terminal: type a command, or tap one. Same commands as the desktop. */
+/** The phone Terminal: type a command, or tap one. Same commands as the desktop, on any of the three OSes. */
 function MobileTerminal({ onOpen, onSearch }: { onOpen: (target: string) => void; onSearch: (q: string) => void }) {
-  const { lines, history, set } = useMobileTerm();
+  const { lines, history, os, set } = useMobileTerm();
   const [input, setInput] = useState('');
   const [histIdx, setHistIdx] = useState(-1);
+  const [guide, setGuide] = useState(false);
   const bottom = useRef<HTMLDivElement>(null);
   const field = useRef<HTMLInputElement>(null);
+  const net = { windows: 'ipconfig /all', mac: 'ifconfig', linux: 'ip a' }[os];
 
   useEffect(() => {
     bottom.current?.scrollIntoView({ block: 'end' });
   }, [lines]);
 
-  const run = (c: string) => {
+  const run = (c: string, on: TermOs = os) => {
     if (!c.trim()) return;
-    const r = runCommand(c, { skin: 'linux', shell: 0 });
-    set({ lines: r.clear ? [] : [...lines, { cmd: true, text: c }, ...r.lines.map((t) => ({ cmd: false, text: t }))], history: [c, ...history].slice(0, 50) });
+    const r = runCommand(c, { skin: on, shell: 0 });
+    const now = useMobileTerm.getState().lines;
+    set({ lines: r.clear ? [] : [...now, { cmd: true, text: c, prompt: PROMPTS[on] }, ...r.lines.map((t) => ({ cmd: false, text: t }))], history: [c, ...history].slice(0, 50) });
+    if (r.guide) setGuide(true);
     // nslookup, ping and traceroute print once the lookup answers.
     r.later?.then((more) => {
-      const now = useMobileTerm.getState().lines;
-      useMobileTerm.getState().set({ lines: [...now, ...more.map((t) => ({ cmd: false, text: t }))] });
+      const cur = useMobileTerm.getState().lines;
+      useMobileTerm.getState().set({ lines: [...cur, ...more.map((t) => ({ cmd: false, text: t }))] });
     });
     // Commands that open something (open resume, search intune, sudo hire mark)
     // open the matching phone screen after a moment, so the output is seen first.
@@ -685,8 +693,15 @@ function MobileTerminal({ onOpen, onSearch }: { onOpen: (target: string) => void
 
   return (
     <>
+      <div className="m-term-os" role="group" aria-label="Operating system">
+        {(['windows', 'mac', 'linux'] as TermOs[]).map((o) => (
+          <button key={o} type="button" aria-pressed={os === o} onClick={() => set({ os: o })}>
+            {{ windows: 'Windows', mac: 'macOS', linux: 'Linux' }[o]}
+          </button>
+        ))}
+      </div>
       <div className="m-term" role="log" aria-live="polite" aria-label="Terminal output" onClick={() => field.current?.focus()}>
-        {lines.map((l, i) => <div key={i} className={l.cmd ? 'm-term-cmd' : ''}>{l.cmd ? `$ ${l.text}` : l.text || '\u00a0'}</div>)}
+        {lines.map((l, i) => <div key={i} className={l.cmd ? 'm-term-cmd' : ''}>{l.cmd ? `${l.prompt ?? '$'} ${l.text}` : l.text || '\u00a0'}</div>)}
         <form
           className="m-term-input"
           onSubmit={(e) => {
@@ -696,7 +711,7 @@ function MobileTerminal({ onOpen, onSearch }: { onOpen: (target: string) => void
             setHistIdx(-1);
           }}
         >
-          <label htmlFor="m-term-in" className="m-term-cmd">$</label>
+          <label htmlFor="m-term-in" className="m-term-cmd">{os === 'windows' ? 'PS>' : os === 'mac' ? '%' : '$'}</label>
           <input
             id="m-term-in"
             ref={field}
@@ -717,10 +732,22 @@ function MobileTerminal({ onOpen, onSearch }: { onOpen: (target: string) => void
       </div>
       <div className="m-chips">
         <button type="button" className="m-chip" aria-label="Previous command" disabled={!history.length} onClick={() => recall(1)}>↑</button>
-        {['help', 'whoami', 'projects', 'skills', 'ip a', 'nslookup google.com', 'search intune', 'contact', 'clear'].map((c) => (
+        {['commands', 'help', 'whoami', 'projects', 'skills', net, 'nslookup google.com', 'search intune', os === 'windows' ? 'cls' : 'clear'].map((c) => (
           <button key={c} type="button" className="m-chip" onClick={() => run(c)}>{c}</button>
         ))}
       </div>
+      {guide && (
+        <CommandGuide
+          phone
+          os={os}
+          onClose={() => setGuide(false)}
+          onRun={(cmd, tab) => {
+            setGuide(false);
+            if (tab !== os) set({ os: tab });
+            run(cmd, tab);
+          }}
+        />
+      )}
     </>
   );
 }

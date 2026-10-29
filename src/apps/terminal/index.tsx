@@ -7,6 +7,8 @@ import { useSkinStore } from '../../os/skinStore';
 import { openSearch, openTarget } from '../../os/actions';
 import { terminalText } from '../../content/terminal';
 import { runCommand } from './commands';
+import { CommandGuide } from './CommandGuide';
+import { osLabel } from '../../content/commandGuide';
 
 type Line = { cmd: boolean; prompt?: string; text: string };
 
@@ -28,11 +30,12 @@ export default function TerminalApp() {
   const online = useSkinStore((s) => s.wifi);
   const [input, setInput] = useState('');
   const [histIdx, setHistIdx] = useState(-1);
+  const [guide, setGuide] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const prompt = skin.shells[shell].prompt(terminalText.user);
   const net = { windows: 'ipconfig /all', mac: 'ifconfig', linux: 'ip a' }[skin.id];
-  const quick = ['help', 'whoami', 'projects', 'skills', net, 'nslookup google.com', skin.id === 'windows' ? 'cls' : 'clear'];
+  const quick = ['commands', 'help', 'whoami', 'projects', 'skills', net, 'nslookup google.com', skin.id === 'windows' ? 'cls' : 'clear'];
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ block: 'end' });
@@ -48,6 +51,7 @@ export default function TerminalApp() {
       const now = useTerm.getState().lines;
       set({ lines: [...now, ...more.map((t) => ({ cmd: false, text: t }))] });
     });
+    if (result.guide) setGuide(true);
     if (result.open) openTarget(result.open);
     if (result.search) openSearch(result.search);
   };
@@ -74,6 +78,25 @@ export default function TerminalApp() {
           <button key={c} type="button" onClick={() => run(c)}>{c}</button>
         ))}
       </div>
+      {guide && (
+        <CommandGuide
+          os={skin.id}
+          onClose={() => {
+            setGuide(false);
+            inputRef.current?.focus();
+          }}
+          onRun={(cmd) => {
+            setGuide(false);
+            run(cmd);
+            inputRef.current?.focus();
+          }}
+          note={(tab) =>
+            tab === skin.id
+              ? undefined
+              : `These run when the desktop is in ${osLabel[tab]} mode: switch with the Windows, macOS and Linux buttons. Clicking one here shows what ${osLabel[skin.id]} would say.`
+          }
+        />
+      )}
       <form
         className="term-input"
         onSubmit={(e) => {

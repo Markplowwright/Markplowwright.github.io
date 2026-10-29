@@ -508,6 +508,33 @@ a.m-app {
   color: #7ee787;
 }
 
+/* Phone Terminal: pick the OS the commands run on. */
+.m-term-os {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 10px;
+  padding: 3px;
+  border-radius: 10px;
+  background: var(--chip-bg);
+}
+
+.m-term-os button {
+  flex: 1;
+  min-height: 36px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--fg);
+  font: inherit;
+  font-size: 14px;
+}
+
+.m-term-os button[aria-pressed='true'] {
+  background: var(--card);
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
 /* The typing line at the bottom of the phone Terminal. */
 .m-term-input {
   display: flex;
