@@ -625,19 +625,6 @@ a.m-app {
   border-radius: 4px;
 }
 
-.m-event.is-on {
-  outline: 2px solid var(--accent);
-}
-
-.m-event strong,
-.m-event span {
-  display: block;
-}
-
-.m-event-body {
-  margin-top: 8px;
-}
-
 .m-switch {
   width: 52px;
   height: 32px;

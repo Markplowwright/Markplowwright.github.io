@@ -660,44 +660,27 @@
   border-bottom: 1px solid var(--line);
 }
 
-/* ---------- Event viewer ---------- */
-.eventlog,
+/* ---------- Settings ---------- */
 .settings {
   display: flex;
   height: 100%;
 }
 
-.ev-title {
-  font-weight: 600;
-}
-
-.ev-meta {
-  font-size: 11px;
-  color: var(--muted);
-}
-
-.ev-detail,
 .settings-page {
   flex: 1;
   padding: 18px 24px;
   overflow: auto;
 }
 
-.ev-detail h2,
 .settings-page h2 {
   margin: 0;
   font-size: 17px;
   line-height: 1.3;
 }
 
-.ev-detail h3,
 .settings-page h3 {
   margin: 18px 0 6px;
   font-size: 13px;
-}
-
-.ev-detail p {
-  margin: 0;
 }
 
 /* ---------- Network map ---------- */

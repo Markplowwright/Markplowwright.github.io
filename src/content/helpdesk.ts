@@ -8,7 +8,7 @@ export type Step = { text: string; sub?: string[] };
 /** Something a visitor can try from a ticket. */
 export type TryIt =
   | { label: string; terminal: string; os?: 'windows' | 'mac' | 'linux' }
-  | { label: string; app: 'taskmgr' | 'network' | 'eventlog' }
+  | { label: string; app: 'taskmgr' | 'network' }
   | { label: string; node: string };
 
 export type Ticket = {

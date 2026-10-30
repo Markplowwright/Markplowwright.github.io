@@ -12,7 +12,6 @@ import { profile } from '../content/profile';
 import { projects } from '../content/projects';
 import { presentations, research } from '../content/presentations';
 import { lab } from '../content/lab';
-import { events } from '../content/events';
 import { terminalText } from '../content/terminal';
 import { skills } from '../content/skills';
 import { interests, writing } from '../content/interests';
@@ -30,7 +29,7 @@ import { SOCIALS, SocialTile, type SocialId } from '../os/SocialIcon';
 import { ProjectTile, projectShort } from './ProjectIcons';
 import './mobile.css';
 
-type MobileApp = 'about' | 'projects' | 'slides' | 'resume' | 'contact' | 'browser' | 'helpdesk' | 'terminal' | 'network' | 'activity' | 'logs' | 'settings';
+type MobileApp = 'about' | 'projects' | 'slides' | 'resume' | 'contact' | 'browser' | 'helpdesk' | 'terminal' | 'network' | 'activity' | 'settings';
 
 const DEFS: { id: MobileApp; label: string; icon: string; tile?: string }[] = [
   { id: 'about', label: 'About Mark', icon: 'folder', tile: 'linear-gradient(160deg,#5ac8fa,#0a84ff)' },
@@ -43,7 +42,6 @@ const DEFS: { id: MobileApp; label: string; icon: string; tile?: string }[] = [
   { id: 'terminal', label: 'Terminal', icon: 'terminal' },
   { id: 'network', label: 'Network', icon: 'network' },
   { id: 'activity', label: 'Activity', icon: 'taskmgr' },
-  { id: 'logs', label: 'Logs', icon: 'eventlog' },
   { id: 'settings', label: 'Settings', icon: 'settings' },
 ];
 const DOCK: MobileApp[] = ['projects', 'contact', 'browser', 'settings'];
@@ -53,7 +51,7 @@ type Group = 'projects' | 'tools';
 const TOOLS: MobileApp[] = ['helpdesk', 'terminal'];
 const PAGES: (MobileApp | SocialId | `group-${Group}`)[][] = [
   ['group-projects', 'group-tools', 'about', 'slides', 'resume', 'linkedin', 'github', 'email'],
-  ['activity', 'logs', 'network'],
+  ['activity', 'network'],
 ];
 const PULL = 80; // pixels to pull down before releasing opens search
 
@@ -249,7 +247,7 @@ export function MobileHome() {
       return;
     }
     const apps: Record<string, MobileApp> = {
-      files: 'projects', work: 'projects', terminal: 'terminal', browser: 'browser', helpdesk: 'helpdesk', taskmgr: 'activity', eventlog: 'logs',
+      files: 'projects', work: 'projects', terminal: 'terminal', browser: 'browser', helpdesk: 'helpdesk', taskmgr: 'activity',
       network: 'network', settings: 'settings', resume: 'resume', contact: 'contact', pres: 'slides',
     };
     if (apps[target]) {
@@ -266,7 +264,7 @@ export function MobileHome() {
       setApp('terminal');
       setFocus(null);
     } else if ('app' in x) {
-      const map: Record<string, MobileApp> = { taskmgr: 'activity', network: 'network', eventlog: 'logs' };
+      const map: Record<string, MobileApp> = { taskmgr: 'activity', network: 'network' };
       setFrom(app);
       setApp(map[x.app]);
       setFocus(null);
@@ -623,8 +621,6 @@ function MobileApp({ id, onOpen, onOpenTarget, onSearch, onTry }: { id: MobileAp
       return <MobileNetwork />;
     case 'activity':
       return <MobileActivity />;
-    case 'logs':
-      return <MobileLogs />;
     case 'settings':
       return <MobileSettings />;
   }
@@ -879,27 +875,6 @@ function MobileActivity() {
         <div key={p.name} className="m-row m-proc"><span>{p.name}</span><span className="m-muted">{p.cpu}%</span></div>
       ))}
       <p className="m-muted">Sample data.</p>
-    </>
-  );
-}
-
-function MobileLogs() {
-  const [open, setOpen] = useState(0);
-  return (
-    <>
-      {events.map((e, i) => (
-        <button key={e.title} type="button" className={`m-card m-event${open === i ? ' is-on' : ''}`} aria-expanded={open === i} onClick={() => setOpen(open === i ? -1 : i)}>
-          <strong>{e.title}</strong>
-          <span className="m-muted">{e.source} · {e.level}</span>
-          {open === i && (
-            <span className="m-event-body">
-              <b>Means:</b> {e.means}
-              <br />
-              <b>Do:</b> {e.fix}
-            </span>
-          )}
-        </button>
-      ))}
     </>
   );
 }
