@@ -4,6 +4,10 @@
 // that takes { windowId }), add its id to AppId in types.ts, then add one entry
 // below. The taskbar, dock, start menu, search and window manager pick it up.
 //
+// New apps: use launcher: true (not pinned) and add a desktop icon in
+// src/os/shared/DesktopIcons.tsx, so the taskbar and dock stay short. An
+// open app shows in the taskbar / dock while it runs, pinned or not.
+//
 // Components are loaded lazily, so each app is its own small JavaScript file
 // that downloads the first time it is opened.
 import { lazy } from 'react';
@@ -44,7 +48,7 @@ export const apps: AppDefinition[] = [
     component: lazy(() => import('../apps/helpdesk')),
     defaultSize: { w: 900, h: 580 },
     singleInstance: true,
-    pinned: true,
+    launcher: true,
   },
   {
     id: 'capture',
@@ -53,7 +57,7 @@ export const apps: AppDefinition[] = [
     component: lazy(() => import('../apps/capture')),
     defaultSize: { w: 1000, h: 620 },
     singleInstance: true,
-    pinned: true,
+    launcher: true,
   },
   {
     id: 'subnet',
@@ -62,7 +66,7 @@ export const apps: AppDefinition[] = [
     component: lazy(() => import('../apps/subnet')),
     defaultSize: { w: 720, h: 600 },
     singleInstance: true,
-    pinned: true,
+    launcher: true,
   },
   {
     id: 'taskmgr',

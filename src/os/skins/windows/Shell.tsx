@@ -4,7 +4,7 @@ import { SOCIALS, SocialTile, openSocial } from '../../SocialIcon';
 import { useUiStore } from '../../uiStore';
 import { useSkinStore } from '../../skinStore';
 import { openApp, openNode } from '../../actions';
-import { fmt, useNow, usePins } from '../../shared/hooks';
+import { fmt, useNow, useLauncherApps, usePins } from '../../shared/hooks';
 import { BatteryIcon, SearchGlyph, SearchInput, SearchResults, SkinSwitcher, VolumeIcon, WifiIcon } from '../../shared/ShellParts';
 import { profile } from '../../../content/profile';
 
@@ -17,6 +17,7 @@ const RECOMMENDED = [
 
 export function Shell() {
   const pins = usePins();
+  const launcherApps = useLauncherApps();
   const now = useNow();
   const startOpen = useUiStore((s) => s.launcherOpen);
   const query = useUiStore((s) => s.query);
@@ -79,7 +80,7 @@ export function Shell() {
                 <strong>Pinned</strong>
               </div>
               <div className="start-grid">
-                {pins.map((p) => (
+                {launcherApps.map((p) => (
                   <button key={p.id} type="button" onClick={() => openApp(p.id)}>
                     <AppIcon app={p.id} skin="windows" size={36} />
                     {p.label}

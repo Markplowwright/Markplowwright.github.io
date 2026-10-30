@@ -4,11 +4,12 @@ import { SOCIALS, SocialTile, openSocial } from '../../SocialIcon';
 import { useUiStore } from '../../uiStore';
 import { useSkinStore } from '../../skinStore';
 import { openApp, openNode } from '../../actions';
-import { fmt, useNow, usePins } from '../../shared/hooks';
+import { fmt, useNow, useLauncherApps, usePins } from '../../shared/hooks';
 import { BatteryIcon, SearchGlyph, SearchInput, SearchResults, SkinSwitcher, VolumeIcon, WifiIcon } from '../../shared/ShellParts';
 
 export function Shell() {
   const pins = usePins();
+  const launcherApps = useLauncherApps();
   const now = useNow();
   const overview = useUiStore((s) => s.launcherOpen);
   const query = useUiStore((s) => s.query);
@@ -68,7 +69,7 @@ export function Shell() {
             <SearchResults className="lx-results" iconSize={30} />
           ) : (
             <div className="lx-grid">
-              {pins.map((p) => (
+              {launcherApps.map((p) => (
                 <button key={p.id} type="button" onClick={() => openApp(p.id)}>
                   <AppIcon app={p.id} skin="linux" size={72} />
                   {p.label}

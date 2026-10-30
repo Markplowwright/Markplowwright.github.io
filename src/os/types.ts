@@ -16,8 +16,13 @@ export type AppDefinition = {
   defaultSize: { w: number; h: number };
   /** If true, opening the app again focuses the existing window. */
   singleInstance?: boolean;
-  /** Shown in the taskbar / dock / start menu. */
+  /** Kept in the taskbar / dock (and the start menu) even when closed. */
   pinned?: boolean;
+  /**
+   * Listed in the start menu and the Linux app grid but not kept in the
+   * taskbar / dock. These apps get a desktop icon instead (DesktopIcons.tsx).
+   */
+  launcher?: boolean;
 };
 
 export type SnapSide = 'left' | 'right';

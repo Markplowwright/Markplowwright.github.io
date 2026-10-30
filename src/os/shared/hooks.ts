@@ -35,13 +35,17 @@ export const fmt = {
 
 export type Pin = { id: AppId; label: string; open: boolean; active: boolean; onClick: () => void };
 
-/** Pinned apps for the taskbar / dock, with their open and active state. */
+/**
+ * Apps for the taskbar / dock: the pinned ones, then any other app while it is
+ * open (like a real taskbar), with their open and active state.
+ */
 export function usePins(): Pin[] {
   const skin = useSkinStore((s) => s.skin);
   const windows = useWindowStore((s) => s.windows);
   const active = activeWindowId(windows);
-  return apps
-    .filter((a) => a.pinned)
+  const running = (id: AppId) => windows.some((w) => w.appId === id);
+  // Pinned apps keep their place; other open apps join at the end.
+  return [...apps.filter((a) => a.pinned), ...apps.filter((a) => !a.pinned && running(a.id))]
     .map((a) => {
       const w = windows.find((x) => x.appId === a.id);
       const isActive = !!w && w.id === active;
@@ -54,4 +58,10 @@ export function usePins(): Pin[] {
         onClick: () => (isActive && w ? useWindowStore.getState().minimizeWindow(w.id) : openApp(a.id)),
       };
     });
+}
+
+/** Apps for the start menu and the Linux app grid: pinned and launcher apps. */
+export function useLauncherApps(): { id: AppId; label: string }[] {
+  const skin = useSkinStore((s) => s.skin);
+  return apps.filter((a) => a.pinned || a.launcher).map((a) => ({ id: a.id, label: a.title[skin] }));
 }
