@@ -6,6 +6,7 @@ import { terminalText as T } from '../../content/terminal';
 import type { SkinId } from '../../os/types';
 import { engineName, popularSearches, search } from '../../content/search';
 import { commandGuide, explain, osLabel } from '../../content/commandGuide';
+import { subnetLines } from '../../content/subnet';
 import { NET, dnsLookup, ipconfig, isHostName, linuxIpAddr, macIfconfig, nslookup, ping, trace, type Lookup } from './network';
 
 /** online: the desktop's Wi-Fi toggle. lookup: swapped out in tests. */
@@ -33,7 +34,7 @@ const target = (parts: string[]) => parts.slice(1).filter((p) => !p.startsWith('
 
 /** Names you can type after "open", mapped to app or file ids. */
 const OPEN_TARGETS: Record<string, string> = {
-  files: 'files', explorer: 'files', finder: 'files', terminal: 'terminal', browser: 'browser', helpdesk: 'helpdesk', tickets: 'helpdesk', capture: 'capture', wireshark: 'capture', packets: 'capture',
+  files: 'files', explorer: 'files', finder: 'files', terminal: 'terminal', browser: 'browser', helpdesk: 'helpdesk', tickets: 'helpdesk', capture: 'capture', wireshark: 'capture', packets: 'capture', subnet: 'subnet', calculator: 'subnet',
   taskmgr: 'taskmgr', monitor: 'taskmgr', network: 'network',
   settings: 'settings', resume: 'resume', projects: 'work', contact: 'contact', presentations: 'pres',
   education: 'education', interests: 'interests', hobbies: 'interests',
@@ -149,6 +150,11 @@ export function runCommand(raw: string, ctx: TermContext): CommandResult {
         };
       return { lines: ['Usage: ip [ OPTIONS ] OBJECT { COMMAND | help }', 'Try: ip a, ip route'] };
     }
+    case 'subnet':
+      return { lines: subnetLines(arg) };
+    case 'ipcalc':
+      if (win) return wrongOs(cmd, 'Linux', `subnet ${arg || '10.0.0.25/24'}`, ctx);
+      return { lines: subnetLines(arg) };
     case 'nslookup': {
       const name = target(parts);
       if (!name) return { lines: ['Usage: nslookup <name>, for example: nslookup google.com'] };
