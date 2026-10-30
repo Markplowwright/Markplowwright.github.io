@@ -4,7 +4,7 @@
 // from what the Terminal really understands.
 
 export type GuideOs = 'windows' | 'mac' | 'linux';
-export type GuideSection = 'About Mark' | 'Basics' | 'Network' | 'DNS and troubleshooting';
+export type GuideSection = 'About Mark' | 'Basics' | 'Hardware' | 'Network' | 'DNS and troubleshooting';
 
 export type GuideEntry = {
   /** Exactly what to type. Clicking it in the guide runs it. */
@@ -18,7 +18,7 @@ export type GuideEntry = {
 const ALL: GuideOs[] = ['windows', 'mac', 'linux'];
 const UNIX: GuideOs[] = ['mac', 'linux'];
 
-export const guideSections: GuideSection[] = ['About Mark', 'Basics', 'Network', 'DNS and troubleshooting'];
+export const guideSections: GuideSection[] = ['About Mark', 'Basics', 'Hardware', 'Network', 'DNS and troubleshooting'];
 export const osLabel: Record<GuideOs, string> = { windows: 'Windows', mac: 'macOS', linux: 'Linux' };
 
 export const commandGuide: GuideEntry[] = [
@@ -46,6 +46,13 @@ export const commandGuide: GuideEntry[] = [
   { cmd: 'uname', does: 'Names the operating system. uname -a adds the kernel version.', os: UNIX, section: 'Basics' },
   { cmd: 'cls', does: 'Clears the screen.', os: ['windows'], section: 'Basics' },
   { cmd: 'clear', does: 'Clears the screen.', os: UNIX, section: 'Basics' },
+
+  // Hardware
+  { cmd: 'systeminfo', does: 'The PC\'s model, OS build, memory, domain and network card in one list. Good for a quick look before remote work.', os: ['windows'], section: 'Hardware' },
+  { cmd: 'devmgmt.msc', does: 'Opens Device Manager, where drivers are updated or rolled back and problem devices show a warning.', os: ['windows'], section: 'Hardware' },
+  { cmd: 'system_profiler SPHardwareDataType', does: "The Mac's model, chip, memory and serial number. Same as System Information's overview.", os: ['mac'], section: 'Hardware' },
+  { cmd: 'lshw -short', does: 'A one-line-per-device list of the hardware. Add sudo for full detail.', os: ['linux'], section: 'Hardware' },
+  { cmd: 'lsusb', does: 'Lists USB devices. Shows whether a plugged-in device is seen at all.', os: ['linux'], section: 'Hardware' },
 
   // Network
   { cmd: 'ipconfig', does: "Shows the PC's IP address, subnet mask and gateway. The quick check when a PC can't get online.", os: ['windows'], section: 'Network' },

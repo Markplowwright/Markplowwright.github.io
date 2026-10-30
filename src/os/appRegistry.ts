@@ -69,6 +69,15 @@ export const apps: AppDefinition[] = [
     launcher: true,
   },
   {
+    id: 'devices',
+    title: { windows: 'Device Manager', mac: 'System Information', linux: 'Hardware' },
+    icon: 'devices',
+    component: lazy(() => import('../apps/devices')),
+    defaultSize: { w: 900, h: 580 },
+    singleInstance: true,
+    launcher: true,
+  },
+  {
     id: 'taskmgr',
     title: { windows: 'Task Manager', mac: 'Activity Monitor', linux: 'System Monitor' },
     icon: 'taskmgr',
