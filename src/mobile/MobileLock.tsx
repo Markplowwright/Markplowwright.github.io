@@ -45,12 +45,15 @@ const reduceMotion = () => window.matchMedia?.('(prefers-reduced-motion: reduce)
 // iPhone lock screens show 9:41, without AM/PM.
 const lockTime = (d: Date) => fmt.time(d).replace(/\s?[AP]\.?M\.?$/i, '');
 const FACE_ID_MS = 1300;
+/** After Face ID succeeds, the tick and "Welcome back" fade away after this long. */
+const WELCOME_MS = 1500;
 
 function Padlock({ open }: { open: boolean }) {
   return (
-    <svg className={`m-lock-pad${open ? ' is-open' : ''}`} width="22" height="26" viewBox="0 0 22 26" aria-hidden="true">
-      <path className="m-lock-shackle" d="M6 11V7.5a5 5 0 0 1 10 0V11" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" />
-      <rect x="2.5" y="11" width="17" height="13" rx="3" fill="#fff" />
+    // Wide enough for the open shackle, which lifts and moves right like iOS, so nothing is clipped.
+    <svg className={`m-lock-pad${open ? ' is-open' : ''}`} width="34" height="30" viewBox="0 0 34 30" aria-hidden="true">
+      <path className="m-lock-shackle" d="M12 15V11.5a5 5 0 0 1 10 0V15" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" />
+      <rect x="8.5" y="15" width="17" height="13" rx="3" fill="#fff" />
     </svg>
   );
 }
@@ -58,7 +61,7 @@ function Padlock({ open }: { open: boolean }) {
 /** The Face ID glyph: corner brackets around a face, then a tick. */
 function FaceId({ done }: { done: boolean }) {
   return (
-    <svg className={`m-faceid${done ? ' is-done' : ''}`} width="64" height="64" viewBox="0 0 64 64" aria-hidden="true">
+    <svg className={`m-faceid${done ? ' is-done' : ''}`} width="26" height="26" viewBox="0 0 64 64" aria-hidden="true">
       <path d="M6 20V12a6 6 0 0 1 6-6h8M44 6h8a6 6 0 0 1 6 6v8M58 44v8a6 6 0 0 1-6 6h-8M20 58h-8a6 6 0 0 1-6-6v-8" fill="none" stroke="#fff" strokeWidth="3.5" strokeLinecap="round" />
       {done ? (
         <path className="m-faceid-tick" d="M20 33l8 8 16-17" fill="none" stroke="#fff" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
@@ -163,6 +166,7 @@ export function MobileLock({ mode, onDone }: { mode: Exclude<LockMode, 'none'>; 
   const quick = reduceMotion();
   const [phase, setPhase] = useState<'boot' | 'locked' | 'opening'>(mode === 'first' ? 'boot' : 'locked');
   const [faceDone, setFaceDone] = useState(false);
+  const [welcomeGone, setWelcomeGone] = useState(false);
   const [drag, setDrag] = useState(0);
   const [nudge, setNudge] = useState(0);
   const start = useRef<number | null>(null);
@@ -189,7 +193,11 @@ export function MobileLock({ mode, onDone }: { mode: Exclude<LockMode, 'none'>; 
   useEffect(() => {
     if (mode !== 'returning') return;
     const t = setTimeout(() => setFaceDone(true), quick ? 300 : FACE_ID_MS);
-    return () => clearTimeout(t);
+    const u = setTimeout(() => setWelcomeGone(true), (quick ? 300 : FACE_ID_MS) + WELCOME_MS);
+    return () => {
+      clearTimeout(t);
+      clearTimeout(u);
+    };
   }, [mode, quick]);
 
   if (phase === 'boot')
@@ -217,7 +225,7 @@ export function MobileLock({ mode, onDone }: { mode: Exclude<LockMode, 'none'>; 
       <LockNotification fade={Math.max(0, 1 + drag / (height * 0.4))} onView={() => setNudge((n) => n + 1)} />
 
       {mode === 'returning' && (
-        <div className="m-lock-center" aria-live="polite">
+        <div className={`m-lock-center${welcomeGone ? ' is-gone' : ''}`} aria-live="polite">
           <FaceId done={faceDone} />
           <div className={`m-lock-welcome${faceDone ? ' is-in' : ''}`}>{faceDone ? 'Welcome back' : 'Face ID'}</div>
         </div>

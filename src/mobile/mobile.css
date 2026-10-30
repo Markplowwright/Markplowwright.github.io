@@ -1030,8 +1030,10 @@ img.m-gal-big {
 }
 
 .m-boot {
-  position: absolute;
-  inset: 0;
+  position: fixed;
+  inset: 0 0 auto;
+  height: 100vh;
+  height: 100lvh;
   z-index: 60;
   display: flex;
   flex-direction: column;
@@ -1062,8 +1064,12 @@ img.m-gal-big {
 }
 
 .m-lock {
-  position: absolute;
-  inset: 0;
+  /* Pinned to the screen and as tall as its largest height, so it reaches the
+     very bottom even in a home-screen web app, where the page box can end short. */
+  position: fixed;
+  inset: 0 0 auto;
+  height: 100vh;
+  height: 100lvh;
   z-index: 60;
   display: flex;
   flex-direction: column;
@@ -1092,13 +1098,17 @@ img.m-gal-big {
   margin-bottom: 10px;
 }
 
-.m-lock-shackle {
-  transition: transform 0.3s ease-out;
-  transform-origin: 16px 11px;
+.m-lock-pad {
+  overflow: visible;
 }
 
+.m-lock-shackle {
+  transition: transform 0.3s ease-out;
+}
+
+/* Open: the shackle lifts out of the body and moves right, like the iOS padlock. */
 .m-lock-pad.is-open .m-lock-shackle {
-  transform: translate(5px, -2px) rotate(25deg);
+  transform: translate(8px, -4px);
 }
 
 .m-lock-date {
@@ -1203,7 +1213,7 @@ img.m-gal-big {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 6px;
 }
 
 .m-faceid-face {
@@ -1228,8 +1238,17 @@ img.m-gal-big {
   }
 }
 
+.m-lock-center {
+  transition: opacity 0.45s ease;
+}
+
+.m-lock-center.is-gone {
+  opacity: 0;
+}
+
+/* The same size and weight as "Mark Plowright" in the notification. */
 .m-lock-welcome {
-  font-size: 30px;
+  font-size: 13px;
   font-weight: 700;
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.25);
   opacity: 0.8;
@@ -1238,7 +1257,6 @@ img.m-gal-big {
 
 .m-lock-welcome.is-in {
   opacity: 1;
-  transform: scale(1.04);
 }
 
 .m-lock-note-head {
