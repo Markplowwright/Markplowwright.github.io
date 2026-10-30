@@ -1,6 +1,6 @@
 // Phone layout (below 768px): a home screen of app icons. Tapping one opens
 // it full screen with a Home button. Same content as the desktop.
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import { flushSync } from 'react-dom';
 import { create } from 'zustand';
 import { AppIcon } from '../os/AppIcon';
@@ -323,7 +323,8 @@ export function MobileHome() {
     setFocus(dest[1] ?? null);
   };
 
-  useEffect(() => {
+  // Before the first paint, so the phone colors (and the lock screen) are right from the first frame.
+  useLayoutEffect(() => {
     document.documentElement.dataset.mode = mode;
     document.documentElement.dataset.skin = 'mobile';
   }, [mode]);
