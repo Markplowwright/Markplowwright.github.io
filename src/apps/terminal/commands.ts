@@ -7,6 +7,7 @@ import type { SkinId } from '../../os/types';
 import { engineName, popularSearches, search } from '../../content/search';
 import { commandGuide, explain, osLabel } from '../../content/commandGuide';
 import { subnetLines } from '../../content/subnet';
+import { lshwShortLines, lsusbLines, systemProfilerLines, systeminfoLines } from '../../content/hardware';
 import { NET, dnsLookup, ipconfig, isHostName, linuxIpAddr, macIfconfig, nslookup, ping, trace, type Lookup } from './network';
 
 /** online: the desktop's Wi-Fi toggle. lookup: swapped out in tests. */
@@ -34,7 +35,7 @@ const target = (parts: string[]) => parts.slice(1).filter((p) => !p.startsWith('
 
 /** Names you can type after "open", mapped to app or file ids. */
 const OPEN_TARGETS: Record<string, string> = {
-  files: 'files', explorer: 'files', finder: 'files', terminal: 'terminal', browser: 'browser', helpdesk: 'helpdesk', tickets: 'helpdesk', capture: 'capture', wireshark: 'capture', packets: 'capture', subnet: 'subnet', calculator: 'subnet',
+  files: 'files', explorer: 'files', finder: 'files', terminal: 'terminal', browser: 'browser', helpdesk: 'helpdesk', tickets: 'helpdesk', capture: 'capture', wireshark: 'capture', packets: 'capture', subnet: 'subnet', calculator: 'subnet', devices: 'devices', 'device manager': 'devices', devmgmt: 'devices', hardware: 'devices',
   taskmgr: 'taskmgr', monitor: 'taskmgr', network: 'network',
   settings: 'settings', resume: 'resume', projects: 'work', contact: 'contact', presentations: 'pres',
   education: 'education', interests: 'interests', hobbies: 'interests',
@@ -150,6 +151,24 @@ export function runCommand(raw: string, ctx: TermContext): CommandResult {
         };
       return { lines: ['Usage: ip [ OPTIONS ] OBJECT { COMMAND | help }', 'Try: ip a, ip route'] };
     }
+    // Hardware: each OS's own tool, with a tip pointing to it on the others.
+    case 'systeminfo':
+      if (!win) return wrongOs(cmd, 'Windows', ctx.skin === 'mac' ? 'system_profiler SPHardwareDataType' : 'lshw -short', ctx);
+      return { lines: systeminfoLines() };
+    case 'devmgmt.msc':
+      if (!win) return wrongOs(cmd, 'Windows', ctx.skin === 'mac' ? 'system_profiler SPHardwareDataType' : 'lshw -short', ctx);
+      return { lines: [], open: 'devices' };
+    case 'system_profiler': {
+      if (ctx.skin !== 'mac') return wrongOs(cmd, 'macOS', win ? 'systeminfo' : 'lshw -short', ctx);
+      const out = systemProfilerLines(parts[1] ?? '');
+      return { lines: out ?? [`Try: system_profiler SPHardwareDataType`] };
+    }
+    case 'lshw':
+      if (ctx.skin !== 'linux') return wrongOs(cmd, 'Linux', win ? 'systeminfo' : 'system_profiler SPHardwareDataType', ctx);
+      return { lines: lshwShortLines() };
+    case 'lsusb':
+      if (ctx.skin !== 'linux') return wrongOs(cmd, 'Linux', win ? 'devmgmt.msc' : 'system_profiler SPUSBDataType', ctx);
+      return { lines: lsusbLines() };
     case 'subnet':
       return { lines: subnetLines(arg) };
     case 'ipcalc':
@@ -184,6 +203,7 @@ export function runCommand(raw: string, ctx: TermContext): CommandResult {
       const next = (parts[1] ?? '').toLowerCase();
       if (win && next) return wrongOs('sudo', 'macOS and Linux', 'run the command without sudo (open the terminal as administrator if needed)', ctx);
       // The usual way to flush the DNS cache needs sudo.
+      if (next === 'lshw' && ctx.skin === 'linux') return { lines: [`[sudo] password for ${T.user}: ********`, ...lshwShortLines().slice(1)] };
       if (['dscacheutil', 'killall', 'resolvectl'].includes(next)) {
         if (next === 'resolvectl' && ctx.skin === 'mac') return wrongOs('resolvectl', 'Linux', EQUIV.flushdns.mac, ctx);
         if (next !== 'resolvectl' && ctx.skin === 'linux') return wrongOs(next, 'macOS', EQUIV.flushdns.linux, ctx);

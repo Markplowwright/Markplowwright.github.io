@@ -4,7 +4,7 @@ export type SkinId = 'windows' | 'mac' | 'linux';
 export type Mode = 'light' | 'dark';
 
 /** Every app id. Adding an app means adding its id here and one entry in appRegistry.ts. */
-export type AppId = 'files' | 'viewer' | 'terminal' | 'browser' | 'helpdesk' | 'capture' | 'subnet' | 'taskmgr' | 'network' | 'settings';
+export type AppId = 'files' | 'viewer' | 'terminal' | 'browser' | 'helpdesk' | 'capture' | 'subnet' | 'devices' | 'taskmgr' | 'network' | 'settings';
 
 export type AppDefinition = {
   id: AppId;

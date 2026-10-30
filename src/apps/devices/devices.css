@@ -1,0 +1,249 @@
+/* Device Manager / System Information / Hardware. */
+.dv {
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.dv-split {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: row;
+}
+
+.dv-tabs {
+  display: flex;
+  gap: 2px;
+  padding: 6px 8px 0;
+  border-bottom: 1px solid var(--line);
+  flex: none;
+}
+
+.dv-tabs button {
+  padding: 6px 12px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  cursor: pointer;
+}
+
+.dv-tabs button[aria-selected='true'] {
+  color: inherit;
+  border-bottom-color: var(--accent);
+  font-weight: 600;
+}
+
+/* ---------- left side ---------- */
+.dv-tree,
+.dv-side {
+  flex: none;
+  width: 290px;
+  overflow: auto;
+  padding: 8px;
+  border-right: 1px solid var(--line);
+}
+
+.dv-side {
+  width: 210px;
+}
+
+.dv-root {
+  padding: 2px 4px 4px;
+  font-weight: 600;
+}
+
+.dv-tree details {
+  margin-left: 6px;
+}
+
+.dv-tree summary {
+  padding: 2px 4px;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.dv-tree summary:hover {
+  background: var(--hover);
+}
+
+.dv-tree ul {
+  margin: 0;
+  padding-left: 20px;
+  list-style: none;
+}
+
+.dv-dev {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+  padding: 2px 6px;
+  border: 0;
+  border-radius: 4px;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dv-side .dv-dev {
+  padding: 4px 8px;
+}
+
+.dv-dev:hover {
+  background: var(--hover);
+}
+
+.dv-dev.is-sel {
+  background: var(--hl, var(--hover));
+  font-weight: 600;
+}
+
+.dv-side-head {
+  margin: 8px 6px 2px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.dv-warn {
+  flex: none;
+  vertical-align: -2px;
+}
+
+/* ---------- right side ---------- */
+.dv-pane {
+  flex: 1;
+  min-width: 0;
+  overflow: auto;
+  padding: 14px 20px 24px;
+}
+
+.dv-pane h2 {
+  margin: 0 0 10px;
+  font-size: 16px;
+}
+
+.dv-specs {
+  display: grid;
+  grid-template-columns: minmax(150px, max-content) 1fr;
+  gap: 4px 16px;
+  margin: 0 0 14px;
+}
+
+.dv-specs div {
+  display: contents;
+}
+
+.dv-specs dt {
+  color: var(--muted);
+}
+
+.dv-specs dd {
+  margin: 0;
+}
+
+.dv-status {
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.dv-status.is-bad {
+  border-color: #c99a00;
+  background: rgba(242, 199, 68, 0.14);
+}
+
+.dv-status.is-ok {
+  border-color: rgba(16, 124, 16, 0.4);
+  background: rgba(16, 124, 16, 0.08);
+}
+
+.dv-problem {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dv-story,
+.dv-hint {
+  margin: 0;
+}
+
+.dv-hint {
+  color: var(--muted);
+}
+
+.dv-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.dv-btn {
+  min-height: 30px;
+  padding: 4px 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--field-bg);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.dv-btn:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+
+.dv-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.dv-log {
+  margin: 0;
+  padding-left: 22px;
+}
+
+.dv-log li {
+  margin-bottom: 6px;
+}
+
+.dv-log span {
+  white-space: pre-line;
+}
+
+.dv-log li.is-fix span {
+  color: #0e7a0d;
+}
+
+[data-mode='dark'] .dv-log li.is-fix span {
+  color: #6ccb5f;
+}
+
+.dv-done {
+  margin: 0;
+  font-weight: 600;
+}
+
+.dv-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  font-weight: 400;
+  text-decoration: underline;
+  cursor: pointer;
+}

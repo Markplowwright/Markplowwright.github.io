@@ -5,6 +5,7 @@ import { AppIcon } from '../AppIcon';
 import { useSkin } from '../skins';
 import { openApp, openNode } from '../actions';
 import { SOCIALS, SocialTile, openSocial } from '../SocialIcon';
+import { appTitle } from '../../content/hardware';
 
 export function DesktopIcons() {
   const skin = useSkin();
@@ -14,6 +15,7 @@ export function DesktopIcons() {
     { key: 'helpdesk', icon: 'helpdesk', label: 'Help Desk', open: () => openApp('helpdesk') },
     { key: 'capture', icon: 'capture', label: 'Packet Capture', open: () => openApp('capture') },
     { key: 'subnet', icon: 'subnet', label: 'Subnet Calculator', open: () => openApp('subnet') },
+    { key: 'devices', icon: 'devices', label: appTitle[skin.id], open: () => openApp('devices') },
   ];
   // macOS keeps Trash in the dock, the others show it on the desktop.
   if (skin.id !== 'mac') items.push({ key: 'trash', icon: 'trash', label: skin.words.trash, open: () => openNode('trash') });
