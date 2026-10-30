@@ -8,6 +8,10 @@
       name="description"
       content="Mark Plowright's portfolio, shaped like a desktop OS in the browser. Field Systems Engineer in New York City. Projects, home labs, presentations and resume."
     />
+    <!-- Phone only (narrower than 768px): the status bar strip matches the top of the
+         phone wallpaper. The first tag that matches wins, so the desktop keeps #2e2f33. -->
+    <meta name="theme-color" media="(max-width: 767px) and (prefers-color-scheme: dark)" content="#0f1a4a" />
+    <meta name="theme-color" media="(max-width: 767px)" content="#5a3fb8" />
     <meta name="theme-color" content="#2e2f33" />
     <link rel="icon" href="/favicon.ico" sizes="48x48" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />

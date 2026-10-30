@@ -329,6 +329,22 @@ export function MobileHome() {
     document.documentElement.dataset.skin = 'mobile';
   }, [mode]);
 
+  // The status bar strip (the saved web app, and Safari's top bar) matches the top of
+  // the phone wallpaper and follows the site's dark mode switch. Phone only: the tag is
+  // removed if the window grows into the desktop layout.
+  useLayoutEffect(() => {
+    let tag = document.getElementById('phone-theme-color') as HTMLMetaElement | null;
+    if (!tag) {
+      tag = document.createElement('meta');
+      tag.id = 'phone-theme-color';
+      tag.name = 'theme-color';
+      // First in <head>, so it wins over the tags in index.html.
+      document.head.prepend(tag);
+    }
+    tag.content = mode === 'dark' ? '#0f1a4a' : '#5a3fb8';
+  }, [mode]);
+  useEffect(() => () => document.getElementById('phone-theme-color')?.remove(), []);
+
   // Tip banners at the top of the home screen, counted from when the phone is unlocked.
   useEffect(() => {
     if (!tipsOn || lock !== 'none') return;
