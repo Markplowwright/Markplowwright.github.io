@@ -242,6 +242,12 @@ export function MobileHome() {
 
   /** "open resume" and friends from the Terminal: desktop app names mapped to phone screens. */
   const openTerminalTarget = (target: string) => {
+    if (target === 'capture') {
+      // Packet capture apps don't exist on phones.
+      const t = useMobileTerm.getState();
+      t.set({ lines: [...t.lines, { cmd: false, text: 'Packet Capture is a desktop app, like Wireshark. Open this site on a computer to try it.' }] });
+      return;
+    }
     const apps: Record<string, MobileApp> = {
       files: 'projects', work: 'projects', terminal: 'terminal', browser: 'browser', helpdesk: 'helpdesk', taskmgr: 'activity', eventlog: 'logs',
       network: 'network', settings: 'settings', resume: 'resume', contact: 'contact', pres: 'slides',
