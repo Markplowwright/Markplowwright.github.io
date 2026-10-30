@@ -1,16 +1,19 @@
 // The phone's startup and lock screens.
 //
-//   First visit on this phone: the logo startup screen, then a lock screen the
-//   visitor swipes up to open (only the bottom strip takes the swipe, with a
-//   bouncing arrow as a guide, and the screen follows the finger).
-//   Any later visit: a "Welcome back" lock screen that unlocks itself after
-//   about a second, like Face ID. A tap or swipe skips the wait.
+//   First visit on this phone: the logo startup screen, then the lock screen.
+//   Later visits: no startup screen; Face ID unlocks (about 1.3 s) and
+//   "Welcome back" shows in the middle.
+//   Either way the visitor swipes up on the bottom strip to open, which hops
+//   every couple of seconds as a prompt. Swipe only: a tap does not open it
+//   (keyboard users can still press Enter, since they cannot swipe).
+//   The welcome notification can be swiped left for View and Clear. View
+//   asks the visitor to unlock first, like a locked iPhone.
 //   Same visit (reload, back to the tab) and shared links: no lock screen.
 import { useEffect, useRef, useState } from 'react';
 import { profile } from '../content/profile';
 import { fmt, useNow } from '../os/shared/hooks';
 
-const SEEN = 'mp-phone-unlocked'; // localStorage: swiped open once on this phone
+const SEEN = 'mp-phone-unlocked'; // localStorage: opened once on this phone
 const VISIT = 'mp-phone-visit'; // sessionStorage: already inside this visit
 
 const read = (store: () => Storage, key: string) => {
@@ -24,7 +27,7 @@ const write = (store: () => Storage, key: string) => {
   try {
     store().setItem(key, '1');
   } catch {
-    /* private browsing: the lock simply shows again next time */
+    /* private browsing: the visitor just gets the first-visit screens again */
   }
 };
 
@@ -41,6 +44,7 @@ export function lockModeForThisVisit(deepLink: boolean): LockMode {
 const reduceMotion = () => window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
 // iPhone lock screens show 9:41, without AM/PM.
 const lockTime = (d: Date) => fmt.time(d).replace(/\s?[AP]\.?M\.?$/i, '');
+const FACE_ID_MS = 1300;
 
 function Padlock({ open }: { open: boolean }) {
   return (
@@ -51,28 +55,128 @@ function Padlock({ open }: { open: boolean }) {
   );
 }
 
+/** The Face ID glyph: corner brackets around a face, then a tick. */
+function FaceId({ done }: { done: boolean }) {
+  return (
+    <svg className={`m-faceid${done ? ' is-done' : ''}`} width="64" height="64" viewBox="0 0 64 64" aria-hidden="true">
+      <path d="M6 20V12a6 6 0 0 1 6-6h8M44 6h8a6 6 0 0 1 6 6v8M58 44v8a6 6 0 0 1-6 6h-8M20 58h-8a6 6 0 0 1-6-6v-8" fill="none" stroke="#fff" strokeWidth="3.5" strokeLinecap="round" />
+      {done ? (
+        <path className="m-faceid-tick" d="M20 33l8 8 16-17" fill="none" stroke="#fff" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+      ) : (
+        <g className="m-faceid-face" fill="none" stroke="#fff" strokeWidth="3.5" strokeLinecap="round">
+          <path d="M24 24v5M40 24v5M32 26v10h-3M24 43c4 4 12 4 16 0" />
+        </g>
+      )}
+    </svg>
+  );
+}
+
+/** The welcome notification: swipe left for View and Clear. */
+function LockNotification({ onView, fade }: { onView: () => void; fade: number }) {
+  const [offset, setOffset] = useState(0);
+  const [dragging, setDragging] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [cleared, setCleared] = useState(false);
+  const [gone, setGone] = useState(false);
+  const [shake, setShake] = useState(0);
+  const [asked, setAsked] = useState(false);
+  const start = useRef<{ x: number; base: number } | null>(null);
+  const REVEAL = -150;
+
+  if (gone) return null;
+  const x = cleared ? -500 : dragging ? offset : open ? REVEAL : 0;
+
+  return (
+    <div className={`m-note-wrap${cleared ? ' is-cleared' : ''}`} style={{ opacity: cleared ? 0 : fade }} onTransitionEnd={() => cleared && setGone(true)}>
+      <div className="m-note-row">
+        {/* The buttons sit behind the see-through notification, so they only show as it slides. */}
+        <div className="m-note-actions" aria-hidden={!open} style={{ opacity: Math.min(1, -x / 90) }}>
+          <button
+            type="button"
+            tabIndex={open ? 0 : -1}
+            onClick={() => {
+              setOpen(false);
+              setShake((n) => n + 1);
+              setAsked(true);
+              onView();
+            }}
+          >
+            View
+          </button>
+          <button type="button" tabIndex={open ? 0 : -1} onClick={() => setCleared(true)}>
+            Clear
+          </button>
+        </div>
+        <div
+          key={shake}
+          className={`m-lock-note${shake ? ' is-shake' : ''}`}
+          style={{
+            transform: `translateX(${x}px)`,
+            transition: dragging ? 'none' : undefined,
+          }}
+          onPointerDown={(e) => {
+            start.current = { x: e.clientX, base: open ? REVEAL : 0 };
+            e.currentTarget.setPointerCapture(e.pointerId);
+            setOffset(open ? REVEAL : 0);
+            setDragging(true);
+          }}
+          onPointerMove={(e) => {
+            const s = start.current;
+            if (!s) return;
+            setOffset(Math.max(REVEAL - 30, Math.min(0, s.base + e.clientX - s.x)));
+          }}
+          onPointerUp={() => {
+            if (!start.current) return;
+            start.current = null;
+            setDragging(false);
+            setOpen(offset < REVEAL / 2);
+          }}
+          onPointerCancel={() => {
+            start.current = null;
+            setDragging(false);
+          }}
+          role="group"
+          aria-label={`Notification from ${profile.name}. Swipe left for View and Clear.`}
+        >
+          <img src="/brand/avatar.webp" alt="" width="38" height="38" draggable={false} />
+          <div>
+            <div className="m-lock-note-head">
+              <strong>{profile.name}</strong>
+              <span>now</span>
+            </div>
+            <div className="m-lock-note-title">Welcome to my portfolio</div>
+            <div className="m-lock-note-body">Projects, IT tools and my resume, set up like a phone. Swipe up to look around.</div>
+          </div>
+        </div>
+      </div>
+      {asked && (
+        <p className="m-note-ask" role="status">
+          Swipe up to unlock
+        </p>
+      )}
+    </div>
+  );
+}
+
 export function MobileLock({ mode, onDone }: { mode: Exclude<LockMode, 'none'>; onDone: () => void }) {
   const now = useNow();
   const quick = reduceMotion();
   const [phase, setPhase] = useState<'boot' | 'locked' | 'opening'>(mode === 'first' ? 'boot' : 'locked');
+  const [faceDone, setFaceDone] = useState(false);
   const [drag, setDrag] = useState(0);
-  const [unlocked, setUnlocked] = useState(false);
+  const [nudge, setNudge] = useState(0);
   const start = useRef<number | null>(null);
-  const dragged = useRef(false);
+  const opened = useRef(false);
   const done = useRef(onDone);
   done.current = onDone;
 
-  const opened = useRef(false);
   const open = () => {
     if (opened.current) return;
     opened.current = true;
-    setUnlocked(true);
     setPhase('opening');
     write(() => localStorage, SEEN);
     setTimeout(() => done.current(), quick ? 120 : 380);
   };
-  const openRef = useRef(open);
-  openRef.current = open;
 
   // First visit: the startup screen, then the lock screen.
   useEffect(() => {
@@ -81,88 +185,68 @@ export function MobileLock({ mode, onDone }: { mode: Exclude<LockMode, 'none'>; 
     return () => clearTimeout(t);
   }, [phase, quick]);
 
-  // Returning: the padlock opens, then the screen slides away by itself.
+  // Returning: Face ID recognises the visitor. The phone still needs a swipe.
   useEffect(() => {
-    if (mode !== 'returning' || phase !== 'locked') return;
-    const a = setTimeout(() => setUnlocked(true), quick ? 150 : 450);
-    const b = setTimeout(() => openRef.current(), quick ? 400 : 1100);
-    return () => {
-      clearTimeout(a);
-      clearTimeout(b);
-    };
-  }, [mode, phase, quick]);
+    if (mode !== 'returning') return;
+    const t = setTimeout(() => setFaceDone(true), quick ? 300 : FACE_ID_MS);
+    return () => clearTimeout(t);
+  }, [mode, quick]);
 
   if (phase === 'boot')
     return (
       <div className="m-boot" role="status" aria-label="Starting up">
         <img src="/brand/logo-mark.webp" alt="" width="240" height="143" />
-        <div className="m-boot-bar"><div /></div>
+        <div className="m-boot-bar">
+          <div />
+        </div>
       </div>
     );
 
   const height = typeof window === 'undefined' ? 800 : window.innerHeight;
   const style = phase === 'opening' ? { transform: 'translateY(-100%)' } : drag ? { transform: `translateY(${drag}px)`, transition: 'none' } : undefined;
+  const padOpen = (mode === 'returning' && faceDone) || drag < -40 || phase === 'opening';
 
   return (
-    <div
-      className={`m-lock${phase === 'opening' ? ' is-opening' : ''}${quick ? ' is-quick' : ''}`}
-      style={style}
-      role="dialog"
-      aria-label="Lock screen"
-      onClick={mode === 'returning' ? open : undefined}
-    >
+    <div className={`m-lock${phase === 'opening' ? ' is-opening' : ''}${quick ? ' is-quick' : ''}`} style={style} role="dialog" aria-label="Lock screen">
       <div className="m-lock-top">
-        <Padlock open={unlocked || drag < -40} />
+        <Padlock open={padOpen} />
         <div className="m-lock-date">{fmt.dateLong(now)}</div>
         <div className="m-lock-time">{lockTime(now)}</div>
       </div>
 
-      <div className="m-lock-note" style={{ opacity: Math.max(0, 1 + drag / (height * 0.4)) }}>
-        <img src="/brand/avatar.webp" alt="" width="38" height="38" />
-        <div>
-          <div className="m-lock-note-head">
-            <strong>{profile.name}</strong>
-            <span>now</span>
-          </div>
-          <div className="m-lock-note-title">Welcome to my portfolio</div>
-          <div className="m-lock-note-body">Projects, IT tools and my resume, set up like a phone. Swipe up to look around.</div>
-        </div>
-      </div>
+      <LockNotification fade={Math.max(0, 1 + drag / (height * 0.4))} onView={() => setNudge((n) => n + 1)} />
 
-      {/* Only this strip takes the swipe, so the page itself never scrolls or refreshes. */}
+      {mode === 'returning' && (
+        <div className="m-lock-center" aria-live="polite">
+          <FaceId done={faceDone} />
+          <div className={`m-lock-welcome${faceDone ? ' is-in' : ''}`}>{faceDone ? 'Welcome back' : 'Face ID'}</div>
+        </div>
+      )}
+
+      {/* Only this strip takes the swipe, so the page never scrolls or refreshes. */}
       <button
         type="button"
         className="m-lock-swipe"
-        aria-label={mode === 'first' ? 'Swipe up or tap to open' : 'Welcome back. Opening.'}
+        aria-label="Swipe up to open (or press Enter)"
         onClick={(e) => {
-          e.stopPropagation();
-          // A drag that was let go too early is not a tap.
-          if (dragged.current) {
-            dragged.current = false;
-            return;
-          }
-          open();
+          // Swipe only: taps do nothing. e.detail is 0 for Enter or Space, so keyboard users can open it.
+          if (e.detail === 0) open();
         }}
         onPointerDown={(e) => {
           start.current = e.clientY;
-          dragged.current = false;
           e.currentTarget.setPointerCapture(e.pointerId);
         }}
         onPointerMove={(e) => {
           if (start.current === null) return;
-          const moved = e.clientY - start.current;
-          if (Math.abs(moved) > 8) dragged.current = true;
-          setDrag(Math.min(0, moved));
+          setDrag(Math.min(0, e.clientY - start.current));
         }}
         onPointerUp={(e) => {
           if (start.current === null) return;
           const moved = e.clientY - start.current;
           start.current = null;
-          // Far enough up: open. Otherwise the screen springs back down.
-          if (moved < -Math.min(120, height * 0.15)) {
-            dragged.current = false;
-            open();
-          }
+          // Far enough up: open. Otherwise the screen springs back and the strip hops as a hint.
+          if (moved < -Math.min(120, height * 0.15)) open();
+          else setNudge((n) => n + 1);
           setDrag(0);
         }}
         onPointerCancel={() => {
@@ -170,9 +254,11 @@ export function MobileLock({ mode, onDone }: { mode: Exclude<LockMode, 'none'>; 
           setDrag(0);
         }}
       >
-        <span className="m-lock-arrow" aria-hidden="true" />
-        <span className="m-lock-hint">{mode === 'first' ? 'Swipe up to open' : 'Welcome back'}</span>
-        <span className="m-lock-bar" aria-hidden="true" />
+        <span key={nudge} className={`m-lock-hop${nudge ? ' is-nudge' : ''}`}>
+          <span className="m-lock-arrow" aria-hidden="true" />
+          <span className="m-lock-hint">Swipe up to open</span>
+          <span className="m-lock-bar" aria-hidden="true" />
+        </span>
       </button>
     </div>
   );
