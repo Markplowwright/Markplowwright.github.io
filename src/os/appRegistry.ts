@@ -47,6 +47,15 @@ export const apps: AppDefinition[] = [
     pinned: true,
   },
   {
+    id: 'capture',
+    title: { windows: 'Packet Capture', mac: 'Packet Capture', linux: 'Packet Capture' },
+    icon: 'capture',
+    component: lazy(() => import('../apps/capture')),
+    defaultSize: { w: 1000, h: 620 },
+    singleInstance: true,
+    pinned: true,
+  },
+  {
     id: 'taskmgr',
     title: { windows: 'Task Manager', mac: 'Activity Monitor', linux: 'System Monitor' },
     icon: 'taskmgr',

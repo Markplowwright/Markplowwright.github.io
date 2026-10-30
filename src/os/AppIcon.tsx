@@ -5,14 +5,14 @@
 import { useId } from 'react';
 import type { SkinId } from './types';
 
-type Shape = 'folder' | 'term' | 'net' | 'gear' | 'mon' | 'globe' | 'shield' | 'trash' | 'doc' | 'slides' | 'image' | 'video' | 'desk';
+type Shape = 'folder' | 'term' | 'net' | 'gear' | 'mon' | 'globe' | 'shield' | 'trash' | 'doc' | 'slides' | 'image' | 'video' | 'desk' | 'capture';
 
 const SHAPE: Record<string, Shape> = {
   files: 'folder', folder: 'folder', terminal: 'term', network: 'net', settings: 'gear', taskmgr: 'mon',
   browser: 'globe', link: 'globe', eventlog: 'shield', trash: 'trash', doc: 'doc', pdf: 'doc', viewer: 'doc',
-  slides: 'slides', image: 'image', video: 'video', helpdesk: 'desk',
+  slides: 'slides', image: 'image', video: 'video', helpdesk: 'desk', capture: 'capture',
 };
-const APPS = ['files', 'terminal', 'network', 'settings', 'taskmgr', 'browser', 'eventlog', 'helpdesk'];
+const APPS = ['files', 'terminal', 'network', 'settings', 'taskmgr', 'browser', 'eventlog', 'helpdesk', 'capture'];
 
 // Colors per skin and icon: [fill 1, fill 2, fill 3, fill 4, stroke, container or '', folder tab bar, terminal strip]
 type Colors = [string, string, string, string, string, string, boolean, boolean];
@@ -33,6 +33,7 @@ function palette(skin: SkinId, g: (name: string) => string): Record<string, Colo
       browser: ['#2f80ed', '#ffffff', '', '', '', '', false, false],
       eventlog: ['#e8f0fb', '', '#0f6cbd', '', '#0f6cbd', '', false, false],
       helpdesk: ['', '', '#e8590c', '#0f6cbd', '', '', false, false],
+      capture: ['#0f6cbd', '#e8f0fb', '#0f6cbd', '#2fa66a', '', '', false, false],
       trash: ['#e8eef7', '#8fa3c0', '', '', '#8b99ad', '', false, false],
     };
   if (skin === 'mac')
@@ -50,6 +51,7 @@ function palette(skin: SkinId, g: (name: string) => string): Record<string, Colo
       browser: ['#ffffff', '#0a84ff', '', '', '', 'linear-gradient(160deg,#5ac8fa,#0a84ff)', false, false],
       eventlog: ['#ffffff', '', '#ff3b30', '', 'rgba(0,0,0,0)', 'linear-gradient(160deg,#ff8a80,#ff3b30)', false, false],
       helpdesk: ['', '', '#ffffff', '#ffffff', '', 'linear-gradient(160deg,#ffb347,#ff7a00)', false, false],
+      capture: ['#ffffff', 'rgba(255,255,255,0.25)', '#ffffff', '#7dffb0', '', 'linear-gradient(160deg,#4a8cff,#1747a6)', false, false],
       trash: ['rgba(255,255,255,0.75)', '#aeb4c0', '', '', '#8e95a3', '', false, false],
     };
   return {
@@ -66,6 +68,7 @@ function palette(skin: SkinId, g: (name: string) => string): Record<string, Colo
     browser: ['#ffffff', '#3584e4', '', '', '', '#3584e4', false, false],
     eventlog: ['#ffffff', '', '#c01c28', '', 'rgba(0,0,0,0)', '#e01b24', false, false],
     helpdesk: ['', '', '#ffffff', '#ffffff', '', '#e66100', false, false],
+    capture: ['#ffffff', 'rgba(255,255,255,0.25)', '#ffffff', '#8ff0a4', '', '#1c71d8', false, false],
     trash: ['#e1e1e4', '#9a9996', '', '', '#77767b', '', false, false],
   };
 }
@@ -173,6 +176,13 @@ export function AppIcon({ app, skin, size = 48 }: { app: string; skin: SkinId; s
             <rect x="3" y="5" width="26" height="22" rx="2.5" fill={f1} stroke={st} strokeWidth="1.2" />
             <rect x="5.5" y="7.5" width="21" height="17" rx="1" fill={f2} />
             <path d="M13.5 11.5v9l7.5-4.5z" fill={f1} />
+          </>
+        )}
+        {shape === 'capture' && (
+          <>
+            <rect x="3" y="6" width="26" height="20" rx="3" fill={f2} stroke={f1} strokeWidth="1.6" />
+            <path d="M6 18h4l2-6 3 10 3-13 3 9h5" stroke={f3} strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+            <circle cx="24" cy="18" r="1.8" fill={f4} />
           </>
         )}
         {shape === 'desk' && (

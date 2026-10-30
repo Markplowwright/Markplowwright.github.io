@@ -4,6 +4,7 @@
 // for when the visitor is offline. The lab names (PLOWVM, plowlab.local) come
 // from Mark's Windows Server home lab, whose domain controller is the DNS server.
 import type { SkinId } from '../../os/types';
+import { reportNet } from './netActivity';
 
 export const NET = {
   ip: '10.0.0.25',
@@ -231,6 +232,12 @@ export const linuxIpAddr = (): string[] => [
   '       valid_lft forever preferred_lft forever',
 ];
 
+/** Tells Packet Capture about a DNS query (addresses typed directly need none). */
+function reportDns(name: string, r: DnsAnswer | null) {
+  if (isIpv4(name)) return;
+  reportNet({ type: 'dns', name: r?.name ?? name, a: r?.a ?? [], aaaa: r?.aaaa ?? [], found: !!r });
+}
+
 /** nslookup, as each OS prints it. */
 export async function nslookup(name: string, skin: SkinId, online: boolean, lookup: Lookup): Promise<string[]> {
   if (!online)
@@ -238,6 +245,7 @@ export async function nslookup(name: string, skin: SkinId, online: boolean, look
       ? [`DNS request timed out.`, '    timeout was 2 seconds.', `Server:  UnKnown`, `Address:  ${NET.dns}`, '', `*** Request to UnKnown timed-out`]
       : [';; connection timed out; no servers could be reached'];
   const r = await lookup(name);
+  reportDns(name, r);
   if (skin === 'windows') {
     const head = [`Server:  ${NET.dnsName}`, `Address:  ${NET.dns}`, ''];
     if (!r) return [...head, `*** ${NET.dnsName} can't find ${name}: Non-existent domain`];
@@ -263,6 +271,8 @@ const ms = (base: number) => Math.round((base + Math.random() * 4) * 1000) / 100
 /** ping, four replies, as each OS prints it. */
 export async function ping(host: string, skin: SkinId, online: boolean, lookup: Lookup): Promise<string[]> {
   const r = online ? await lookup(host) : null;
+  if (online) reportDns(host, r);
+  if (r) reportNet({ type: 'ping', ip: r.a[0] ?? r.aaaa[0], count: 4, internal: r.internal });
   if (!r) {
     if (skin === 'windows') return online ? [`Ping request could not find host ${host}. Please check the name and try again.`] : ['PING: transmit failed. General failure.'];
     return skin === 'mac' ? [`ping: cannot resolve ${host}: Unknown host`] : [`ping: ${host}: ${online ? 'Name or service not known' : 'Temporary failure in name resolution'}`];
@@ -308,6 +318,8 @@ export async function trace(host: string, skin: SkinId, online: boolean, lookup:
   if (!r) return skin === 'windows' ? [`Unable to resolve target system name ${host}.`] : [`traceroute: unknown host ${host}`];
   const ip = r.a[0] ?? r.aaaa[0];
   const hops = r.internal ? [ip] : [NET.gateway, '100.64.0.1', '96.120.18.33', '68.86.90.25', '108.170.248.65', ip];
+  reportDns(host, r);
+  reportNet({ type: 'trace', ip, hops });
   if (skin === 'windows')
     return [
       '',

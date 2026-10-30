@@ -1,0 +1,254 @@
+/* Packet Capture: Wireshark's layout and default coloring rules. */
+.pc {
+  --pc-tcp: #e7e6ff;
+  --pc-udp: #daeeff;
+  --pc-icmp: #fce0ff;
+  --pc-arp: #faf0d7;
+  --pc-synfin: #a0a0a0;
+  --pc-rst-bg: #a40000;
+  --pc-rst-fg: #fffc9c;
+  --pc-row-fg: #12131a;
+  --pc-sel: #2f6ad0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  font-size: 12px;
+  background: var(--body-bg);
+}
+
+[data-mode='dark'] .pc {
+  --pc-tcp: #3b3a5c;
+  --pc-udp: #213a52;
+  --pc-icmp: #4d2c52;
+  --pc-arp: #4a4227;
+  --pc-synfin: #4a4a4a;
+  --pc-rst-bg: #6e0f0f;
+  --pc-rst-fg: #ffef8a;
+  --pc-row-fg: #e9eaf0;
+}
+
+.pc-tools,
+.pc-filter,
+.pc-quick,
+.pc-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 8px;
+  flex: none;
+}
+
+.pc-tools {
+  border-bottom: 1px solid var(--line);
+}
+
+.pc-spacer {
+  flex: 1;
+}
+
+.pc-btn {
+  min-height: 26px;
+  padding: 3px 10px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--field-bg);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.pc-btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.pc-btn.is-start span {
+  color: #1d6fd1;
+}
+
+.pc-btn.is-stop span {
+  color: #d13438;
+}
+
+.pc-filter input {
+  flex: 1;
+  min-width: 0;
+  height: 26px;
+  padding: 0 8px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--field-bg);
+  color: inherit;
+  font: 12px ui-monospace, Menlo, Consolas, monospace;
+}
+
+/* Wireshark's filter bar turns green when valid, red when not. */
+.pc-filter input.is-ok {
+  background: #afffaf;
+  color: #102010;
+}
+
+.pc-filter input.is-bad {
+  background: #ffafaf;
+  color: #2a0d0d;
+}
+
+.pc-quick {
+  flex-wrap: wrap;
+  padding-top: 0;
+}
+
+.pc-quick button {
+  padding: 1px 8px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font: 11px ui-monospace, Menlo, Consolas, monospace;
+  cursor: pointer;
+}
+
+.pc-quick button[aria-pressed='true'] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.pc-note {
+  margin: 0 8px 6px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: var(--hover);
+  flex: none;
+}
+
+/* ---------- packet list ---------- */
+.pc-list {
+  flex: 1 1 45%;
+  min-height: 90px;
+  overflow: auto;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.pc-list table {
+  width: 100%;
+  border-collapse: collapse;
+  font: 12px/1.35 ui-monospace, Menlo, Consolas, monospace;
+  white-space: nowrap;
+}
+
+.pc-list th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 3px 8px;
+  background: var(--toolbar-bg, var(--body-bg));
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  font: 600 12px system-ui, sans-serif;
+}
+
+.pc-list td {
+  padding: 1px 8px;
+  color: var(--pc-row-fg);
+}
+
+.pc-list td:last-child {
+  width: 100%;
+}
+
+.pc-list tr {
+  cursor: default;
+}
+
+.c-tcp td { background: var(--pc-tcp); }
+.c-udp td { background: var(--pc-udp); }
+.c-icmp td { background: var(--pc-icmp); }
+.c-arp td { background: var(--pc-arp); }
+.c-synfin td { background: var(--pc-synfin); }
+.c-rst td { background: var(--pc-rst-bg); color: var(--pc-rst-fg); }
+
+.pc-list tr.is-sel td {
+  background: var(--pc-sel);
+  color: #fff;
+}
+
+.pc-empty {
+  margin: 10px 12px;
+  color: var(--muted);
+}
+
+/* ---------- details and bytes ---------- */
+.pc-lower {
+  flex: 1 1 35%;
+  min-height: 90px;
+  display: flex;
+}
+
+.pc-details {
+  flex: 3;
+  min-width: 0;
+  overflow: auto;
+  padding: 4px 8px;
+  border-right: 1px solid var(--line);
+  font: 12px/1.5 ui-monospace, Menlo, Consolas, monospace;
+}
+
+.pc-details summary {
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.pc-details ul {
+  margin: 0 0 4px;
+  padding-left: 26px;
+  list-style: none;
+  color: var(--muted);
+}
+
+.pc-bytes {
+  flex: 2;
+  min-width: 0;
+  overflow: auto;
+  padding: 4px 8px;
+  font: 12px/1.5 ui-monospace, Menlo, Consolas, monospace;
+  white-space: pre;
+}
+
+.pc-off {
+  color: var(--muted);
+  margin-right: 12px;
+}
+
+.pc-ascii {
+  margin-left: 12px;
+  color: var(--muted);
+}
+
+/* ---------- status bar ---------- */
+.pc-status {
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+}
+
+.pc-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--muted);
+}
+
+.pc-dot.is-live {
+  background: #2fa66a;
+  box-shadow: 0 0 0 3px rgba(47, 166, 106, 0.25);
+}
+
+.pc-sim {
+  padding: 0 6px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  font-size: 11px;
+}
