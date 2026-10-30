@@ -1,0 +1,256 @@
+/* Subnet Calculator. Colors come from the skin (desktop) or the phone. */
+.sn {
+  --sn-surface: var(--card, var(--field-bg, #fff));
+  --sn-soft: var(--chip-bg, var(--hover, rgba(127, 127, 127, 0.12)));
+  --sn-accent: var(--accent, #1a5fd0);
+  --sn-net: #1d6fd1;
+  --sn-host: #c2410c;
+  height: 100%;
+  overflow: auto;
+  padding: 14px 18px 24px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+[data-mode='dark'] .sn {
+  --sn-net: #6aa9ff;
+  --sn-host: #ffa36b;
+}
+
+.sn label {
+  font-weight: 600;
+}
+
+.sn-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.sn-row input {
+  flex: 1;
+  min-width: 0;
+  height: 34px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--sn-surface);
+  color: inherit;
+  font: 15px ui-monospace, Menlo, Consolas, monospace;
+}
+
+.sn-row input[aria-invalid='true'] {
+  border-color: #d13438;
+}
+
+.sn-btn {
+  flex: none;
+  padding: 0 12px;
+  border: 1px solid var(--sn-accent);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--sn-accent);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.sn-help {
+  margin: 4px 0 8px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.sn-help.is-bad {
+  color: #d13438;
+}
+
+.sn-examples {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.sn-examples button {
+  padding: 3px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.sn-examples button span {
+  color: var(--muted);
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+}
+
+.sn-examples button[aria-pressed='true'] {
+  border-color: var(--sn-accent);
+  box-shadow: inset 0 0 0 1px var(--sn-accent);
+}
+
+.sn-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 8px;
+  margin: 14px 0 0;
+}
+
+.sn-grid div {
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--sn-surface);
+}
+
+.sn-grid dt {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.sn-grid dd {
+  margin: 0;
+  font: 600 14px ui-monospace, Menlo, Consolas, monospace;
+}
+
+.sn-note {
+  margin: 8px 0 0;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--sn-soft);
+}
+
+.sn h3 {
+  margin: 18px 0 6px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.sn-legend {
+  margin: 0 0 6px;
+  font-size: 12px;
+}
+
+.sn .is-net {
+  color: var(--sn-net);
+  font-weight: 700;
+}
+
+.sn .is-host {
+  color: var(--sn-host);
+}
+
+.sn-binary {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2px 12px;
+  align-items: baseline;
+}
+
+.sn-binary > span {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.sn-bits {
+  font: 13px ui-monospace, Menlo, Consolas, monospace;
+  letter-spacing: 0.02em;
+  overflow-wrap: anywhere;
+}
+
+.sn-dot {
+  color: var(--muted);
+}
+
+.sn-formula {
+  margin: 8px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.sn-split {
+  font-weight: 400 !important;
+}
+
+.sn-split select {
+  margin-left: 4px;
+  padding: 3px 6px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--sn-surface);
+  color: inherit;
+  font: inherit;
+}
+
+.sn-table-wrap {
+  margin-top: 8px;
+  overflow-x: auto;
+}
+
+.sn-table {
+  width: 100%;
+  border-collapse: collapse;
+  font: 12px ui-monospace, Menlo, Consolas, monospace;
+}
+
+.sn-table th,
+.sn-table td {
+  padding: 4px 10px 4px 0;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.sn-table th {
+  font: 600 11px system-ui, sans-serif;
+  color: var(--muted);
+}
+
+.sn-more {
+  margin: 6px 0 0;
+  color: var(--muted);
+}
+
+/* Phone: bigger touch targets, labels above the binary rows. */
+.sn.is-phone {
+  height: auto;
+  overflow: visible;
+  padding: 0;
+  font-size: 15px;
+}
+
+.sn.is-phone .sn-row {
+  flex-direction: column;
+}
+
+.sn.is-phone .sn-row input {
+  flex: none; /* in a column, flex: 1 would squash its height */
+  height: 44px;
+  font-size: 16px;
+}
+
+.sn.is-phone .sn-btn,
+.sn.is-phone .sn-examples button {
+  min-height: 44px;
+}
+
+.sn.is-phone .sn-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.sn.is-phone .sn-grid div {
+  background: var(--card);
+}
+
+.sn.is-phone .sn-binary {
+  grid-template-columns: 1fr;
+}
+
+.sn.is-phone .sn-bits {
+  font-size: 12px;
+}

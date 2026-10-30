@@ -56,6 +56,15 @@ export const apps: AppDefinition[] = [
     pinned: true,
   },
   {
+    id: 'subnet',
+    title: { windows: 'Subnet Calculator', mac: 'Subnet Calculator', linux: 'Subnet Calculator' },
+    icon: 'subnet',
+    component: lazy(() => import('../apps/subnet')),
+    defaultSize: { w: 720, h: 600 },
+    singleInstance: true,
+    pinned: true,
+  },
+  {
     id: 'taskmgr',
     title: { windows: 'Task Manager', mac: 'Activity Monitor', linux: 'System Monitor' },
     icon: 'taskmgr',

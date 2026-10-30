@@ -21,6 +21,7 @@ import type { Target } from '../content/search';
 import { SearchView } from '../apps/browser/SearchView';
 import { CommandGuide } from '../apps/terminal/CommandGuide';
 import { HelpDeskView } from '../apps/helpdesk/HelpDeskView';
+import { SubnetView } from '../apps/subnet/SubnetView';
 import { useTermQueue } from '../apps/terminal/queue';
 import type { TryIt } from '../content/helpdesk';
 import { useBrowserEntry, useBrowserStore } from '../apps/browser/store';
@@ -29,7 +30,7 @@ import { SOCIALS, SocialTile, type SocialId } from '../os/SocialIcon';
 import { ProjectTile, projectShort } from './ProjectIcons';
 import './mobile.css';
 
-type MobileApp = 'about' | 'projects' | 'slides' | 'resume' | 'contact' | 'browser' | 'helpdesk' | 'terminal' | 'network' | 'activity' | 'settings';
+type MobileApp = 'about' | 'projects' | 'slides' | 'resume' | 'contact' | 'browser' | 'helpdesk' | 'subnet' | 'terminal' | 'network' | 'activity' | 'settings';
 
 const DEFS: { id: MobileApp; label: string; icon: string; tile?: string }[] = [
   { id: 'about', label: 'About Mark', icon: 'folder', tile: 'linear-gradient(160deg,#5ac8fa,#0a84ff)' },
@@ -39,6 +40,7 @@ const DEFS: { id: MobileApp; label: string; icon: string; tile?: string }[] = [
   { id: 'contact', label: 'Contact', icon: 'doc', tile: 'linear-gradient(160deg,#6ee7a0,#1f9d55)' },
   { id: 'browser', label: 'Browser', icon: 'browser' },
   { id: 'helpdesk', label: 'Help Desk', icon: 'helpdesk' },
+  { id: 'subnet', label: 'Subnet Calc', icon: 'subnet' },
   { id: 'terminal', label: 'Terminal', icon: 'terminal' },
   { id: 'network', label: 'Network', icon: 'network' },
   { id: 'activity', label: 'Activity', icon: 'taskmgr' },
@@ -48,7 +50,7 @@ const DOCK: MobileApp[] = ['projects', 'contact', 'browser', 'settings'];
 /** The home screen pages, left to right. The dock shows on every page. */
 type Group = 'projects' | 'tools';
 /** The apps inside the IT Tools group. */
-const TOOLS: MobileApp[] = ['helpdesk', 'terminal'];
+const TOOLS: MobileApp[] = ['helpdesk', 'subnet', 'terminal'];
 const PAGES: (MobileApp | SocialId | `group-${Group}`)[][] = [
   ['group-projects', 'group-tools', 'about', 'slides', 'resume', 'linkedin', 'github', 'email'],
   ['activity', 'network'],
@@ -247,7 +249,7 @@ export function MobileHome() {
       return;
     }
     const apps: Record<string, MobileApp> = {
-      files: 'projects', work: 'projects', terminal: 'terminal', browser: 'browser', helpdesk: 'helpdesk', taskmgr: 'activity',
+      files: 'projects', work: 'projects', terminal: 'terminal', browser: 'browser', helpdesk: 'helpdesk', subnet: 'subnet', taskmgr: 'activity',
       network: 'network', settings: 'settings', resume: 'resume', contact: 'contact', pres: 'slides',
     };
     if (apps[target]) {
@@ -615,6 +617,8 @@ function MobileApp({ id, onOpen, onOpenTarget, onSearch, onTry }: { id: MobileAp
       return <MobileBrowser onOpen={onOpen} />;
     case 'helpdesk':
       return <HelpDeskView phone onTry={onTry} />;
+    case 'subnet':
+      return <SubnetView phone onRunInTerminal={(cmd) => onTry({ label: cmd, terminal: cmd })} />;
     case 'terminal':
       return <MobileTerminal onOpen={onOpenTarget} onSearch={onSearch} />;
     case 'network':

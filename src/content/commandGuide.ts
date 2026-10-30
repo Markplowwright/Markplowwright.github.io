@@ -53,6 +53,8 @@ export const commandGuide: GuideEntry[] = [
   { cmd: 'ifconfig', does: "Shows each network interface's IP and MAC address. The Mac's version of ipconfig.", os: ['mac'], section: 'Network' },
   { cmd: 'ipconfig getifaddr en0', does: "Prints just the Mac's Wi-Fi IP address. Handy in scripts.", os: ['mac'], section: 'Network' },
   { cmd: 'ip a', does: "Shows each network interface's IP and MAC address. Replaced ifconfig on modern Linux.", os: ['linux'], section: 'Network' },
+  { cmd: 'subnet 10.0.0.25/24', does: "Works out a network's range, mask, broadcast and host count. Same as the Subnet Calculator app.", os: ALL, section: 'Network' },
+  { cmd: 'ipcalc 192.168.1.130/26', does: 'The real Linux tool for the same job. Handy when planning or checking an address.', os: UNIX, section: 'Network' },
   { cmd: 'ip route', does: 'Shows the routing table, including the default gateway traffic leaves through.', os: ['linux'], section: 'Network' },
 
   // DNS and troubleshooting
