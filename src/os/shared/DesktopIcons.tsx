@@ -13,6 +13,7 @@ export function DesktopIcons() {
     { key: 'about', icon: 'folder', label: 'About Mark', open: () => openNode('about') },
     { key: 'resume', icon: 'pdf', label: 'Resume.pdf', open: () => openNode('resume') },
     { key: 'helpdesk', icon: 'helpdesk', label: 'Help Desk', open: () => openApp('helpdesk') },
+    { key: 'capture', icon: 'capture', label: 'Packet Capture', open: () => openApp('capture') },
   ];
   // macOS keeps Trash in the dock, the others show it on the desktop.
   if (skin.id !== 'mac') items.push({ key: 'trash', icon: 'trash', label: skin.words.trash, open: () => openNode('trash') });
@@ -63,7 +64,7 @@ export function DesktopIcons() {
         {render(items.slice(0, fit))}
       </div>
       {fit < items.length && (
-        <div className="desk-icons desk-icons-more" role="group" aria-label="More desktop icons" style={below ? { top: below } : undefined}>
+        <div className="desk-icons desk-icons-more" role="group" aria-label="More desktop icons" style={below ? { top: below, maxHeight: `calc(100% - ${below}px - var(--inset-bottom, 0px) - 14px)` } : undefined}>
           {render(items.slice(fit))}
         </div>
       )}
