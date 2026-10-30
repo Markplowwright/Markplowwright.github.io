@@ -26,6 +26,7 @@ import { useTermQueue } from '../apps/terminal/queue';
 import type { TryIt } from '../content/helpdesk';
 import { useBrowserEntry, useBrowserStore } from '../apps/browser/store';
 import { queryParam } from '../os/storage';
+import { MobileLock, lockModeForThisVisit, type LockMode } from './MobileLock';
 import { SOCIALS, SocialTile, type SocialId } from '../os/SocialIcon';
 import { ProjectTile, projectShort } from './ProjectIcons';
 import './mobile.css';
@@ -180,6 +181,8 @@ export function MobileHome() {
   const [groupOpen, setGroupOpen] = useState<Group | null>(null);
   const [pull, setPull] = useState(0);
   const [standalone] = useState(isStandalone);
+  // Startup and lock screen: first visit, returning visit, or none (same visit, shared links).
+  const [lock, setLock] = useState<LockMode>(() => lockModeForThisVisit(queryParam('q') !== null || queryParam('open') !== null));
   const pager = useRef<HTMLDivElement>(null);
   const touch = useRef<{ x: number; y: number; top: number } | null>(null);
 
@@ -325,24 +328,24 @@ export function MobileHome() {
     document.documentElement.dataset.skin = 'mobile';
   }, [mode]);
 
-  // Tip banners at the top of the home screen.
+  // Tip banners at the top of the home screen, counted from when the phone is unlocked.
   useEffect(() => {
-    if (!tipsOn) return;
+    if (!tipsOn || lock !== 'none') return;
     const timers = [6000, 26000, 46000, 66000, 86000].map((ms, i) => setTimeout(() => setBanner(i), ms));
     return () => timers.forEach(clearTimeout);
-  }, [tipsOn]);
+  }, [tipsOn, lock]);
 
   const def = DEFS.find((d) => d.id === app);
 
   return (
-    <div className="m-root">
+    <div className={`m-root${lock !== 'none' ? ' is-locked' : ''}`}>
       <h1 className="sr-only">Mark Plowright, portfolio</h1>
       <div className={`m-status${app ? ' is-app' : ''}`} aria-hidden="true">
         <span>{fmt.time(now)}</span>
         <span>●●● ▮</span>
       </div>
 
-      <main className="m-home" aria-hidden={!!app}>
+      <main className="m-home" aria-hidden={!!app || lock !== 'none'}>
         <div className="m-pull" aria-hidden="true" style={{ opacity: Math.min(1, pull / PULL), transform: `translate(-50%, ${pull / 3}px)` }}>
           <span className="m-pull-icon" />
           {pull >= PULL ? 'Release to search' : 'Pull down to search'}
@@ -497,6 +500,7 @@ export function MobileHome() {
         />
       )}
       {gallery && <MobileGallery key={gallery.start} rootId={gallery.rootId} project={gallery.project} start={gallery.start} closeLabel={DEFS.find((d) => d.id === app)?.label} onClose={() => setGallery(null)} />}
+      {lock !== 'none' && <MobileLock mode={lock} onDone={() => setLock('none')} />}
       <div className="m-indicator" aria-hidden="true" />
     </div>
   );

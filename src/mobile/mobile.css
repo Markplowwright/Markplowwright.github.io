@@ -1021,3 +1021,201 @@ img.m-gal-big {
   font-size: 14px;
   font-weight: 600;
 }
+
+/* ---------- startup and lock screens ---------- */
+/* Like an iPhone, the status bar stays visible over the lock screen. */
+.m-root.is-locked .m-status {
+  z-index: 61;
+  color: #fff;
+}
+
+.m-boot {
+  position: absolute;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  background: #2e2f33; /* the logo's own background */
+}
+
+.m-boot img {
+  width: min(240px, 62vw);
+  height: auto;
+}
+
+.m-boot-bar {
+  width: 140px;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.18);
+  overflow: hidden;
+}
+
+.m-boot-bar div {
+  height: 100%;
+  background: #e3a04a; /* the logo's orange */
+  transform-origin: left;
+  animation: bar 1.4s ease-out forwards;
+}
+
+.m-lock {
+  position: absolute;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #fff;
+  background: var(--home-bg);
+  transition: transform 0.38s cubic-bezier(0.3, 0.7, 0.2, 1);
+  touch-action: none; /* no page scrolling or pull-to-refresh behind the lock */
+  user-select: none;
+}
+
+.m-lock.is-quick {
+  transition-duration: 0.12s;
+}
+
+.m-lock-top {
+  margin-top: calc(56px + env(safe-area-inset-top, 0px));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+}
+
+.m-lock-pad {
+  margin-bottom: 10px;
+}
+
+.m-lock-shackle {
+  transition: transform 0.3s ease-out;
+  transform-origin: 16px 11px;
+}
+
+.m-lock-pad.is-open .m-lock-shackle {
+  transform: translate(5px, -2px) rotate(25deg);
+}
+
+.m-lock-date {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.m-lock-time {
+  font-size: 84px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.m-lock-note {
+  width: calc(100% - 24px);
+  max-width: 420px;
+  margin-top: 40px;
+  padding: 12px 14px;
+  border-radius: 22px;
+  background-color: rgba(255, 255, 255, 0.24);
+  backdrop-filter: blur(20px) saturate(160%);
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.m-lock-note img {
+  flex: none;
+  border-radius: 9px;
+}
+
+.m-lock-note-head {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+.m-lock-note-head span {
+  opacity: 0.75;
+}
+
+.m-lock-note-title {
+  font-weight: 600;
+}
+
+.m-lock-note-body {
+  opacity: 0.92;
+}
+
+/* The swipe strip: the only part that takes the gesture. */
+.m-lock-swipe {
+  margin-top: auto;
+  width: 100%;
+  padding: 18px 0 calc(14px + env(safe-area-inset-bottom, 0px));
+  border: 0;
+  background: transparent;
+  color: #fff;
+  font: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  touch-action: none;
+  cursor: grab;
+}
+
+.m-lock-swipe:focus {
+  outline: none;
+}
+
+/* Keyboard users still see where they are. */
+.m-lock-swipe:focus-visible .m-lock-hint {
+  outline: 2px solid #fff;
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.m-lock-arrow {
+  width: 14px;
+  height: 14px;
+  border-left: 3px solid #fff;
+  border-top: 3px solid #fff;
+  border-radius: 2px;
+  transform: rotate(45deg);
+  animation: m-lock-bounce 1.6s ease-in-out infinite;
+  opacity: 0.9;
+}
+
+@keyframes m-lock-bounce {
+  0%,
+  100% {
+    transform: translateY(4px) rotate(45deg);
+  }
+  50% {
+    transform: translateY(-6px) rotate(45deg);
+  }
+}
+
+.m-lock-hint {
+  font-size: 15px;
+  font-weight: 600;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.m-lock-bar {
+  width: 134px;
+  height: 5px;
+  border-radius: 3px;
+  background: #fff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .m-lock-arrow,
+  .m-boot-bar div {
+    animation: none;
+  }
+}
