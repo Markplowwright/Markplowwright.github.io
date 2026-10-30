@@ -108,7 +108,7 @@ html[data-skin='mobile'],
 .m-dots {
   position: fixed;
   left: 50%;
-  bottom: calc(122px + env(safe-area-inset-bottom, 0px));
+  bottom: 122px;
   transform: translateX(-50%);
   display: flex;
   padding: 0 4px;
@@ -145,7 +145,7 @@ html[data-skin='mobile'],
 .m-install {
   position: fixed;
   left: 50%;
-  bottom: calc(156px + env(safe-area-inset-bottom, 0px));
+  bottom: 156px;
   transform: translateX(-50%);
   width: max-content;
   max-width: calc(100% - 48px);
@@ -285,7 +285,7 @@ a.m-app {
   position: fixed;
   left: 14px;
   right: 14px;
-  bottom: calc(26px + env(safe-area-inset-bottom, 0px));
+  bottom: 26px;
   height: 84px;
   border-radius: 30px;
   background-color: rgba(255, 255, 255, 0.22);
@@ -916,31 +916,27 @@ img.m-gal-big {
   overflow: visible;
 }
 
-/* Saved to the home screen as an app: the phone shows its own status bar
-   and home indicator, so the fake ones hide and the layout clears them. */
+/* Saved to the home screen as an app: iOS shows its own status bar above the
+   site and its own home bar, so the site's pretend ones hide. */
 [data-standalone] .m-status,
 [data-standalone] .m-indicator {
   display: none;
 }
 
 [data-standalone] .m-home {
-  top: calc(env(safe-area-inset-top, 0px) + 8px);
+  top: 8px;
 }
 
 [data-standalone] .m-sheet-head {
-  padding-top: calc(env(safe-area-inset-top, 0px) + 8px);
+  padding-top: 8px;
 }
 
 [data-standalone] .m-banner {
-  top: calc(env(safe-area-inset-top, 0px) + 8px);
+  top: 8px;
 }
 
-[data-standalone] .m-dock {
-  bottom: calc(10px + env(safe-area-inset-bottom, 0px));
-}
-
-[data-standalone] .m-dots {
-  bottom: calc(106px + env(safe-area-inset-bottom, 0px));
+[data-standalone] .m-lock-top {
+  margin-top: 24px;
 }
 
 /* Projects group tile: a frosted square with tiny project icons, like an iPhone folder. */
@@ -1023,21 +1019,25 @@ img.m-gal-big {
 }
 
 /* ---------- startup and lock screens ---------- */
+/* Light on purpose: no blur and nothing animating while the lock screen waits. */
+
 /* Like an iPhone, the status bar stays visible over the lock screen. */
 .m-root.is-locked .m-status {
   z-index: 61;
   color: #fff;
 }
 
-.m-boot {
+.m-boot,
+.m-lock {
   position: fixed;
-  inset: 0 0 auto;
-  height: 100vh;
-  height: 100lvh;
+  inset: 0;
   z-index: 60;
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.m-boot {
   justify-content: center;
   gap: 28px;
   background: #2e2f33; /* the logo's own background */
@@ -1064,16 +1064,6 @@ img.m-gal-big {
 }
 
 .m-lock {
-  /* Pinned to the screen and as tall as its largest height, so it reaches the
-     very bottom even in a home-screen web app, where the page box can end short. */
-  position: fixed;
-  inset: 0 0 auto;
-  height: 100vh;
-  height: 100lvh;
-  z-index: 60;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   color: #fff;
   /* The fallback keeps the screen filled even before the phone colors load. */
   background: var(--home-bg, linear-gradient(170deg, #5a3fb8, #c4607a 62%, #e08a5a));
@@ -1087,7 +1077,7 @@ img.m-gal-big {
 }
 
 .m-lock-top {
-  margin-top: calc(56px + env(safe-area-inset-top, 0px));
+  margin-top: 56px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1096,17 +1086,14 @@ img.m-gal-big {
 
 .m-lock-pad {
   margin-bottom: 10px;
-}
-
-.m-lock-pad {
   overflow: visible;
 }
 
 .m-lock-shackle {
-  transition: transform 0.3s ease-out;
+  transition: transform 0.2s ease-out;
 }
 
-/* Open: the shackle lifts out of the body and moves right, like the iOS padlock. */
+/* While swiping: the shackle lifts out and moves right, like the iOS padlock. */
 .m-lock-pad.is-open .m-lock-shackle {
   transform: translate(8px, -4px);
 }
@@ -1124,52 +1111,14 @@ img.m-gal-big {
   font-variant-numeric: tabular-nums;
 }
 
-/* The notification sits over its View / Clear buttons and slides left to show them. */
-.m-note-wrap {
-  position: relative;
+/* A still notification: a plain see-through tint instead of a blur. */
+.m-lock-note {
   width: calc(100% - 24px);
   max-width: 420px;
   margin-top: 40px;
-  transition: opacity 0.3s ease;
-}
-
-.m-note-row {
-  position: relative;
-}
-
-.m-note-actions {
-  transition: opacity 0.2s;
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.m-note-actions button {
-  height: 100%;
-  min-width: 66px;
-  border: 0;
-  border-radius: 18px;
-  background-color: rgba(255, 255, 255, 0.28);
-  backdrop-filter: blur(20px);
-  color: #fff;
-  font: inherit;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.m-lock-note {
-  position: relative;
-  z-index: 1;
-  touch-action: none;
-  transition: transform 0.28s cubic-bezier(0.3, 0.7, 0.2, 1);
   padding: 12px 14px;
   border-radius: 22px;
-  background-color: rgba(255, 255, 255, 0.24);
-  backdrop-filter: blur(20px) saturate(160%);
+  background: rgba(255, 255, 255, 0.2);
   display: flex;
   gap: 12px;
   align-items: flex-start;
@@ -1180,83 +1129,6 @@ img.m-gal-big {
 .m-lock-note img {
   flex: none;
   border-radius: 9px;
-  pointer-events: none;
-}
-
-/* "View" on a locked phone: a small shake, then the ask to unlock. */
-.m-lock-note.is-shake {
-  animation: m-note-shake 0.42s ease;
-}
-
-@keyframes m-note-shake {
-  20%,
-  60% {
-    transform: translateX(-9px);
-  }
-  40%,
-  80% {
-    transform: translateX(9px);
-  }
-}
-
-.m-note-ask {
-  margin: 10px 0 0;
-  text-align: center;
-  font-size: 14px;
-  font-weight: 600;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-}
-
-/* Returning visitors: Face ID in the middle, then "Welcome back". */
-.m-lock-center {
-  margin: auto 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-}
-
-.m-faceid-face {
-  animation: m-face-scan 0.65s ease-in-out infinite alternate;
-}
-
-@keyframes m-face-scan {
-  from {
-    opacity: 0.45;
-  }
-}
-
-.m-faceid-tick {
-  stroke-dasharray: 40;
-  stroke-dashoffset: 40;
-  animation: m-tick 0.35s ease-out forwards;
-}
-
-@keyframes m-tick {
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-
-.m-lock-center {
-  transition: opacity 0.45s ease;
-}
-
-.m-lock-center.is-gone {
-  opacity: 0;
-}
-
-/* The same size and weight as "Mark Plowright" in the notification. */
-.m-lock-welcome {
-  font-size: 13px;
-  font-weight: 700;
-  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.25);
-  opacity: 0.8;
-  transition: opacity 0.3s, transform 0.3s;
-}
-
-.m-lock-welcome.is-in {
-  opacity: 1;
 }
 
 .m-lock-note-head {
@@ -1281,7 +1153,7 @@ img.m-gal-big {
 .m-lock-swipe {
   margin-top: auto;
   width: 100%;
-  padding: 18px 0 calc(14px + env(safe-area-inset-bottom, 0px));
+  padding: 18px 0 14px;
   border: 0;
   background: transparent;
   color: #fff;
@@ -1303,46 +1175,6 @@ img.m-gal-big {
   outline: 2px solid #fff;
   outline-offset: 4px;
   border-radius: 4px;
-}
-
-/* The whole strip hops every couple of seconds to prompt the swipe. */
-.m-lock-hop {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  animation: m-lock-hop 2.4s ease-in-out infinite;
-}
-
-/* After a tap, a short swipe or "View": one bigger hop straight away. */
-.m-lock-hop.is-nudge {
-  animation: m-lock-nudge 0.6s ease-out, m-lock-hop 2.4s ease-in-out 0.6s infinite;
-}
-
-@keyframes m-lock-hop {
-  0%,
-  62%,
-  100% {
-    transform: translateY(0);
-  }
-  72% {
-    transform: translateY(-12px);
-  }
-  80% {
-    transform: translateY(0);
-  }
-  88% {
-    transform: translateY(-5px);
-  }
-}
-
-@keyframes m-lock-nudge {
-  35% {
-    transform: translateY(-22px);
-  }
-  70% {
-    transform: translateY(2px);
-  }
 }
 
 .m-lock-arrow {
@@ -1369,8 +1201,6 @@ img.m-gal-big {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .m-lock-hop,
-  .m-faceid-face,
   .m-boot-bar div {
     animation: none;
   }

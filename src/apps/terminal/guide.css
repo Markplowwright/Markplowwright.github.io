@@ -150,7 +150,7 @@
 }
 
 [data-standalone] .cg.is-phone .cg-head {
-  padding-top: calc(env(safe-area-inset-top, 0px) + 8px);
+  padding-top: 8px;
 }
 
 .cg.is-phone .cg-close {
