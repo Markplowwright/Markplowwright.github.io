@@ -8,6 +8,7 @@ import { openSearch, openTarget } from '../../os/actions';
 import { terminalText } from '../../content/terminal';
 import { runCommand } from './commands';
 import { CommandGuide } from './CommandGuide';
+import { forOs, useTermQueue } from './queue';
 import { osLabel } from '../../content/commandGuide';
 
 type Line = { cmd: boolean; prompt?: string; text: string };
@@ -55,6 +56,14 @@ export default function TerminalApp() {
     if (result.open) openTarget(result.open);
     if (result.search) openSearch(result.search);
   };
+
+  // A command sent from another app (Help Desk "Try it").
+  const pending = useTermQueue((s) => s.pending);
+  useEffect(() => {
+    if (!pending) return;
+    const c = useTermQueue.getState().take();
+    if (c) run(forOs(c.cmd, c.os, skin.id));
+  }, [pending]);
 
   return (
     <div className="terminal" onClick={() => inputRef.current?.focus()}>

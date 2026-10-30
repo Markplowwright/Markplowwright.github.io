@@ -38,6 +38,15 @@ export const apps: AppDefinition[] = [
     pinned: true,
   },
   {
+    id: 'helpdesk',
+    title: { windows: 'Help Desk', mac: 'Help Desk', linux: 'Help Desk' },
+    icon: 'helpdesk',
+    component: lazy(() => import('../apps/helpdesk')),
+    defaultSize: { w: 900, h: 580 },
+    singleInstance: true,
+    pinned: true,
+  },
+  {
     id: 'taskmgr',
     title: { windows: 'Task Manager', mac: 'Activity Monitor', linux: 'System Monitor' },
     icon: 'taskmgr',
