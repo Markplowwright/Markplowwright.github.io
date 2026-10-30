@@ -5,14 +5,14 @@
 import { useId } from 'react';
 import type { SkinId } from './types';
 
-type Shape = 'folder' | 'term' | 'net' | 'gear' | 'mon' | 'globe' | 'shield' | 'trash' | 'doc' | 'slides' | 'image' | 'video' | 'desk' | 'capture';
+type Shape = 'folder' | 'term' | 'net' | 'gear' | 'mon' | 'globe' | 'trash' | 'doc' | 'slides' | 'image' | 'video' | 'desk' | 'capture';
 
 const SHAPE: Record<string, Shape> = {
   files: 'folder', folder: 'folder', terminal: 'term', network: 'net', settings: 'gear', taskmgr: 'mon',
-  browser: 'globe', link: 'globe', eventlog: 'shield', trash: 'trash', doc: 'doc', pdf: 'doc', viewer: 'doc',
+  browser: 'globe', link: 'globe', trash: 'trash', doc: 'doc', pdf: 'doc', viewer: 'doc',
   slides: 'slides', image: 'image', video: 'video', helpdesk: 'desk', capture: 'capture',
 };
-const APPS = ['files', 'terminal', 'network', 'settings', 'taskmgr', 'browser', 'eventlog', 'helpdesk', 'capture'];
+const APPS = ['files', 'terminal', 'network', 'settings', 'taskmgr', 'browser', 'helpdesk', 'capture'];
 
 // Colors per skin and icon: [fill 1, fill 2, fill 3, fill 4, stroke, container or '', folder tab bar, terminal strip]
 type Colors = [string, string, string, string, string, string, boolean, boolean];
@@ -31,7 +31,6 @@ function palette(skin: SkinId, g: (name: string) => string): Record<string, Colo
       image: ['#ffffff', '#58b6ff', '#2f9e44', '#f2c744', '#8b99ad', '', false, false],
       taskmgr: ['#ffffff', '', '#0f9d58', '', '#8b99ad', '', false, false],
       browser: ['#2f80ed', '#ffffff', '', '', '', '', false, false],
-      eventlog: ['#e8f0fb', '', '#0f6cbd', '', '#0f6cbd', '', false, false],
       helpdesk: ['', '', '#e8590c', '#0f6cbd', '', '', false, false],
       capture: ['#0f6cbd', '#e8f0fb', '#0f6cbd', '#2fa66a', '', '', false, false],
       trash: ['#e8eef7', '#8fa3c0', '', '', '#8b99ad', '', false, false],
@@ -49,7 +48,6 @@ function palette(skin: SkinId, g: (name: string) => string): Record<string, Colo
       image: ['#ffffff', '#5ac8fa', '#34c759', '#ffcc00', '#c7ccd6', '', false, false],
       taskmgr: ['#ffffff', '', '#34c759', '', 'rgba(0,0,0,0)', 'linear-gradient(160deg,#4a4a50,#161618)', false, false],
       browser: ['#ffffff', '#0a84ff', '', '', '', 'linear-gradient(160deg,#5ac8fa,#0a84ff)', false, false],
-      eventlog: ['#ffffff', '', '#ff3b30', '', 'rgba(0,0,0,0)', 'linear-gradient(160deg,#ff8a80,#ff3b30)', false, false],
       helpdesk: ['', '', '#ffffff', '#ffffff', '', 'linear-gradient(160deg,#ffb347,#ff7a00)', false, false],
       capture: ['#ffffff', 'rgba(255,255,255,0.25)', '#ffffff', '#7dffb0', '', 'linear-gradient(160deg,#4a8cff,#1747a6)', false, false],
       trash: ['rgba(255,255,255,0.75)', '#aeb4c0', '', '', '#8e95a3', '', false, false],
@@ -66,7 +64,6 @@ function palette(skin: SkinId, g: (name: string) => string): Record<string, Colo
     image: ['#ffffff', '#62a0ea', '#26a269', '#f5c211', '#c0bfbc', '', false, false],
     taskmgr: ['#ffffff', '', '#26a269', '', 'rgba(0,0,0,0)', '#2e3436', false, false],
     browser: ['#ffffff', '#3584e4', '', '', '', '#3584e4', false, false],
-    eventlog: ['#ffffff', '', '#c01c28', '', 'rgba(0,0,0,0)', '#e01b24', false, false],
     helpdesk: ['', '', '#ffffff', '#ffffff', '', '#e66100', false, false],
     capture: ['#ffffff', 'rgba(255,255,255,0.25)', '#ffffff', '#8ff0a4', '', '#1c71d8', false, false],
     trash: ['#e1e1e4', '#9a9996', '', '', '#77767b', '', false, false],
@@ -206,12 +203,6 @@ export function AppIcon({ app, skin, size = 48 }: { app: string; skin: SkinId; s
             <circle cx="16" cy="16" r="12.5" fill={f1} />
             <ellipse cx="16" cy="16" rx="5.2" ry="12.5" fill="none" stroke={f2} strokeWidth="1.5" />
             <path d="M3.8 12h24.4M3.8 20h24.4M16 3.5v25" stroke={f2} strokeWidth="1.5" fill="none" />
-          </>
-        )}
-        {shape === 'shield' && (
-          <>
-            <path d="M16 3l11 4v8c0 7-4.8 11-11 14C9.8 26 5 22 5 15V7z" fill={f1} stroke={st} strokeWidth="1.2" strokeLinejoin="round" />
-            <path d="M10.5 15.5l4 4 7-8" stroke={f3} strokeWidth="2.6" fill="none" strokeLinecap="round" strokeLinejoin="round" />
           </>
         )}
         {shape === 'trash' && (

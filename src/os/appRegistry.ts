@@ -65,15 +65,6 @@ export const apps: AppDefinition[] = [
     pinned: true,
   },
   {
-    id: 'eventlog',
-    title: { windows: 'Event Viewer', mac: 'Console', linux: 'Logs' },
-    icon: 'eventlog',
-    component: lazy(() => import('../apps/eventlog')),
-    defaultSize: { w: 720, h: 420 },
-    singleInstance: true,
-    pinned: true,
-  },
-  {
     id: 'network',
     title: { windows: 'Network Map', mac: 'Network Map', linux: 'Network Map' },
     icon: 'network',

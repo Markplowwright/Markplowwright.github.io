@@ -34,7 +34,7 @@ const target = (parts: string[]) => parts.slice(1).filter((p) => !p.startsWith('
 /** Names you can type after "open", mapped to app or file ids. */
 const OPEN_TARGETS: Record<string, string> = {
   files: 'files', explorer: 'files', finder: 'files', terminal: 'terminal', browser: 'browser', helpdesk: 'helpdesk', tickets: 'helpdesk', capture: 'capture', wireshark: 'capture', packets: 'capture',
-  taskmgr: 'taskmgr', monitor: 'taskmgr', events: 'eventlog', logs: 'eventlog', network: 'network',
+  taskmgr: 'taskmgr', monitor: 'taskmgr', network: 'network',
   settings: 'settings', resume: 'resume', projects: 'work', contact: 'contact', presentations: 'pres',
   education: 'education', interests: 'interests', hobbies: 'interests',
 };
