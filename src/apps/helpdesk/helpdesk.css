@@ -1,0 +1,375 @@
+/* Help Desk. Colors come from the skin (desktop) or the phone's variables. */
+.hd {
+  --hd-surface: var(--card, var(--body-bg, #fff));
+  --hd-soft: var(--chip-bg, var(--hover, rgba(127, 127, 127, 0.12)));
+  --hd-link: var(--accent, #1a5fd0);
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.hd-top {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--line);
+  flex: none;
+}
+
+.hd-top strong {
+  font-size: 15px;
+}
+
+.hd-muted {
+  color: var(--muted);
+}
+
+.hd-main {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+
+/* ---------- ticket list ---------- */
+.hd-list {
+  flex: none;
+  width: 270px;
+  overflow: auto;
+  border-right: 1px solid var(--line);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hd-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.hd-item:hover {
+  background: var(--hd-soft);
+}
+
+.hd-item.is-on {
+  background: var(--hl, var(--hd-soft));
+  box-shadow: inset 3px 0 0 var(--hd-link);
+}
+
+.hd-item.is-method {
+  border: 1px dashed var(--line);
+}
+
+.hd-item-num {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.hd-item-title {
+  font-weight: 600;
+}
+
+.hd-item .hd-state {
+  align-self: flex-start;
+}
+
+.hd-filters {
+  display: flex;
+  gap: 4px;
+  margin: 6px 0 4px;
+}
+
+.hd-filters button {
+  flex: 1;
+  min-height: 28px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.hd-filters button[aria-pressed='true'] {
+  background: var(--hd-link);
+  border-color: var(--hd-link);
+  color: #fff;
+}
+
+.hd-p {
+  font-weight: 700;
+}
+
+.hd-p.p1,
+.hd-p.p2 {
+  color: #d13438;
+}
+
+.hd-p.p3 {
+  color: #c27c0e;
+}
+
+.hd-p.p4 {
+  color: var(--muted);
+}
+
+.hd-state {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.hd-state.is-resolved {
+  background: rgba(16, 124, 16, 0.14);
+  color: #0e7a0d;
+}
+
+.hd-state.is-escalated {
+  background: rgba(194, 124, 14, 0.16);
+  color: #a86500;
+}
+
+[data-mode='dark'] .hd-state.is-resolved {
+  color: #6ccb5f;
+}
+
+[data-mode='dark'] .hd-state.is-escalated {
+  color: #f0b45a;
+}
+
+/* ---------- ticket ---------- */
+.hd-detail {
+  flex: 1;
+  min-width: 0;
+  overflow: auto;
+  padding: 16px 22px 28px;
+}
+
+.hd-back {
+  display: none;
+  min-height: 36px;
+  margin-bottom: 6px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--hd-link);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.hd-ticket {
+  max-width: 720px;
+}
+
+.hd-kicker {
+  margin: 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.hd-ticket h2 {
+  margin: 2px 0 10px;
+  font-size: 19px;
+}
+
+.hd-ticket h3 {
+  margin: 18px 0 6px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.hd-ticket p {
+  margin: 0 0 8px;
+}
+
+.hd-fields {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px 16px;
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--hd-surface);
+}
+
+.hd-fields dt {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.hd-fields dd {
+  margin: 0;
+}
+
+.hd-quote {
+  margin: 0;
+  padding: 8px 12px;
+  border-left: 3px solid var(--line);
+  font-style: italic;
+}
+
+.hd-steps,
+.hd-method {
+  margin: 0;
+  padding-left: 22px;
+}
+
+.hd-steps > li,
+.hd-method > li {
+  margin-bottom: 6px;
+}
+
+.hd-steps ul {
+  margin: 4px 0 2px;
+  padding-left: 18px;
+}
+
+.hd-steps ul li {
+  margin-bottom: 3px;
+}
+
+.hd-ticket code {
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: var(--hd-soft);
+  font: 12px ui-monospace, Menlo, Consolas, monospace;
+}
+
+.hd-evidence {
+  margin: 0 0 10px;
+}
+
+.hd-evidence figcaption {
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+
+.hd-evidence pre {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #0f1115;
+  color: #d6dbe1;
+  font: 12px/1.5 ui-monospace, Menlo, Consolas, monospace;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.hd-evidence.is-escalation pre {
+  background: #2a1f0b;
+  color: #f6dcae;
+}
+
+.hd-note {
+  margin-top: 14px !important;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--hd-soft);
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.hd-try {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.hd-try-btn {
+  min-height: 32px;
+  padding: 5px 12px;
+  border: 1px solid var(--hd-link);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--hd-link);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.hd-try-btn:hover {
+  background: var(--hd-link);
+  color: #fff;
+}
+
+/* ---------- narrow windows and the phone: list or ticket, not both ---------- */
+@container (max-width: 620px) {
+  .hd-list {
+    width: auto;
+    flex: 1;
+    border-right: 0;
+  }
+
+  .hd.show-detail .hd-list,
+  .hd.show-list .hd-detail {
+    display: none;
+  }
+
+  .hd-back {
+    display: block;
+  }
+
+  .hd-detail {
+    padding: 10px 14px 24px;
+  }
+
+  .hd-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.hd.is-phone {
+  font-size: 15px;
+  height: auto;
+}
+
+.hd.is-phone .hd-main,
+.hd.is-phone .hd-detail,
+.hd.is-phone .hd-list {
+  overflow: visible;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.hd.is-phone .hd-item {
+  min-height: 56px;
+  background: var(--card);
+  border-radius: 12px;
+  padding: 10px 14px;
+}
+
+.hd.is-phone .hd-item.is-on {
+  box-shadow: none;
+}
+
+.hd.is-phone .hd-filters button,
+.hd.is-phone .hd-try-btn,
+.hd.is-phone .hd-back {
+  min-height: 44px;
+}
+
+.hd.is-phone .hd-fields {
+  background: var(--card);
+}

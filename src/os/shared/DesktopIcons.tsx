@@ -12,6 +12,7 @@ export function DesktopIcons() {
   const items: { key: string; icon: string; label: string; open: () => void; social?: (typeof SOCIALS)[number]['id'] }[] = [
     { key: 'about', icon: 'folder', label: 'About Mark', open: () => openNode('about') },
     { key: 'resume', icon: 'pdf', label: 'Resume.pdf', open: () => openNode('resume') },
+    { key: 'helpdesk', icon: 'helpdesk', label: 'Help Desk', open: () => openApp('helpdesk') },
   ];
   // macOS keeps Trash in the dock, the others show it on the desktop.
   if (skin.id !== 'mac') items.push({ key: 'trash', icon: 'trash', label: skin.words.trash, open: () => openNode('trash') });

@@ -21,13 +21,16 @@ import { fileTree } from '../content/fileTree';
 import type { Target } from '../content/search';
 import { SearchView } from '../apps/browser/SearchView';
 import { CommandGuide } from '../apps/terminal/CommandGuide';
+import { HelpDeskView } from '../apps/helpdesk/HelpDeskView';
+import { useTermQueue } from '../apps/terminal/queue';
+import type { TryIt } from '../content/helpdesk';
 import { useBrowserEntry, useBrowserStore } from '../apps/browser/store';
 import { queryParam } from '../os/storage';
 import { SOCIALS, SocialTile, type SocialId } from '../os/SocialIcon';
 import { ProjectTile, projectShort } from './ProjectIcons';
 import './mobile.css';
 
-type MobileApp = 'about' | 'projects' | 'slides' | 'resume' | 'contact' | 'browser' | 'terminal' | 'network' | 'activity' | 'logs' | 'settings';
+type MobileApp = 'about' | 'projects' | 'slides' | 'resume' | 'contact' | 'browser' | 'helpdesk' | 'terminal' | 'network' | 'activity' | 'logs' | 'settings';
 
 const DEFS: { id: MobileApp; label: string; icon: string; tile?: string }[] = [
   { id: 'about', label: 'About Mark', icon: 'folder', tile: 'linear-gradient(160deg,#5ac8fa,#0a84ff)' },
@@ -36,6 +39,7 @@ const DEFS: { id: MobileApp; label: string; icon: string; tile?: string }[] = [
   { id: 'resume', label: 'Resume', icon: 'pdf', tile: 'linear-gradient(160deg,#ff8a80,#e5281d)' },
   { id: 'contact', label: 'Contact', icon: 'doc', tile: 'linear-gradient(160deg,#6ee7a0,#1f9d55)' },
   { id: 'browser', label: 'Browser', icon: 'browser' },
+  { id: 'helpdesk', label: 'Help Desk', icon: 'helpdesk' },
   { id: 'terminal', label: 'Terminal', icon: 'terminal' },
   { id: 'network', label: 'Network', icon: 'network' },
   { id: 'activity', label: 'Activity', icon: 'taskmgr' },
@@ -44,8 +48,11 @@ const DEFS: { id: MobileApp; label: string; icon: string; tile?: string }[] = [
 ];
 const DOCK: MobileApp[] = ['projects', 'contact', 'browser', 'settings'];
 /** The home screen pages, left to right. The dock shows on every page. */
-const PAGES: (MobileApp | SocialId | 'group-projects')[][] = [
-  ['group-projects', 'about', 'slides', 'resume', 'terminal', 'linkedin', 'github', 'email'],
+type Group = 'projects' | 'tools';
+/** The apps inside the IT Tools group. */
+const TOOLS: MobileApp[] = ['helpdesk', 'terminal'];
+const PAGES: (MobileApp | SocialId | `group-${Group}`)[][] = [
+  ['group-projects', 'group-tools', 'about', 'slides', 'resume', 'linkedin', 'github', 'email'],
   ['activity', 'logs', 'network'],
 ];
 const PULL = 80; // pixels to pull down before releasing opens search
@@ -59,30 +66,60 @@ type InstallPrompt = Event & { prompt: () => Promise<void> };
 /** A project's main link: its live site if it has one, otherwise GitHub. */
 const projectLink = (p: (typeof projects)[number]) => p.links[0]?.url;
 
-/** The Projects group: opens like an iPhone folder, one icon per project. */
-function ProjectsGroup({ onClose, onDetails }: { onClose: () => void; onDetails: () => void }) {
-  const first = useRef<HTMLAnchorElement>(null);
+/** An open group (like an iPhone folder): blurred home screen, a title and a panel of icons. */
+function GroupLayer({ title, onClose, more, children }: { title: string; onClose: () => void; more?: { label: string; onClick: () => void }; children: ReactNode }) {
+  const panel = useRef<HTMLDivElement>(null);
+  const close = useRef(onClose);
+  close.current = onClose;
   useEffect(() => {
-    first.current?.focus();
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
+    panel.current?.querySelector<HTMLElement>('a, button')?.focus();
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && close.current();
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [onClose]);
+  }, []);
   return (
-    <div className="m-group-layer" role="dialog" aria-modal="true" aria-label="Projects group" onClick={onClose}>
-      <h2 className="m-group-title">Projects</h2>
-      <div className="m-group-panel" onClick={(e) => e.stopPropagation()}>
-        {projects.map((p, i) => (
-          <a key={p.id} ref={i === 0 ? first : undefined} className="m-app" href={projectLink(p)} target="_blank" rel="noopener noreferrer" aria-label={`${p.name} (opens ${p.links[0]?.label ?? 'link'})`}>
-            <ProjectTile id={p.id} name={p.name} />
-            <span>{projectShort(p.id, p.name)}</span>
-          </a>
-        ))}
+    <div className="m-group-layer" role="dialog" aria-modal="true" aria-label={`${title} group`} onClick={onClose}>
+      <h2 className="m-group-title">{title}</h2>
+      <div className="m-group-panel" ref={panel} onClick={(e) => e.stopPropagation()}>
+        {children}
       </div>
-      <button type="button" className="m-group-more" onClick={(e) => { e.stopPropagation(); onDetails(); }}>
-        See details for every project ›
-      </button>
+      {more && (
+        <button type="button" className="m-group-more" onClick={(e) => { e.stopPropagation(); more.onClick(); }}>
+          {more.label} ›
+        </button>
+      )}
     </div>
+  );
+}
+
+/** The Projects group: one icon per project, linking to its site or GitHub. */
+function ProjectsGroup({ onClose, onDetails }: { onClose: () => void; onDetails: () => void }) {
+  return (
+    <GroupLayer title="Projects" onClose={onClose} more={{ label: 'See details for every project', onClick: onDetails }}>
+      {projects.map((p) => (
+        <a key={p.id} className="m-app" href={projectLink(p)} target="_blank" rel="noopener noreferrer" aria-label={`${p.name} (opens ${p.links[0]?.label ?? 'link'})`}>
+          <ProjectTile id={p.id} name={p.name} />
+          <span>{projectShort(p.id, p.name)}</span>
+        </a>
+      ))}
+    </GroupLayer>
+  );
+}
+
+/** The IT Tools group: Help Desk, Terminal and the other IT apps. */
+function ToolsGroup({ onClose, onOpen }: { onClose: () => void; onOpen: (id: MobileApp) => void }) {
+  return (
+    <GroupLayer title="IT Tools" onClose={onClose}>
+      {TOOLS.map((id) => {
+        const d = DEFS.find((x) => x.id === id)!;
+        return (
+          <button key={id} type="button" className="m-app" onClick={() => onOpen(id)}>
+            <Icon d={d} />
+            <span>{d.label}</span>
+          </button>
+        );
+      })}
+    </GroupLayer>
   );
 }
 
@@ -140,7 +177,7 @@ export function MobileHome() {
   const [focus, setFocus] = useState<string | null>(null);
   const [gallery, setGallery] = useState<{ rootId: string; project: string; start: string } | null>(null);
   const [page, setPage] = useState(0);
-  const [groupOpen, setGroupOpen] = useState(false);
+  const [groupOpen, setGroupOpen] = useState<Group | null>(null);
   const [pull, setPull] = useState(0);
   const [standalone] = useState(isStandalone);
   const pager = useRef<HTMLDivElement>(null);
@@ -206,7 +243,7 @@ export function MobileHome() {
   /** "open resume" and friends from the Terminal: desktop app names mapped to phone screens. */
   const openTerminalTarget = (target: string) => {
     const apps: Record<string, MobileApp> = {
-      files: 'projects', work: 'projects', terminal: 'terminal', browser: 'browser', taskmgr: 'activity', eventlog: 'logs',
+      files: 'projects', work: 'projects', terminal: 'terminal', browser: 'browser', helpdesk: 'helpdesk', taskmgr: 'activity', eventlog: 'logs',
       network: 'network', settings: 'settings', resume: 'resume', contact: 'contact', pres: 'slides',
     };
     if (apps[target]) {
@@ -214,6 +251,20 @@ export function MobileHome() {
       setApp(apps[target]);
       setFocus(null);
     } else openResult({ node: target });
+  };
+  /** Help Desk "Try it": run a command in the Terminal, or open an app or screenshots. */
+  const tryFromHelpDesk = (x: TryIt) => {
+    if ('terminal' in x) {
+      useTermQueue.getState().send({ cmd: x.terminal, os: x.os });
+      setFrom(app);
+      setApp('terminal');
+      setFocus(null);
+    } else if ('app' in x) {
+      const map: Record<string, MobileApp> = { taskmgr: 'activity', network: 'network', eventlog: 'logs' };
+      setFrom(app);
+      setApp(map[x.app]);
+      setFocus(null);
+    } else openResult({ node: x.node });
   };
   const searchFromApp = (q: string) => {
     useBrowserStore.getState().go(q);
@@ -313,13 +364,29 @@ export function MobileHome() {
                 {items.map((id) => {
                   if (id === 'group-projects')
                     return (
-                      <button key={id} type="button" className="m-app" aria-haspopup="dialog" onClick={() => setGroupOpen(true)}>
+                      <button key={id} type="button" className="m-app" aria-haspopup="dialog" onClick={() => setGroupOpen('projects')}>
                         <span className="m-folder" aria-hidden="true">
                           {projects.slice(0, 9).map((p) => (
                             <ProjectTile key={p.id} id={p.id} name={p.name} size={13} />
                           ))}
                         </span>
                         <span>Projects</span>
+                      </button>
+                    );
+                  if (id === 'group-tools')
+                    return (
+                      <button key={id} type="button" className="m-app" aria-haspopup="dialog" onClick={() => setGroupOpen('tools')}>
+                        <span className="m-folder" aria-hidden="true">
+                          {TOOLS.slice(0, 9).map((t) => {
+                            const d = DEFS.find((x) => x.id === t)!;
+                            return d.tile ? (
+                              <span key={t} className="m-tile" style={{ background: d.tile, width: 13, height: 13, borderRadius: 3 }} />
+                            ) : (
+                              <AppIcon key={t} app={d.icon} skin="mac" size={13} />
+                            );
+                          })}
+                        </span>
+                        <span>IT Tools</span>
                       </button>
                     );
                   const social = SOCIALS.find((x) => x.id === id);
@@ -397,16 +464,25 @@ export function MobileHome() {
             <h2>{def.label}</h2>
           </div>
           <div className="m-sheet-body">
-            <MobileApp id={app} onOpen={openResult} onOpenTarget={openTerminalTarget} onSearch={searchFromApp} />
+            <MobileApp id={app} onOpen={openResult} onOpenTarget={openTerminalTarget} onSearch={searchFromApp} onTry={tryFromHelpDesk} />
           </div>
         </div>
       )}
-      {groupOpen && !app && (
+      {groupOpen === 'projects' && !app && (
         <ProjectsGroup
-          onClose={() => setGroupOpen(false)}
+          onClose={() => setGroupOpen(null)}
           onDetails={() => {
-            setGroupOpen(false);
+            setGroupOpen(null);
             openApp('projects');
+          }}
+        />
+      )}
+      {groupOpen === 'tools' && !app && (
+        <ToolsGroup
+          onClose={() => setGroupOpen(null)}
+          onOpen={(id) => {
+            setGroupOpen(null);
+            openApp(id);
           }}
         />
       )}
@@ -447,7 +523,7 @@ function ProjectsApp() {
   );
 }
 
-function MobileApp({ id, onOpen, onOpenTarget, onSearch }: { id: MobileApp; onOpen: (t: Target) => void; onOpenTarget: (target: string) => void; onSearch: (q: string) => void }) {
+function MobileApp({ id, onOpen, onOpenTarget, onSearch, onTry }: { id: MobileApp; onOpen: (t: Target) => void; onOpenTarget: (target: string) => void; onSearch: (q: string) => void; onTry: (x: TryIt) => void }) {
   switch (id) {
     case 'about':
       return (
@@ -533,6 +609,8 @@ function MobileApp({ id, onOpen, onOpenTarget, onSearch }: { id: MobileApp; onOp
       return <MobileContact />;
     case 'browser':
       return <MobileBrowser onOpen={onOpen} />;
+    case 'helpdesk':
+      return <HelpDeskView phone onTry={onTry} />;
     case 'terminal':
       return <MobileTerminal onOpen={onOpenTarget} onSearch={onSearch} />;
     case 'network':
@@ -666,6 +744,15 @@ function MobileTerminal({ onOpen, onSearch }: { onOpen: (target: string) => void
   useEffect(() => {
     bottom.current?.scrollIntoView({ block: 'end' });
   }, [lines]);
+
+  // A command sent from Help Desk "Try it": switch to its OS and run it.
+  useEffect(() => {
+    const c = useTermQueue.getState().take();
+    if (!c) return;
+    const on = (c.os ?? os) as TermOs;
+    set({ os: on });
+    run(c.cmd, on);
+  }, []);
 
   const run = (c: string, on: TermOs = os) => {
     if (!c.trim()) return;

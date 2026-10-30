@@ -51,8 +51,22 @@ async function doh(name: string, type: 'A' | 'AAAA', signal: AbortSignal) {
 }
 
 /** Looks a name up: the lab first, then real DNS, then the built-in list. null = no such name. */
+/** Names for well-known addresses, for nslookup <ip> and traceroute. */
+const REVERSE: Record<string, string> = {
+  '8.8.8.8': 'dns.google',
+  '8.8.4.4': 'dns.google',
+  '1.1.1.1': 'one.one.one.one',
+  '10.0.0.1': 'router.plowlab.local',
+  '10.0.0.4': 'PLOWVM.plowlab.local',
+  '10.0.0.5': 'PLOWCLIENT.plowlab.local',
+};
+export const isIpv4 = (s: string) => /^(25[0-5]|2[0-4]\d|1?\d?\d)(\.(25[0-5]|2[0-4]\d|1?\d?\d)){3}$/.test(s);
+const isPrivate = (ip: string) => /^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.|127\.)/.test(ip);
+
 export const dnsLookup: Lookup = async (raw) => {
   const name = raw.toLowerCase().replace(/\.$/, '');
+  // An address needs no lookup: ping 8.8.8.8, ping 10.0.0.1.
+  if (isIpv4(name)) return { name: REVERSE[name] ?? name, a: [name], aaaa: [], aliases: [], internal: isPrivate(name) };
   if (LAB[name]) {
     const fqdn = name.includes('.') ? name : `${name}.${NET.domain}`;
     return { name: fqdn, a: [LAB[name]], aaaa: [], aliases: [], internal: true };
@@ -261,7 +275,7 @@ export async function ping(host: string, skin: SkinId, online: boolean, lookup: 
   if (skin === 'windows')
     return [
       '',
-      `Pinging ${r.name} [${ip}] with 32 bytes of data:`,
+      isIpv4(host) ? `Pinging ${ip} with 32 bytes of data:` : `Pinging ${r.name} [${ip}] with 32 bytes of data:`,
       ...t.map((x) => `Reply from ${ip}: bytes=32 time=${Math.round(x)}ms TTL=${ttl}`),
       '',
       `Ping statistics for ${ip}:`,
