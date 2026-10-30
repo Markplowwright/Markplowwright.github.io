@@ -1,7 +1,6 @@
-// Icons on the desktop. One click opens (visitors may not think to double-click).
-import { useLayoutEffect, useState } from 'react';
-import { useUiStore } from '../uiStore';
-import { useSkinStore } from '../skinStore';
+// Icons on the desktop, down the left side on every skin (new apps go here,
+// not in the taskbar or dock). One click opens: visitors may not think to
+// double-click. On short screens the icons wrap into another column.
 import { AppIcon } from '../AppIcon';
 import { useSkin } from '../skins';
 import { openApp, openNode } from '../actions';
@@ -24,28 +23,6 @@ export function DesktopIcons() {
   for (const x of SOCIALS) items.push({ key: x.id, icon: '', label: x.label, open: () => openSocial(x.id), social: x.id });
   const size = skin.id === 'mac' ? 58 : skin.id === 'linux' ? 52 : 46;
 
-  // macOS: icons run down the right edge. Any that don't fit go in a second
-  // column below the clock widget instead of underneath it.
-  const height = useUiStore((s) => s.viewport.height);
-  const widgetOn = useSkinStore((s) => s.widgets);
-  const [below, setBelow] = useState(0);
-  const mac = skin.id === 'mac';
-  const fit = mac ? Math.max(1, Math.floor((height - 28 - 14 - 88) / 112)) : items.length;
-  useLayoutEffect(() => {
-    if (!mac) return;
-    const w = document.querySelector('.widget');
-    if (!w) {
-      setBelow(0);
-      return;
-    }
-    // Follow the widget as it changes size (fonts loading, the clock text).
-    const measure = () => setBelow(Math.round(w.getBoundingClientRect().bottom) + 14);
-    measure();
-    const ro = new ResizeObserver(measure);
-    ro.observe(w);
-    return () => ro.disconnect();
-  }, [mac, height, widgetOn]);
-
   const render = (list: typeof items) =>
     list.map((i) => (
         <button
@@ -60,15 +37,8 @@ export function DesktopIcons() {
     ));
 
   return (
-    <>
-      <div className="desk-icons" role="group" aria-label="Desktop">
-        {render(items.slice(0, fit))}
-      </div>
-      {fit < items.length && (
-        <div className="desk-icons desk-icons-more" role="group" aria-label="More desktop icons" style={below ? { top: below, maxHeight: `calc(100% - ${below}px - var(--inset-bottom, 0px) - 14px)` } : undefined}>
-          {render(items.slice(fit))}
-        </div>
-      )}
-    </>
+    <div className="desk-icons" role="group" aria-label="Desktop">
+      {render(items)}
+    </div>
   );
 }

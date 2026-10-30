@@ -37,17 +37,6 @@
   z-index: 5;
 }
 
-[data-skin='mac'] .desk-icons {
-  left: auto;
-  right: 14px;
-  flex-wrap: wrap-reverse;
-}
-
-/* macOS overflow column, lined up under the clock widget's right edge. */
-[data-skin='mac'] .desk-icons-more {
-  right: 120px;
-}
-
 /* LinkedIn, GitHub and Email tiles keep the icons' height so labels line up. */
 .desk-social {
   margin: 3px 0;
@@ -92,10 +81,6 @@
   background: var(--widget-bg, rgba(20, 30, 60, 0.42));
   backdrop-filter: blur(18px) saturate(150%);
   box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
-}
-
-[data-skin='mac'] .widget {
-  right: 120px;
 }
 
 .widget-time {
