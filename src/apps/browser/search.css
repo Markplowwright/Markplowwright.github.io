@@ -6,6 +6,9 @@
   --sx-chip: var(--chip-bg, var(--hover, rgba(127, 127, 127, 0.14)));
   --sx-hover: var(--hover, rgba(127, 127, 127, 0.12));
   --sx-link: var(--accent, #1a5fd0);
+  /* Always solid: the suggestion list must hide what is behind it. macOS search
+     fields are see-through, so the field color can't be used here. */
+  --sx-solid: var(--card, var(--body-bg, #fff));
   flex: 1;
   min-height: 0;
   overflow: auto;
@@ -167,7 +170,7 @@
   text-align: left;
   border: 1px solid var(--line);
   border-radius: 14px;
-  background: var(--sx-field);
+  background: var(--sx-solid);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
 }
 
