@@ -23,7 +23,7 @@ export const profile = {
   summary:
     'IT support professional with experience since 2022 across K-12 schools, a university research lab, and summer programs. Hands-on with Mac and Windows support, Jamf, networks, AV and video conferencing, ticketing, and end-user training.',
   bio: [
-    'Mark Plowright. Field Systems Engineer at Fairdinkum in New York City, starting November 2026.',
+    'Mark Plowright. Field Systems Engineer at Fairdinkum in New York City.',
     'IT support professional with experience since 2022 across K-12 schools, a university research lab, and summer programs. Hands-on with Mac and Windows support, Jamf, networks, AV and video conferencing, ticketing, and end-user training.',
     'He also builds things: he co-founded GradAisle, a free graduate school discovery platform, and runs home labs for Windows Server, Active Directory and Microsoft 365 administration.',
     'Away from the keyboard, Mark attends church and is a musician, a chess player, and a writer with published poems. He reads (last finished: Never Split the Difference by Chris Voss), plays video games, goes to the gym, plays ultimate frisbee, and follows basketball and football while learning more about the American football game. He is also an audiophile. More in the Interests folder.',
