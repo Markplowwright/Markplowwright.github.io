@@ -34,7 +34,7 @@ import './mobile.css';
 type MobileApp = 'about' | 'projects' | 'slides' | 'resume' | 'contact' | 'browser' | 'helpdesk' | 'subnet' | 'terminal' | 'network' | 'activity' | 'settings';
 
 const DEFS: { id: MobileApp; label: string; icon: string; tile?: string }[] = [
-  { id: 'about', label: 'About Mark', icon: 'folder', tile: 'linear-gradient(160deg,#5ac8fa,#0a84ff)' },
+  { id: 'about', label: 'About Me', icon: 'folder', tile: 'linear-gradient(160deg,#5ac8fa,#0a84ff)' },
   { id: 'projects', label: 'Projects', icon: 'files' },
   { id: 'slides', label: 'Presentations', icon: 'slides', tile: 'linear-gradient(160deg,#ffb84d,#ff7a00)' },
   { id: 'resume', label: 'Resume', icon: 'pdf', tile: 'linear-gradient(160deg,#ff8a80,#e5281d)' },
@@ -138,7 +138,7 @@ function InstallHint() {
   if (prompt)
     return (
       <button type="button" className="m-install" onClick={() => prompt.prompt().catch(() => {})}>
-        Save Mark's portfolio as an app: tap to install
+        Save my portfolio as an app: tap to install
       </button>
     );
   const apple = /iphone|ipad|ipod/i.test(navigator.userAgent);
@@ -150,11 +150,11 @@ function InstallHint() {
 }
 
 const BANNERS: { title: string; body: string; label: string; app: MobileApp; q?: string }[] = [
-  { title: "Start with Mark's projects", body: 'Each build has the problem, what he built and links.', label: 'Open Projects', app: 'projects' },
-  { title: 'Search Mark’s portfolio in the Browser', body: 'Look up a skill like Group Policy or Intune and jump to the proof.', label: 'Search in the Browser', app: 'browser', q: 'Group Policy' },
-  { title: 'Get to know Mark outside of work', body: 'Music, chess, writing, books, sports, games and audio.', label: 'Open About Mark', app: 'about' },
-  { title: "Here are Mark's presentations", body: 'Seminars on network security and ML in computational chemistry.', label: 'Open Presentations', app: 'slides' },
-  { title: 'Want to get in touch with Mark?', body: 'Email him, or read his resume.', label: 'Open Contact', app: 'contact' },
+  { title: 'Start with my projects', body: 'Each build has the problem, what I built and links.', label: 'Open Projects', app: 'projects' },
+  { title: 'Search my portfolio in the Browser', body: 'Look up a skill like Group Policy or Intune and jump to the proof.', label: 'Search in the Browser', app: 'browser', q: 'Group Policy' },
+  { title: 'Get to know me outside of work', body: 'Music, chess, writing, books, sports, games and audio.', label: 'Open About Me', app: 'about' },
+  { title: 'Here are my presentations', body: 'Seminars on network security and ML in computational chemistry.', label: 'Open Presentations', app: 'slides' },
+  { title: 'Want to get in touch?', body: 'Email me, or read my resume.', label: 'Open Contact', app: 'contact' },
 ];
 
 function Icon({ d }: { d: (typeof DEFS)[number] }) {
@@ -736,7 +736,7 @@ function MobileContact() {
         ))}
       </div>
       <Card>Email: {profile.email}</Card>
-      <h3>Write Mark an email</h3>
+      <h3>Write me an email</h3>
       <label className="sr-only" htmlFor="m-sub">Subject</label>
       <input id="m-sub" className="m-input" placeholder="Subject" value={subject} onChange={(e) => setSubject(e.target.value)} />
       <label className="sr-only" htmlFor="m-msg">Message</label>

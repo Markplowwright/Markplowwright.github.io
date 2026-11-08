@@ -99,7 +99,7 @@ function SearchBox({ initial, onSearch, onOpen, autoFocus }: { initial: string; 
         ref={input}
         type="search"
         value={text}
-        placeholder="Search Mark's portfolio"
+        placeholder="Search my portfolio"
         aria-label={`Search with ${engineName}`}
         role="combobox"
         aria-expanded={open && list.length > 0}
@@ -225,7 +225,7 @@ export function SearchView({ entry, onSearch, onOpen, phone }: Props) {
       <div className={`sx sx-home${phone ? ' is-phone' : ''}`} ref={top}>
         <Logo big />
         <SearchBox initial="" onSearch={(t) => onSearch(t)} onOpen={onOpen} autoFocus={!phone} />
-        <p className="sx-note">Searches Mark's portfolio: projects, screenshots, skills, presentations and profiles. Not the web.</p>
+        <p className="sx-note">Searches my portfolio: projects, screenshots, skills, presentations and profiles. Not the web.</p>
         <h2 className="sx-label">Try asking</h2>
         <Chips items={questionSearches} onSearch={onSearch} />
         <h2 className="sx-label">Popular searches</h2>
@@ -281,7 +281,7 @@ export function SearchView({ entry, onSearch, onOpen, phone }: Props) {
         {list.length === 0 && (
           <div className="sx-empty">
             <p>
-              No results for <strong>“{q}”</strong>{tab !== 'all' ? ` in ${TABS.find((t) => t.id === tab)?.label}` : ''}. {engineName} only searches Mark's portfolio.
+              No results for <strong>“{q}”</strong>{tab !== 'all' ? ` in ${TABS.find((t) => t.id === tab)?.label}` : ''}. {engineName} only searches my portfolio.
             </p>
             {TABS.some((t) => t.id !== tab && count(t.id) > 0) ? (
               <div className="sx-chips">

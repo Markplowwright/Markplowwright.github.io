@@ -96,7 +96,7 @@ export default function SettingsApp() {
               <dt>Time zone</dt><dd>{tz}</dd>
               <dt>System</dt><dd>{profile.osName}, {skin.label} style</dd>
             </dl>
-            <button type="button" className="btn-accent" onClick={() => openNode('about')}>Open the About Mark folder</button>
+            <button type="button" className="btn-accent" onClick={() => openNode('about')}>Open the About Me folder</button>
           </>
         )}
       </div>

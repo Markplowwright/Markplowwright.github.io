@@ -34,7 +34,7 @@ function buildTree(): Record<string, FsNode> {
     nodes[n.id] = n;
   };
 
-  add({ id: 'about', name: 'About Mark', kind: 'folder', kids: ['bio', 'resume', 'experience', 'education', 'skills', 'contact', 'work', 'pres', 'interests'] });
+  add({ id: 'about', name: 'About Me', kind: 'folder', kids: ['bio', 'resume', 'experience', 'education', 'skills', 'contact', 'work', 'pres', 'interests'] });
   add({ id: 'bio', name: 'Bio.txt', kind: 'doc', body: profile.bio.join('\n\n') });
   add({ id: 'resume', name: 'Resume.pdf', kind: 'pdf', src: '/resume.pdf', body: `${profile.fullName}. ${profile.summary}` });
   add({
@@ -128,7 +128,7 @@ function buildTree(): Record<string, FsNode> {
   add({ id: 'int-writing', name: 'Writing.txt', kind: 'doc', body: writing.body.join('\n\n') });
   const interestKids = [...interests.map((i) => i.id), 'int-writing'];
   if (creativeSite.url) {
-    add({ id: 'creative', name: creativeSite.name, kind: 'link', src: creativeSite.url, body: "Mark's poems and music, on their own site." });
+    add({ id: 'creative', name: creativeSite.name, kind: 'link', src: creativeSite.url, body: 'My poems and music, on their own site.' });
     interestKids.push('creative');
   }
   add({
@@ -136,7 +136,7 @@ function buildTree(): Record<string, FsNode> {
     name: 'Interests',
     kind: 'folder',
     kids: interestKids,
-    body: 'Mark outside of work: music, chess, writing, reading, sports, games and audio.',
+    body: 'Me outside of work: music, chess, writing, reading, sports, games and audio.',
   });
 
   add({ id: 'trash', name: 'Trash', kind: 'folder', kids: ['t1', 't2', 't3'] });

@@ -209,7 +209,7 @@ export function runCommand(raw: string, ctx: TermContext): CommandResult {
         if (next !== 'resolvectl' && ctx.skin === 'linux') return wrongOs(next, 'macOS', EQUIV.flushdns.linux, ctx);
         return { lines: [`[sudo] password for ${T.user}: ********`] };
       }
-      return { lines: ['Nice try. Only one sudo command works here, and it involves hiring Mark.'] };
+      return { lines: ['Nice try. Only one sudo command works here, and it involves hiring me.'] };
     }
     case 'open': {
       const target = OPEN_TARGETS[arg.toLowerCase()];
@@ -220,7 +220,7 @@ export function runCommand(raw: string, ctx: TermContext): CommandResult {
     case 'find': {
       if (!arg) return { lines: [`Usage: search <words>. Try: search ${popularSearches[1].toLowerCase()}`] };
       const r = search(arg);
-      if (!r.results.length) return { lines: [`No results for "${arg}" in Mark's portfolio.`, `Try: ${popularSearches.slice(0, 5).join(', ')}`] };
+      if (!r.results.length) return { lines: [`No results for "${arg}" in my portfolio.`, `Try: ${popularSearches.slice(0, 5).join(', ')}`] };
       const top = r.results.filter((d) => d.type !== 'image').slice(0, 5);
       return {
         lines: [

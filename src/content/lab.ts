@@ -14,7 +14,7 @@ export const lab = {
       name: 'Admin Mac',
       role: 'Remote Desktop client',
       ip: '203.0.113.10',
-      text: 'Mark manages the lab over Remote Desktop (RDP) from a Mac. RDP is limited to his own IP address, and the VMs auto-shut down at night to control cost.',
+      text: 'I manage the lab over Remote Desktop (RDP) from a Mac. RDP is limited to my own IP address, and the VMs auto-shut down at night to control cost.',
     },
     {
       id: 'dc',
@@ -31,6 +31,6 @@ export const lab = {
       text: 'A Windows 11 client in the same virtual network, joined to plowlab.local and used to test Group Policy with gpupdate /force and gpresult. Its DNS had to point at PLOWVM before it could find the domain.',
     },
   ] satisfies LabNode[],
-  rdpNote: "RDP, Mark's IP only",
+  rdpNote: 'RDP, my IP only',
   idleText: 'Pick a tool to run it against the selected machine. Output is sample data.',
 };
