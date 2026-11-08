@@ -19,7 +19,7 @@ function MethodView() {
   return (
     <article className="hd-ticket" aria-labelledby="hd-method-title">
       <p className="hd-kicker">Start here</p>
-      <h2 id="hd-method-title">How Mark works a ticket</h2>
+      <h2 id="hd-method-title">How I work a ticket</h2>
       <p className="hd-muted">The same pattern for every problem. Each ticket in the queue follows it.</p>
       <ol className="hd-method">
         {method.map((m) => (
@@ -28,7 +28,7 @@ function MethodView() {
           </li>
         ))}
       </ol>
-      <p className="hd-note">These are practice tickets: common problems and how Mark handles them. Callers are fictional and the evidence is sample output.</p>
+      <p className="hd-note">These are practice tickets: common problems and how I handle them. Callers are fictional and the evidence is sample output.</p>
     </article>
   );
 }
@@ -131,7 +131,7 @@ export function HelpDeskView({ onTry, phone }: { onTry: (x: TryIt) => void; phon
         <nav className="hd-list" aria-label="Tickets">
           <button type="button" className={`hd-item is-method${sel === METHOD ? ' is-on' : ''}`} aria-current={sel === METHOD || undefined} onClick={() => pick(METHOD)}>
             <span className="hd-item-num">Start here</span>
-            <span className="hd-item-title">How Mark works a ticket</span>
+            <span className="hd-item-title">How I work a ticket</span>
           </button>
           <div className="hd-filters" role="group" aria-label="Filter by state">
             {(['All', 'Resolved', 'Escalated'] as Filter[]).map((f) => (

@@ -50,7 +50,7 @@ export function Shell() {
           </button>
         ))}
         <span className="dock-sep" aria-hidden="true" />
-        <button type="button" className="dock-item" aria-label="About Mark folder" title="About Mark" onClick={() => openNode('about')}>
+        <button type="button" className="dock-item" aria-label="About Me folder" title="About Me" onClick={() => openNode('about')}>
           <AppIcon app="folder" skin="linux" size={42} />
         </button>
         <button type="button" className="dock-item" aria-label="Trash" title="Trash" onClick={() => openNode('trash')}>
@@ -77,7 +77,7 @@ export function Shell() {
               ))}
               <button type="button" onClick={() => openNode('about')}>
                 <AppIcon app="folder" skin="linux" size={72} />
-                About Mark
+                About Me
               </button>
               {SOCIALS.map((x) => (
                 <button key={x.id} type="button" onClick={() => openSocial(x.id)}>

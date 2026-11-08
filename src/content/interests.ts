@@ -11,7 +11,7 @@ export const interests: Interest[] = [
     title: 'Music',
     summary: 'Musician and composer',
     body: [
-      'Mark is a musician who composes his own music.',
+      'I am a musician and I compose my own music.',
     ],
   },
   {
@@ -20,8 +20,8 @@ export const interests: Interest[] = [
     title: 'Audio',
     summary: 'Audiophile',
     body: [
-      'Mark is an audiophile.',
-      'It ties in with his AV work, where he has set up audio distribution, touch panels and video conferencing for events.',
+      'I am an audiophile.',
+      'I love music, whether I am making it or listening to it, but on a geek level.',
     ],
   },
   {
@@ -30,8 +30,8 @@ export const interests: Interest[] = [
     title: 'Chess',
     summary: 'Chess player, founded a university chess club',
     body: [
-      'Mark plays chess and founded the Methodist University Chess Club (2022 to 2024).',
-      'He recruited members, taught beginners strategy and ran tournaments: the club grew to 45+ active members and held 12+ tournaments with 100+ participants.',
+      'I play chess and founded the Methodist University Chess Club (2022 to 2024).',
+      'I recruited members, taught beginners strategy and ran tournaments: the club grew to 45+ active members and held 12+ tournaments with 100+ participants.',
     ],
   },
   {
@@ -39,7 +39,7 @@ export const interests: Interest[] = [
     name: 'Reading.txt',
     title: 'Reading',
     summary: 'Last finished: Never Split the Difference',
-    body: ['Mark enjoys reading.', 'Last book finished: Never Split the Difference by Chris Voss.'],
+    body: ['I enjoy reading.', 'Last book finished: Never Split the Difference by Chris Voss.'],
   },
   {
     id: 'int-sports',
@@ -47,8 +47,8 @@ export const interests: Interest[] = [
     title: 'Sports and fitness',
     summary: 'Gym, ultimate frisbee, basketball and football',
     body: [
-      'Regular at the gym, and plays ultimate frisbee.',
-      'Plays and follows basketball and football, and is learning more about the American football game.',
+      'I am a regular at the gym, and I play ultimate frisbee.',
+      'I play and follow basketball and football, and am learning more about the American football game.',
     ],
   },
   {
@@ -56,7 +56,7 @@ export const interests: Interest[] = [
     name: 'Video Games.txt',
     title: 'Video games',
     summary: 'Gamer',
-    body: ['Mark enjoys video games.'],
+    body: ['I enjoy video games.'],
   },
 ];
 
@@ -64,16 +64,16 @@ export const writing = {
   title: 'Writing',
   summary: 'Writer and published poet',
   body: [
-    'Mark writes, and has published poems.',
-    'He founded Writers Ink, a creative writing club at Methodist University (2022 to 2024): it ran writing workshops and critique sessions and published 3 student anthologies with 50+ contributors.',
+    'I write, and have published poems.',
+    'I founded Writers Ink, a creative writing club at Methodist University (2022 to 2024): it ran writing workshops and critique sessions and published 3 student anthologies with 50+ contributors.',
   ],
 };
 
 /**
- * Mark's poems and music live on their own site. Put its address in url and a
- * "See poems and music of Mark" link appears in Interests. Hidden while empty.
+ * Poems and music live on their own site. Put its address in url and a
+ * "See my poems and music" link appears in Interests. Hidden while empty.
  */
-export const creativeSite = { name: 'See poems and music of Mark', url: '' };
+export const creativeSite = { name: 'See my poems and music', url: '' };
 
 /** One line used by the terminal and short summaries. */
 export const interestsOneLine = 'Musician, chess player, writer and published poet, reader, gym, ultimate frisbee, basketball and football, video games, audiophile';

@@ -24,7 +24,7 @@ export function search(query: string, skin: SkinId, limit = 8): SearchResult[] {
     if (!hay.includes(q)) continue;
     // Show which folder a file is in, since several projects have an Overview.txt.
     const parent = fileTree[pathTo(n.id).slice(-2)[0]];
-    out.push({ key: n.id, name: n.name, sub: n.kids ? 'Folder' : `File in ${parent?.name ?? 'About Mark'}`, icon: n.kind, node: n.id });
+    out.push({ key: n.id, name: n.name, sub: n.kids ? 'Folder' : `File in ${parent?.name ?? 'About Me'}`, icon: n.kind, node: n.id });
   }
   return out;
 }

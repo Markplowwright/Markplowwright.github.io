@@ -10,7 +10,7 @@ function ContactForm() {
   const href = `mailto:${profile.email}?subject=${encodeURIComponent(mailSubject || 'Hello Mark')}&body=${encodeURIComponent(mailBody)}`;
   return (
     <form className="contact-form" onSubmit={(e) => e.preventDefault()}>
-      <strong>Write Mark an email</strong>
+      <strong>Write me an email</strong>
       <label className="sr-only" htmlFor="mail-subject">Subject</label>
       <input id="mail-subject" type="text" placeholder="Subject" value={mailSubject} onChange={(e) => setMail({ mailSubject: e.target.value })} />
       <label className="sr-only" htmlFor="mail-body">Message</label>
