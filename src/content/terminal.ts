@@ -7,7 +7,7 @@ import { interests, writing } from './interests';
 export const terminalText = {
   user: 'mark',
   hostname: 'MARK-PORTFOLIO',
-  whoami: `mark: ${profile.role}. ${profile.tagline}.`,
+  whoami: `mark: ${profile.name}. ${profile.tagline}.`,
   intro: 'Type help, or use the buttons below.',
   projects: projects.map((p) => `${p.name.padEnd(36)} ${p.category}`),
   skills: skillsOneLine,

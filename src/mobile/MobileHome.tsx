@@ -386,7 +386,7 @@ export function MobileHome() {
                 <div className="m-clock">
                   <div className="m-time">{fmt.time(now)}</div>
                   <div className="m-date">{fmt.dateLong(now)}</div>
-                  <div className="m-who">{profile.name} · {profile.role}</div>
+                  <div className="m-who">{profile.name}</div>
                   <div className="m-hint">Pull down to search · Swipe for more apps</div>
                 </div>
               )}
@@ -563,7 +563,7 @@ function MobileApp({ id, onOpen, onOpenTarget, onSearch, onTry }: { id: MobileAp
             <img className="m-avatar" src="/brand/avatar.webp" alt="" width="64" height="64" />
             <div>
               <div className="m-name">{profile.name}</div>
-              <div className="m-muted">{profile.role}</div>
+              <div className="m-muted">{profile.location}</div>
             </div>
           </div>
           {profile.bio.map((p) => <p key={p}>{p}</p>)}

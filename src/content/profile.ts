@@ -16,14 +16,13 @@ export const profile = {
   fullName: 'Mark Leslie Plowright',
   initials: 'MP',
   osName: 'Mark Leslie Plowright OS',
-  role: 'IT Support Specialist',
   tagline: 'IT support, networking, and systems',
   location: 'New York City, NY',
   motto: 'Learn a little about a lot.',
   summary:
     'I am an IT support professional with experience since 2022 across K-12 schools, a university research lab, and summer programs. Hands-on with Mac and Windows support, Jamf, networks, AV and video conferencing, ticketing, and end-user training.',
   bio: [
-    "I'm Mark Plowright, an IT support specialist in New York City.",
+    "I'm Mark Plowright, based in New York City.",
     'I am an IT support professional with experience since 2022 across K-12 schools, a university research lab, and summer programs. Hands-on with Mac and Windows support, Jamf, networks, AV and video conferencing, ticketing, and end-user training.',
     'I also build things: I co-founded GradAisle, a free graduate school discovery platform, and run home labs for Windows Server, Active Directory and Microsoft 365 administration.',
     'Away from the keyboard, I attend church and am a musician, a chess player, and a writer with published poems. I read (last finished: Never Split the Difference by Chris Voss), play video games, go to the gym, play ultimate frisbee, and follow basketball and football while learning more about the American football game. I am also an audiophile. More in the Interests folder.',

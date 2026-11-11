@@ -98,7 +98,7 @@ function buildIndex(): SearchDoc[] {
 
   // Public profiles and live sites
   docs.push(
-    doc({ id: 'linkedin', title: 'Mark Plowright on LinkedIn', where: host(profile.links.linkedin), snippet: `${profile.role}. Work history, education and skills.`, type: 'link', target: { href: profile.links.linkedin }, terms: ['linkedin social profile'], boost: 3 }),
+    doc({ id: 'linkedin', title: 'Mark Plowright on LinkedIn', where: host(profile.links.linkedin), snippet: 'Work history, education and skills.', type: 'link', target: { href: profile.links.linkedin }, terms: ['linkedin social profile'], boost: 3 }),
     doc({ id: 'github', title: 'Markplowwright on GitHub', where: host(profile.links.github), snippet: 'Code for the labs, scripts and this portfolio.', type: 'link', target: { href: profile.links.github }, terms: ['github code repositories repos social'], boost: 3 }),
   );
 
