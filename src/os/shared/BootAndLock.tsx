@@ -47,7 +47,6 @@ export function LockScreen() {
       <button ref={btnRef} type="button" className="lock-btn" onClick={unlock}>
         {skin.words.unlock}
       </button>
-      <div className="lock-tag">{profile.role}</div>
     </div>
   );
 }

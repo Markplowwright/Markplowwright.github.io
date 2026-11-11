@@ -88,7 +88,6 @@ export default function SettingsApp() {
             <h2>{skin.words.aboutPc}</h2>
             <dl className="about-grid">
               <dt>Name</dt><dd>{profile.fullName}</dd>
-              <dt>Role</dt><dd>{profile.role}</dd>
               <dt>Location</dt><dd>{profile.location}</dd>
               <dt>Education</dt><dd>{profile.education.map((e) => `${e.school}, ${e.short}`).join('; ')}</dd>
               <dt>Building</dt><dd>{profile.building.join(', ')}</dd>
