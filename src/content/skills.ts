@@ -19,7 +19,7 @@ export const skills: { group: string; items: string[] }[] = [
   },
   {
     group: 'Process and documentation',
-    items: ['ServiceNow / ITSM', 'ConnectWise', 'Incident IQ', 'Google Workspace', 'Hardware inventory tracking', 'SOPs'],
+    items: ['ServiceNow / ITSM', 'ConnectWise', 'Incident IQ', 'Jira', 'Google Workspace', 'Hardware inventory tracking', 'SOPs'],
   },
   {
     group: 'Programming and data',
