@@ -16,14 +16,14 @@ export const profile = {
   fullName: 'Mark Leslie Plowright',
   initials: 'MP',
   osName: 'Mark Leslie Plowright OS',
-  role: 'Field Systems Engineer at Fairdinkum',
+  role: 'IT Support Specialist',
   tagline: 'IT support, networking, and systems',
   location: 'New York City, NY',
   motto: 'Learn a little about a lot.',
   summary:
     'IT support professional with experience since 2022 across K-12 schools, a university research lab, and summer programs. Hands-on with Mac and Windows support, Jamf, networks, AV and video conferencing, ticketing, and end-user training.',
   bio: [
-    "I'm Mark Plowright, a Field Systems Engineer at Fairdinkum in New York City.",
+    "I'm Mark Plowright, an IT support specialist in New York City.",
     "I've worked in IT support since 2022, across K-12 schools, a university research lab, and summer programs. I'm hands-on with Mac and Windows support, Jamf, networks, AV and video conferencing, ticketing, and end-user training.",
     'I also build things: I co-founded GradAisle, a free graduate school discovery platform, and I run home labs for Windows Server, Active Directory and Microsoft 365 administration.',
     "Away from the keyboard, I attend church, and I'm a musician, a chess player, and a writer with published poems. I read (last finished: Never Split the Difference by Chris Voss), play video games, go to the gym, play ultimate frisbee, and follow basketball and football while learning more about the American football game. I'm also an audiophile. More in the Interests folder.",
@@ -39,13 +39,6 @@ export const profile = {
   // Shown in the desktop widget under "Currently building".
   building: ['GradAisle (web app)', 'Windows Server home lab in Azure', 'This portfolio OS'],
   experience: [
-    {
-      title: 'Field Systems Engineer',
-      company: 'Fairdinkum',
-      location: 'New York City, NY',
-      period: 'Nov 2026 – Present',
-      points: ['[add what you do in this role once you start]'],
-    },
     {
       title: 'School Technology Specialist',
       company: 'ACS International Resources (Inspiroz)',
