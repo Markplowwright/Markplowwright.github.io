@@ -4,7 +4,7 @@
 // from what the Terminal really understands.
 
 export type GuideOs = 'windows' | 'mac' | 'linux';
-export type GuideSection = 'About Mark' | 'Basics' | 'Hardware' | 'Network' | 'DNS and troubleshooting';
+export type GuideSection = 'About Me' | 'Basics' | 'Hardware' | 'Network' | 'DNS and troubleshooting';
 
 export type GuideEntry = {
   /** Exactly what to type. Clicking it in the guide runs it. */
@@ -18,20 +18,20 @@ export type GuideEntry = {
 const ALL: GuideOs[] = ['windows', 'mac', 'linux'];
 const UNIX: GuideOs[] = ['mac', 'linux'];
 
-export const guideSections: GuideSection[] = ['About Mark', 'Basics', 'Hardware', 'Network', 'DNS and troubleshooting'];
+export const guideSections: GuideSection[] = ['About Me', 'Basics', 'Hardware', 'Network', 'DNS and troubleshooting'];
 export const osLabel: Record<GuideOs, string> = { windows: 'Windows', mac: 'macOS', linux: 'Linux' };
 
 export const commandGuide: GuideEntry[] = [
-  // About Mark (this portfolio's own commands)
-  { cmd: 'whoami', does: 'Shows the signed-in user. Here: who Mark is and what he does.', os: ALL, section: 'About Mark' },
-  { cmd: 'projects', does: "Lists Mark's projects.", os: ALL, section: 'About Mark' },
-  { cmd: 'skills', does: "Mark's technical skills in one line.", os: ALL, section: 'About Mark' },
-  { cmd: 'education', does: 'Where Mark studied.', os: ALL, section: 'About Mark' },
-  { cmd: 'interests', does: 'What Mark does outside of work.', os: ALL, section: 'About Mark' },
-  { cmd: 'contact', does: "Mark's email, LinkedIn and GitHub.", os: ALL, section: 'About Mark' },
-  { cmd: 'search intune', does: "Searches Mark's portfolio and opens the results in the Browser.", os: ALL, section: 'About Mark' },
-  { cmd: 'open resume', does: 'Opens an app or file, like the resume or projects.', os: ALL, section: 'About Mark' },
-  { cmd: 'sudo hire mark', does: 'An easter egg. Try it.', os: ALL, section: 'About Mark' },
+  // About Me (this portfolio's own commands)
+  { cmd: 'whoami', does: 'Shows the signed-in user. Here: who I am and what I do.', os: ALL, section: 'About Me' },
+  { cmd: 'projects', does: 'Lists my projects.', os: ALL, section: 'About Me' },
+  { cmd: 'skills', does: 'My technical skills in one line.', os: ALL, section: 'About Me' },
+  { cmd: 'education', does: 'Where I studied.', os: ALL, section: 'About Me' },
+  { cmd: 'interests', does: 'What I do outside of work.', os: ALL, section: 'About Me' },
+  { cmd: 'contact', does: 'My email, LinkedIn and GitHub.', os: ALL, section: 'About Me' },
+  { cmd: 'search intune', does: 'Searches my portfolio and opens the results in the Browser.', os: ALL, section: 'About Me' },
+  { cmd: 'open resume', does: 'Opens an app or file, like the resume or projects.', os: ALL, section: 'About Me' },
+  { cmd: 'sudo hire mark', does: 'An easter egg. Try it.', os: ALL, section: 'About Me' },
 
   // Basics
   { cmd: 'help', does: 'Lists the commands this terminal understands.', os: ALL, section: 'Basics' },

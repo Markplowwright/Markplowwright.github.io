@@ -211,7 +211,7 @@ export const tickets: Ticket[] = [
       { title: 'Active Directory', lines: ['Account locked: Yes (5 bad attempts, the lockout policy limit)', 'Password expired: No', 'Last bad password: 8:58 AM, from her phone'] },
     ],
     resolution: 'Her phone still had the old password saved and kept retrying, which tripped the 5-attempt lockout. Unlocked the account in AD, updated the password on her phone, and she signed in. No reset needed.',
-    tryIt: [{ label: "See the lockout policy in Mark's lab", node: 'p-homelab-shots/2 Group Policy/3 Account Lockout' }],
+    tryIt: [{ label: 'See the lockout policy in my lab', node: 'p-homelab-shots/2 Group Policy/3 Account Lockout' }],
   },
   {
     number: 'INC0010463',
@@ -262,7 +262,7 @@ export const tickets: Ticket[] = [
     resolution: 'Account, mailbox, license and laptop ready before the start date. On day one, Jordan signed in, changed the password, and opened email and the Finance drive.',
     tryIt: [
       { label: 'See new hire practice in the Admin Practice Lab', node: 'p-admin-shots/7 Lab guide' },
-      { label: "See user creation in Mark's home lab", node: 'p-homelab-shots/1 Active Directory' },
+      { label: 'See user creation in my home lab', node: 'p-homelab-shots/1 Active Directory' },
     ],
   },
   {

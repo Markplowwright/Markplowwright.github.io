@@ -74,7 +74,7 @@ export function Shell() {
           </button>
         ))}
         <span className="dock-sep" aria-hidden="true" />
-        <button type="button" className="dock-item" aria-label="About Mark folder" title="About Mark" onClick={() => openNode('about')}>
+        <button type="button" className="dock-item" aria-label="About Me folder" title="About Me" onClick={() => openNode('about')}>
           <AppIcon app="folder" skin="mac" size={54} />
           <span className="dock-dot" />
         </button>

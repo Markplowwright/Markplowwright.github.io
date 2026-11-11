@@ -61,9 +61,9 @@ function buildIndex(): SearchDoc[] {
 
   // About Mark
   docs.push(
-    doc({ id: 'bio', title: 'About Mark', where: crumbs('bio'), snippet: profile.bio[0], type: 'page', target: { node: 'bio' }, terms: [...profile.bio, profile.summary, 'about bio profile who'], boost: 2 }),
+    doc({ id: 'bio', title: 'About Me', where: crumbs('bio'), snippet: profile.bio[0], type: 'page', target: { node: 'bio' }, terms: [...profile.bio, profile.summary, 'about bio profile who'], boost: 2 }),
     doc({ id: 'resume', title: 'Resume (PDF)', where: crumbs('resume'), snippet: profile.summary, type: 'page', target: { node: 'resume' }, terms: ['resume cv pdf download'], boost: 3 }),
-    doc({ id: 'contact', title: 'Contact Mark', where: crumbs('contact'), snippet: `Email Mark at ${profile.email}, or connect on LinkedIn.`, type: 'page', target: { node: 'contact' }, terms: ['contact email hire reach message'], boost: 2 }),
+    doc({ id: 'contact', title: 'Contact Me', where: crumbs('contact'), snippet: `Email me at ${profile.email}, or connect on LinkedIn.`, type: 'page', target: { node: 'contact' }, terms: ['contact email hire reach message'], boost: 2 }),
     doc({
       id: 'experience',
       title: 'Work experience',
@@ -140,10 +140,10 @@ function buildIndex(): SearchDoc[] {
   for (const r of research) docs.push(doc({ id: r.id, title: r.name.replace(/\.\w+$/, ''), where: crumbs(r.id), snippet: r.body ?? '', type: 'page', target: { node: r.id }, terms: ['research paper publication'], boost: 2 }));
 
   // Interests
-  docs.push(doc({ id: 'interests', title: 'Interests', where: crumbs('interests'), snippet: 'Mark outside of work: music, chess, writing, reading, sports, games and audio.', type: 'page', target: { node: 'interests' }, terms: ['interests hobbies outside of work fun', ...interests.map((i) => i.title)], boost: 2 }));
+  docs.push(doc({ id: 'interests', title: 'Interests', where: crumbs('interests'), snippet: 'Me outside of work: music, chess, writing, reading, sports, games and audio.', type: 'page', target: { node: 'interests' }, terms: ['interests hobbies outside of work fun', ...interests.map((i) => i.title)], boost: 2 }));
   for (const i of interests) docs.push(doc({ id: i.id, title: i.title, where: crumbs(i.id), snippet: i.body.join(' '), type: 'page', target: { node: i.id }, terms: ['interests hobbies', i.summary] }));
   docs.push(doc({ id: 'int-writing', title: writing.title, where: crumbs('int-writing'), snippet: writing.body.join(' '), type: 'page', target: { node: 'int-writing' }, terms: ['interests hobbies writing writer', writing.summary] }));
-  if (creativeSite.url) docs.push(doc({ id: 'creative', title: creativeSite.name, where: host(creativeSite.url), snippet: "Mark's poems and music, on their own site.", type: 'link', target: { href: creativeSite.url }, terms: ['poems poetry music songs creative'], boost: 2 }));
+  if (creativeSite.url) docs.push(doc({ id: 'creative', title: creativeSite.name, where: host(creativeSite.url), snippet: 'My poems and music, on their own site.', type: 'link', target: { href: creativeSite.url }, terms: ['poems poetry music songs creative'], boost: 2 }));
 
   return docs;
 }
@@ -158,7 +158,7 @@ export const skillAnswers: SkillAnswer[] = [
   {
     id: 'ad',
     title: 'Active Directory',
-    answer: 'Yes. Mark built a Windows Server 2025 domain controller for plowlab.local in Azure, created users, OUs and security groups, and joined a Windows 11 client to the domain. He also practices hybrid identity (AD users synced to Entra) in his Admin Practice Lab.',
+    answer: 'Yes. I built a Windows Server 2025 domain controller for plowlab.local in Azure, created users, OUs and security groups, and joined a Windows 11 client to the domain. I also practice hybrid identity (AD users synced to Entra) in my Admin Practice Lab.',
     aliases: ['active directory', 'aduc', 'domain controller', 'ad ds', 'domain join', 'ou', 'ous'],
     proof: [
       { label: 'Active Directory screenshots', target: shots('p-homelab-shots/1 Active Directory') },
@@ -169,7 +169,7 @@ export const skillAnswers: SkillAnswer[] = [
   {
     id: 'gpo',
     title: 'Group Policy',
-    answer: 'Yes. Mark built six GPOs in his home lab (password policy, account lockout, mapped drives, desktop wallpaper, Control Panel restriction and a USB block) and proved them on a domain-joined client with gpupdate and gpresult.',
+    answer: 'Yes. I built six GPOs in my home lab (password policy, account lockout, mapped drives, desktop wallpaper, Control Panel restriction and a USB block) and proved them on a domain-joined client with gpupdate and gpresult.',
     aliases: ['group policy', 'gpmc', 'gpupdate', 'gpresult'],
     proof: [
       { label: 'Group Policy screenshots (7 folders)', target: shots('p-homelab-shots/2 Group Policy') },
@@ -180,7 +180,7 @@ export const skillAnswers: SkillAnswer[] = [
   {
     id: 'intune',
     title: 'Microsoft Intune',
-    answer: 'Yes, in practice. Mark built the Admin Practice Lab, which simulates Intune end to end: Autopilot deployment profiles, compliance policies, enrolling a Windows laptop, wiping a device when someone leaves, and troubleshooting why a user cannot enroll.',
+    answer: 'Yes, in practice. I built the Admin Practice Lab, which simulates Intune end to end: Autopilot deployment profiles, compliance policies, enrolling a Windows laptop, wiping a device when someone leaves, and troubleshooting why a user cannot enroll.',
     aliases: ['intune', 'endpoint manager', 'autopilot', 'compliance policy', 'device enrollment', 'enrollment'],
     proof: [
       { label: 'Intune admin center screenshots', target: shots('p-admin-shots/3 Intune admin center') },
@@ -202,7 +202,7 @@ export const skillAnswers: SkillAnswer[] = [
   {
     id: 'm365',
     title: 'Microsoft 365 and Exchange',
-    answer: 'Yes. Mark supports Office 365 users at work, and his Admin Practice Lab covers the Microsoft 365 admin center (users, licenses, offboarding) and Exchange mailboxes.',
+    answer: 'Yes. I support Office 365 users at work, and my Admin Practice Lab covers the Microsoft 365 admin center (users, licenses, offboarding) and Exchange mailboxes.',
     aliases: ['microsoft 365', 'exchange', 'mailbox', 'mailboxes', 'licenses', 'licensing', 'offboarding', 'onboarding'],
     proof: [
       { label: 'Microsoft 365 admin center screenshot', target: shots('p-admin-shots/1 Microsoft 365 admin center') },
@@ -213,7 +213,7 @@ export const skillAnswers: SkillAnswer[] = [
   {
     id: 'azure',
     title: 'Microsoft Azure',
-    answer: 'Yes. Mark runs his Windows Server lab on an Azure VM with cost controls (auto-shutdown and a budget alert), and fixed client DNS by pointing the VNet DNS at the domain controller.',
+    answer: 'Yes. I run my Windows Server lab on an Azure VM with cost controls (auto-shutdown and a budget alert), and fixed client DNS by pointing the VNet DNS at the domain controller.',
     aliases: ['azure', 'cloud', 'vnet', 'virtual machine'],
     proof: [
       { label: 'Windows Server Home Lab', target: { node: 'p-homelab' } },
@@ -223,7 +223,7 @@ export const skillAnswers: SkillAnswer[] = [
   {
     id: 'files',
     title: 'File servers and permissions',
-    answer: 'Yes. Mark shared a folder with share and NTFS permissions, mapped it by hand and by GPO, and used FSRM for a 100 MB hard quota and active file screening.',
+    answer: 'Yes. I shared a folder with share and NTFS permissions, mapped it by hand and by GPO, and used FSRM for a 100 MB hard quota and active file screening.',
     aliases: ['fsrm', 'file share', 'file server', 'ntfs', 'permissions', 'quota', 'quotas', 'mapped drive', 'smb'],
     proof: [
       { label: 'File share and mapped drive screenshots', target: shots('p-homelab-shots/5 File Share and Mapped Drive') },
@@ -233,7 +233,7 @@ export const skillAnswers: SkillAnswer[] = [
   {
     id: 'passwords',
     title: 'Password and lockout policies',
-    answer: 'Yes. Mark set a domain password policy (12 characters, complexity, 90-day maximum age), an account lockout policy, and fine-grained password policies for admins and users.',
+    answer: 'Yes. I set a domain password policy (12 characters, complexity, 90-day maximum age), an account lockout policy, and fine-grained password policies for admins and users.',
     aliases: ['password policy', 'password', 'passwords', 'lockout', 'fine grained', 'fine-grained'],
     proof: [
       { label: 'Password Policy screenshots', target: shots('p-homelab-shots/2 Group Policy/2 Password Policy') },
@@ -244,7 +244,7 @@ export const skillAnswers: SkillAnswer[] = [
   {
     id: 'scripting',
     title: 'Scripting and automation',
-    answer: 'Yes. Mark wrote bash tools for endpoint checks: a read-only health audit for macOS and a disk usage monitor that posts to Slack, scheduled with launchd or cron. He also uses PowerShell and Python.',
+    answer: 'Yes. I wrote bash tools for endpoint checks: a read-only health audit for macOS and a disk usage monitor that posts to Slack, scheduled with launchd or cron. I also use PowerShell and Python.',
     aliases: ['bash', 'powershell', 'scripting', 'script', 'scripts', 'automation', 'shell', 'cron', 'launchd'],
     proof: [
       { label: 'endpoint-health-audit', target: { node: 'p-endpoint' } },
@@ -254,7 +254,7 @@ export const skillAnswers: SkillAnswer[] = [
   {
     id: 'cli',
     title: 'Windows command line troubleshooting',
-    answer: 'Yes. Mark uses ipconfig, ping, nslookup, gpupdate, gpresult and dsregcmd to troubleshoot, and built a Command Prompt and PowerShell command guide into his Admin Practice Lab.',
+    answer: 'Yes. I use ipconfig, ping, nslookup, gpupdate, gpresult and dsregcmd to troubleshoot, and built a Command Prompt and PowerShell command guide into my Admin Practice Lab.',
     aliases: ['command prompt', 'cmd', 'ipconfig', 'nslookup', 'dsregcmd', 'command line', 'cli', 'terminal'],
     proof: [
       { label: 'Command guide screenshots', target: shots('p-admin-shots/6 Command guide') },
@@ -265,7 +265,7 @@ export const skillAnswers: SkillAnswer[] = [
   {
     id: 'network',
     title: 'Networking and packet analysis',
-    answer: 'Yes. Mark supports Wi-Fi, switches and firewalls at work, and analyses TCP, DNS, SSH, FTP and HTTP traffic with Wireshark, tshark and Python, including spotting SSH brute-force attempts.',
+    answer: 'Yes. I support Wi-Fi, switches and firewalls at work, and analyse TCP, DNS, SSH, FTP and HTTP traffic with Wireshark, tshark and Python, including spotting SSH brute-force attempts.',
     aliases: ['wireshark', 'tshark', 'networking', 'network', 'tcp', 'dns', 'packet', 'pcap', 'firewall', 'firewalls', 'wifi', 'wi-fi'],
     proof: [
       { label: 'Network Traffic Analysis project', target: { node: 'p-traffic' } },
@@ -275,7 +275,7 @@ export const skillAnswers: SkillAnswer[] = [
   {
     id: 'mac',
     title: 'Mac support and Jamf',
-    answer: 'Yes. Mark supports MacBooks and uses Jamf at work, and wrote a macOS health audit that checks FileVault, disk space, uptime and pending updates.',
+    answer: 'Yes. I support MacBooks and use Jamf at work, and wrote a macOS health audit that checks FileVault, disk space, uptime and pending updates.',
     aliases: ['jamf', 'mac', 'macs', 'macos', 'macbook', 'apple', 'filevault'],
     proof: [
       { label: 'Work experience', target: { node: 'experience' } },
@@ -285,18 +285,18 @@ export const skillAnswers: SkillAnswer[] = [
   {
     id: 'support',
     title: 'IT support and help desk',
-    answer: 'Yes. Mark has worked in IT support since 2022 across K-12 schools, a university research lab and summer programs: tickets, Mac and Windows support, AV and video conferencing, and training users.',
+    answer: 'Yes. I have worked in IT support since 2022 across K-12 schools, a university research lab and summer programs: tickets, Mac and Windows support, AV and video conferencing, and training users.',
     aliases: ['help desk', 'helpdesk', 'support', 'tickets', 'ticketing', 'servicenow', 'troubleshooting', 'service desk', 'av', 'video conferencing'],
     proof: [
       { label: 'Work experience', target: { node: 'experience' } },
-      { label: 'Real-world ticket scenarios he built', target: shots('p-admin-shots/7 Lab guide') },
+      { label: 'Real-world ticket scenarios I built', target: shots('p-admin-shots/7 Lab guide') },
       { label: 'Resume', target: { node: 'resume' } },
     ],
   },
   {
     id: 'dev',
     title: 'Software development',
-    answer: 'Yes. Mark co-founded GradAisle and built it end to end (Next.js, TypeScript, Postgres), built the Admin Practice Lab in plain JavaScript, and rewrote a Fortran 77 chemistry program in Python.',
+    answer: 'Yes. I co-founded GradAisle and built it end to end (Next.js, TypeScript, Postgres), built the Admin Practice Lab in plain JavaScript, and rewrote a Fortran 77 chemistry program in Python.',
     aliases: ['python', 'javascript', 'typescript', 'react', 'next.js', 'nextjs', 'sql', 'postgres', 'postgresql', 'web development', 'coding', 'programming', 'developer'],
     proof: [
       { label: 'GradAisle', target: { node: 'p-grad' } },

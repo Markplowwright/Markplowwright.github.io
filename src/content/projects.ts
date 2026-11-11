@@ -56,7 +56,7 @@ export const projects: Project[] = [
     category: 'Web application',
     blurb: 'A free browser simulator for practicing Microsoft 365 and hybrid identity admin work with nothing to break.',
     problem:
-      'While learning Microsoft 365 admin work, Mark kept turning to YouTube to figure out how to do things. He wanted somewhere to just practice, and realized many other learners had the same problem.',
+      'While learning Microsoft 365 admin work, I kept turning to YouTube to figure out how to do things. I wanted somewhere to just practice, and realized many other learners had the same problem.',
     built: [
       'A browser simulator of Windows Server Active Directory, the Microsoft 365 admin center, Entra ID, Intune, Exchange and a virtual Windows laptop, all linked together.',
       'A five-level path with 28 guided missions and 74 guided steps, plus real-world ticket-style scenarios.',

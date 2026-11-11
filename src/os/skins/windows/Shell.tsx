@@ -9,10 +9,10 @@ import { BatteryIcon, SearchGlyph, SearchInput, SearchResults, SkinSwitcher, Vol
 import { profile } from '../../../content/profile';
 
 const RECOMMENDED = [
-  { node: 'resume', name: 'Resume.pdf', sub: 'About Mark', icon: 'pdf' },
+  { node: 'resume', name: 'Resume.pdf', sub: 'About Me', icon: 'pdf' },
   { node: 'work', name: 'Work & Projects', sub: 'Folder', icon: 'folder' },
   { node: 'pres', name: 'Presentations', sub: 'Folder', icon: 'folder' },
-  { node: 'bio', name: 'Bio.txt', sub: 'About Mark', icon: 'doc' },
+  { node: 'bio', name: 'Bio.txt', sub: 'About Me', icon: 'doc' },
 ];
 
 export function Shell() {
@@ -88,7 +88,7 @@ export function Shell() {
                 ))}
                 <button type="button" onClick={() => openNode('about')}>
                   <AppIcon app="folder" skin="windows" size={36} />
-                  About Mark
+                  About Me
                 </button>
                 {SOCIALS.map((x) => (
                   <button key={x.id} type="button" onClick={() => openSocial(x.id)}>

@@ -34,7 +34,7 @@ export default function TaskManagerApp() {
           ))}
         </tbody>
       </table>
-      <p className="muted small">Sample data for this demo. Processes are named after Mark's projects.</p>
+      <p className="muted small">Sample data for this demo. Processes are named after my projects.</p>
     </div>
   );
 }

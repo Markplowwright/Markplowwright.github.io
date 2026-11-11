@@ -21,12 +21,12 @@ export const profile = {
   location: 'New York City, NY',
   motto: 'Learn a little about a lot.',
   summary:
-    'IT support professional with experience since 2022 across K-12 schools, a university research lab, and summer programs. Hands-on with Mac and Windows support, Jamf, networks, AV and video conferencing, ticketing, and end-user training.',
+    'I am an IT support professional with experience since 2022 across K-12 schools, a university research lab, and summer programs. Hands-on with Mac and Windows support, Jamf, networks, AV and video conferencing, ticketing, and end-user training.',
   bio: [
     "I'm Mark Plowright, an IT support specialist in New York City.",
-    "I've worked in IT support since 2022, across K-12 schools, a university research lab, and summer programs. I'm hands-on with Mac and Windows support, Jamf, networks, AV and video conferencing, ticketing, and end-user training.",
-    'I also build things: I co-founded GradAisle, a free graduate school discovery platform, and I run home labs for Windows Server, Active Directory and Microsoft 365 administration.',
-    "Away from the keyboard, I attend church, and I'm a musician, a chess player, and a writer with published poems. I read (last finished: Never Split the Difference by Chris Voss), play video games, go to the gym, play ultimate frisbee, and follow basketball and football while learning more about the American football game. I'm also an audiophile. More in the Interests folder.",
+    'I am an IT support professional with experience since 2022 across K-12 schools, a university research lab, and summer programs. Hands-on with Mac and Windows support, Jamf, networks, AV and video conferencing, ticketing, and end-user training.',
+    'I also build things: I co-founded GradAisle, a free graduate school discovery platform, and run home labs for Windows Server, Active Directory and Microsoft 365 administration.',
+    'Away from the keyboard, I attend church and am a musician, a chess player, and a writer with published poems. I read (last finished: Never Split the Difference by Chris Voss), play video games, go to the gym, play ultimate frisbee, and follow basketball and football while learning more about the American football game. I am also an audiophile. More in the Interests folder.',
     'Before college in the U.S. I spent two years at the United World College of the Adriatic in Italy studying the International Baccalaureate. I then earned a B.S. in Computer Information Technology (Cyber Security and Information Assurance) from Methodist University.',
   ],
   // Mark's public contact details, as listed on his resume.
