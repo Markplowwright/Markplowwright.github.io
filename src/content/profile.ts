@@ -66,7 +66,7 @@ export const profile = {
       location: 'Richmond, VA',
       period: 'Apr 2025 – Jul 2025',
       points: [
-        'Trained Post-Baccalaureate researchers through a Python/LLM-driven research tool through presentations, group sessions, and 1-on-1 coaching.',
+        'Trained Post-Baccalaureate researchers on a Python/LLM-driven research tool through presentations, group sessions, and 1-on-1 coaching.',
         'Created and continuously improved SOPs, FAQs, troubleshooting guides, and internal knowledge bases to standardize processes and reduce reliance on ad hoc support.',
         'Owned the technical lifecycle of hardware computer lab systems, coordinating maintenance and access across a shared research environment.',
       ],
@@ -83,14 +83,15 @@ export const profile = {
       ],
     },
     {
-      title: 'Co-Founder and Lead Project Manager',
+      title: 'Co-Founder',
       company: 'GradAisle',
       location: 'GradAisle.com',
-      period: 'Apr 2025 – Present',
+      period: 'Apr 2026 – Present',
       points: [
         'Led a 3-person distributed team through biweekly planning syncs for planning and building the platform.',
-        'Built an AI-assisted pipeline that turns unstructured university PDFs into a structured PostgreSQL schema powering a 1,000+ program dataset.',
-        'Built and shipped the core platform end-to-end (Next.js 14, Supabase/Postgres, Redis), including the deployment pipeline on a self-hosted VPS (Dokploy, Traefik).',
+        'Contacted and built working relationships with university admissions offices (Syracuse University and Fordham Gabelli) to verify program data accuracy and gather requirements directly from source contacts.',
+        'Built an AI-assisted pipeline that turns unstructured university PDFs into a structured PostgreSQL schema powering a 1,000+ program dataset, with SQL for search, filtering, and matching.',
+        'Built and shipped the core platform end-to-end (Next.js 14, Supabase/Postgres, Redis), including the matching logic and the deployment pipeline on a self-hosted VPS (Dokploy, Traefik).',
       ],
     },
   ] satisfies Job[],
