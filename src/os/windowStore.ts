@@ -11,6 +11,7 @@ import { create } from 'zustand';
 import type { AppId, SnapSide, WindowState } from './types';
 import { getApp, isAppId } from './appRegistry';
 import { isObj, loadSlice, num, saveSlice } from './storage';
+import { track } from './track';
 
 type WindowStore = {
   windows: WindowState[];
@@ -76,6 +77,7 @@ export const useWindowStore = create<WindowStore>((set, get) => ({
   topZ: Math.max(0, ...initialWindows.map((w) => w.z)),
 
   openApp: (appId) => {
+    track('app/' + appId);
     const def = getApp(appId);
     const { windows, topZ } = get();
     const z = topZ + 1;

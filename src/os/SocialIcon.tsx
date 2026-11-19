@@ -2,6 +2,7 @@
 // Contact app and the desktops. Simple drawings of the LinkedIn and GitHub
 // marks, used only to link to Mark's own profiles.
 import { profile } from '../content/profile';
+import { track } from './track';
 
 export type SocialId = 'linkedin' | 'github' | 'email';
 
@@ -17,6 +18,7 @@ const GITHUB_MARK =
 /** Opens a profile in a new tab, or the visitor's email app. */
 export function openSocial(id: SocialId) {
   const x = SOCIALS.find((s) => s.id === id)!;
+  track('social/' + id, false);
   if (x.external) window.open(x.href, '_blank', 'noopener');
   else window.location.href = x.href;
 }
