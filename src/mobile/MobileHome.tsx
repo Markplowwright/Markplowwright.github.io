@@ -4,6 +4,7 @@ import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 're
 import { flushSync } from 'react-dom';
 import { create } from 'zustand';
 import { AppIcon } from '../os/AppIcon';
+import { track } from '../os/track';
 import { useSkinStore } from '../os/skinStore';
 import { fmt, timeZone, useNow } from '../os/shared/hooks';
 import { useStats } from '../apps/taskmgr/useStats';
@@ -171,6 +172,10 @@ export function MobileHome() {
   const tipsOn = useSkinStore((s) => s.tipsOn);
   const now = useNow();
   const [app, setApp] = useState<MobileApp | null>(null);
+  // Count which phone screens get opened (once per screen per visit).
+  useEffect(() => {
+    if (app) track('mobile/' + app);
+  }, [app]);
   const [banner, setBanner] = useState(-1);
   // Where a search result sent us: the app to return to, a section to scroll to,
   // and a Screenshots folder or file to show.

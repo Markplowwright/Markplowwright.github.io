@@ -9,6 +9,7 @@ import { useViewerStore } from '../apps/viewer/store';
 import { useBrowserStore } from '../apps/browser/store';
 import { isAppId } from './appRegistry';
 import type { AppId } from './types';
+import { track } from './track';
 
 export function openApp(id: AppId) {
   useUiStore.getState().closeOverlays();
@@ -19,6 +20,7 @@ export function openApp(id: AppId) {
 export function openNode(id: string) {
   const node = fileTree[id];
   if (!node) return;
+  track('file/' + id);
   if (node.kids) {
     useFilesStore.getState().go(folderPathFor(id));
     openApp('files');
