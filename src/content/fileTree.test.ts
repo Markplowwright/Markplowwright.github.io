@@ -59,3 +59,11 @@ describe('OPT Employer Checker', () => {
     expect(pathTo('p-opt')).toEqual(['about', 'work', 'p-opt']);
   });
 });
+
+describe('OPT Employer Checker app', () => {
+  it('is a launcher app and its project folder uses the app icon', async () => {
+    const { getApp } = await import('../os/appRegistry');
+    expect(getApp('optchecker').launcher).toBe(true);
+    expect(fileTree['p-opt'].icon).toBe('optchecker');
+  });
+});

@@ -23,6 +23,7 @@ import { SearchView } from '../apps/browser/SearchView';
 import { CommandGuide } from '../apps/terminal/CommandGuide';
 import { HelpDeskView } from '../apps/helpdesk/HelpDeskView';
 import { SubnetView } from '../apps/subnet/SubnetView';
+import { OptCheckerView } from '../apps/optchecker/OptCheckerView';
 import { useTermQueue } from '../apps/terminal/queue';
 import type { TryIt } from '../content/helpdesk';
 import { useBrowserEntry, useBrowserStore } from '../apps/browser/store';
@@ -32,7 +33,7 @@ import { SOCIALS, SocialTile, type SocialId } from '../os/SocialIcon';
 import { ProjectTile, projectShort } from './ProjectIcons';
 import './mobile.css';
 
-type MobileApp = 'about' | 'projects' | 'slides' | 'resume' | 'contact' | 'browser' | 'helpdesk' | 'subnet' | 'terminal' | 'network' | 'activity' | 'settings';
+type MobileApp = 'about' | 'projects' | 'slides' | 'resume' | 'contact' | 'browser' | 'helpdesk' | 'subnet' | 'optchecker' | 'terminal' | 'network' | 'activity' | 'settings';
 
 const DEFS: { id: MobileApp; label: string; icon: string; tile?: string }[] = [
   { id: 'about', label: 'About Me', icon: 'folder', tile: 'linear-gradient(160deg,#5ac8fa,#0a84ff)' },
@@ -43,6 +44,7 @@ const DEFS: { id: MobileApp; label: string; icon: string; tile?: string }[] = [
   { id: 'browser', label: 'Browser', icon: 'browser' },
   { id: 'helpdesk', label: 'Help Desk', icon: 'helpdesk' },
   { id: 'subnet', label: 'Subnet Calc', icon: 'subnet' },
+  { id: 'optchecker', label: 'OPT Checker', icon: 'optchecker' },
   { id: 'terminal', label: 'Terminal', icon: 'terminal' },
   { id: 'network', label: 'Network', icon: 'network' },
   { id: 'activity', label: 'Activity', icon: 'taskmgr' },
@@ -54,7 +56,7 @@ type Group = 'projects' | 'tools';
 /** The apps inside the IT Tools group. */
 const TOOLS: MobileApp[] = ['helpdesk', 'subnet', 'terminal'];
 const PAGES: (MobileApp | SocialId | `group-${Group}`)[][] = [
-  ['group-projects', 'group-tools', 'about', 'slides', 'resume', 'linkedin', 'github', 'email'],
+  ['group-projects', 'group-tools', 'optchecker', 'about', 'slides', 'resume', 'linkedin', 'github', 'email'],
   ['activity', 'network'],
 ];
 const PULL = 80; // pixels to pull down before releasing opens search
@@ -649,6 +651,8 @@ function MobileApp({ id, onOpen, onOpenTarget, onSearch, onTry }: { id: MobileAp
       return <HelpDeskView phone onTry={onTry} />;
     case 'subnet':
       return <SubnetView phone onRunInTerminal={(cmd) => onTry({ label: cmd, terminal: cmd })} />;
+    case 'optchecker':
+      return <OptCheckerView phone />;
     case 'terminal':
       return <MobileTerminal onOpen={onOpenTarget} onSearch={onSearch} />;
     case 'network':

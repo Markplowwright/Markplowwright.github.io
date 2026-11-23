@@ -23,6 +23,8 @@ export type Project = {
   extraFiles?: { id: string; name: string; kind: 'pdf'; src: string; body: string }[];
   /** A Screenshots folder (with subfolders) inside the project folder. */
   gallery?: LabShot[];
+  /** Icon id (see AppIcon) drawn for the project's folder in the Files app. */
+  icon?: string;
   /** Older projects sit in an "Earlier projects" folder. */
   earlier?: boolean;
 };
@@ -75,6 +77,7 @@ export const projects: Project[] = [
   },
   {
     id: 'p-opt',
+    icon: 'optchecker',
     name: 'OPT Employer Checker',
     category: 'Chrome extension',
     blurb: 'A free Chrome extension that shows E-Verify and H-1B information next to employers on LinkedIn job pages. Live on the Chrome Web Store.',

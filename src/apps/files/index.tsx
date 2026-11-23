@@ -106,7 +106,7 @@ export default function FilesApp() {
                   onClick={() => open(n)}
                   onContextMenu={(e) => onCtx(e, n)}
                 >
-                  <AppIcon app={n.kind} skin={skin.id} size={20} />
+                  <AppIcon app={n.icon ?? n.kind} skin={skin.id} size={20} />
                   <span className="row-name">{name(n)}</span>
                   <span className="row-type">{typeOf(n)}</span>
                 </button>
@@ -122,7 +122,7 @@ export default function FilesApp() {
                   onClick={() => open(n)}
                   onContextMenu={(e) => onCtx(e, n)}
                 >
-                  <AppIcon app={n.kind} skin={skin.id} size={52} />
+                  <AppIcon app={n.icon ?? n.kind} skin={skin.id} size={52} />
                   <span>{name(n)}</span>
                 </button>
               ))}
@@ -133,7 +133,7 @@ export default function FilesApp() {
         <aside className="preview" aria-label="Preview">
           {sel ? (
             <>
-              <AppIcon app={sel.kind} skin={skin.id} size={64} />
+              <AppIcon app={sel.icon ?? sel.kind} skin={skin.id} size={64} />
               <div className="pv-name">{name(sel)}</div>
               <div className="pv-type">{typeOf(sel)}</div>
               {sel.kind === 'image' && sel.src && <img className="pv-img" src={sel.src} alt={sel.body ?? ''} loading="lazy" />}
