@@ -3,6 +3,7 @@
 
 import { homeLabShots, type LabShot } from './homelabScreenshots';
 import { adminLabShots } from './adminLabScreenshots';
+import { optCheckerShots } from './optCheckerScreenshots';
 
 export type ProjectLink = { label: string; url: string };
 
@@ -71,6 +72,31 @@ export const projects: Project[] = [
       { label: 'GitHub repository', url: gh('admin-practice-lab') },
     ],
     gallery: adminLabShots,
+  },
+  {
+    id: 'p-opt',
+    name: 'OPT Employer Checker',
+    category: 'Chrome extension',
+    blurb: 'A free Chrome extension that shows E-Verify and H-1B information next to employers on LinkedIn job pages. Live on the Chrome Web Store.',
+    problem:
+      'STEM OPT students need an employer enrolled in E-Verify. Checking means leaving the job post, searching the E-Verify list by hand, then repeating it for H-1B history on a second government site, at the stage where a mistake costs the most. I was in that position myself.',
+    built: [
+      'Two chips on every employer in the LinkedIn job list and on the open job: E-Verify (enrolled, ended, not found, could not check) and H-1B (petitions approved in the latest full fiscal year). Clicking a chip opens a details panel with dates, history, the data date and links to the official sources.',
+      'Strict matching rules: an exact name match after normalizing, never a fuzzy match, and "not found" or "could not check" are never shown as a "no".',
+      'Privacy by design: the employer name is hashed in the browser and only the first 3 characters of the hash are requested, which picks one of 4,096 static data files. No server of my own, no accounts and no analytics.',
+      'A data pipeline in Python that turns the public E-Verify (987,714 employer names, over 99% of the dashboard) and USCIS H-1B (FY2009 to FY2026) files into static shards on GitHub Pages, with GitHub Actions safety checks before publishing.',
+      'Tests that keep working when LinkedIn changes its page: saved page fixtures, 52 extension tests, and chips drawn in a shadow DOM using text only.',
+    ],
+    tech: ['Chrome extension (Manifest V3)', 'JavaScript', 'Python (standard library)', 'GitHub Actions', 'GitHub Pages', 'Shadow DOM', 'Chrome Web Store'],
+    outcome:
+      'Built solo in about a week and approved on the Chrome Web Store as v1.0.0 on 2026-11-21. Free to run, because the data is static files. It cannot tell a student whether an employer will sign an I-983, and the panel says so. Next: an employer search page, more job sites and regular data refreshes.',
+    links: [
+      { label: 'Chrome Web Store (install, free)', url: 'https://chromewebstore.google.com/detail/opt-employer-checker/jcdgingcdeeghlegpohgceclekoaacod' },
+      { label: 'About page (how it works, privacy)', url: 'https://markplowwright.github.io/opt-employer-checker/' },
+      { label: 'GitHub repository', url: gh('opt-employer-checker') },
+      { label: 'Case study', url: 'https://github.com/Markplowwright/opt-employer-checker/blob/main/CASE-STUDY.md' },
+    ],
+    gallery: optCheckerShots,
   },
   {
     id: 'p-endpoint',

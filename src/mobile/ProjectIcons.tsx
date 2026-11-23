@@ -31,6 +31,18 @@ const LOOKS: Record<string, Look> = {
       </>
     ),
   },
+  'p-opt': {
+    short: 'OPT Checker',
+    bg: 'linear-gradient(160deg,#2b3f63,#111c33)',
+    glyph: (
+      <>
+        <rect x="3" y="6" width="8.5" height="5" rx="2.5" {...W} />
+        <rect x="12.5" y="6" width="8.5" height="5" rx="2.5" {...W} />
+        <path d="M7.2 8.5l1.2 1.2 2-2.2" {...W} />
+        <path d="M5 15.5h14M5 19h9" {...W} />
+      </>
+    ),
+  },
   'p-endpoint': {
     short: 'Health Audit',
     bg: 'linear-gradient(160deg,#5ee08a,#1e9e4f)',

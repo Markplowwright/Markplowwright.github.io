@@ -49,3 +49,13 @@ describe('admin lab screenshots', () => {
     expect(fileTree['p-homelab'].kids).not.toContain('p-homelab-shot');
   });
 });
+
+describe('OPT Employer Checker', () => {
+  it('links to the Chrome Web Store and the About page, with a Screenshots folder', () => {
+    const links = fileTree['p-opt-links'].body ?? '';
+    expect(links).toContain('https://chromewebstore.google.com/detail/opt-employer-checker/');
+    expect(links).toContain('https://markplowwright.github.io/opt-employer-checker/');
+    expect(fileTree['p-opt'].kids).toContain('p-opt-shots');
+    expect(pathTo('p-opt')).toEqual(['about', 'work', 'p-opt']);
+  });
+});
