@@ -4,13 +4,14 @@
 //   Linux:   flat rounded-square container for apps.
 import { useId } from 'react';
 import type { SkinId } from './types';
+import { OptMarkShapes } from './OptMark';
 
-type Shape = 'folder' | 'term' | 'net' | 'gear' | 'mon' | 'globe' | 'trash' | 'doc' | 'slides' | 'image' | 'video' | 'desk' | 'capture' | 'subnet' | 'chip';
+type Shape = 'folder' | 'term' | 'net' | 'gear' | 'mon' | 'globe' | 'trash' | 'doc' | 'slides' | 'image' | 'video' | 'desk' | 'capture' | 'subnet' | 'chip' | 'opt';
 
 const SHAPE: Record<string, Shape> = {
   files: 'folder', folder: 'folder', terminal: 'term', network: 'net', settings: 'gear', taskmgr: 'mon',
   browser: 'globe', link: 'globe', trash: 'trash', doc: 'doc', pdf: 'doc', viewer: 'doc',
-  slides: 'slides', image: 'image', video: 'video', helpdesk: 'desk', capture: 'capture', subnet: 'subnet', devices: 'chip',
+  slides: 'slides', image: 'image', video: 'video', helpdesk: 'desk', capture: 'capture', subnet: 'subnet', devices: 'chip', optchecker: 'opt',
 };
 const APPS = ['files', 'terminal', 'network', 'settings', 'taskmgr', 'browser', 'helpdesk', 'capture', 'subnet', 'devices'];
 
@@ -180,6 +181,11 @@ export function AppIcon({ app, skin, size = 48 }: { app: string; skin: SkinId; s
             <rect x="5.5" y="7.5" width="21" height="17" rx="1" fill={f2} />
             <path d="M13.5 11.5v9l7.5-4.5z" fill={f1} />
           </>
+        )}
+        {shape === 'opt' && (
+          <g transform="scale(0.25)">
+            <OptMarkShapes />
+          </g>
         )}
         {shape === 'chip' && (
           <>

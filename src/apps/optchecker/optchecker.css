@@ -1,0 +1,221 @@
+/* OPT Employer Checker app. Colors come from the skin (desktop) or the phone. */
+.opt {
+  --opt-navy: #22314a;
+  --opt-brass: #c8a45c;
+  --opt-ivory: #f3ead7;
+  --opt-soft: var(--chip-bg, var(--hover, rgba(127, 127, 127, 0.12)));
+  --opt-accent: var(--accent, #1a5fd0);
+  height: 100%;
+  overflow: auto;
+  padding: 18px 22px 28px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.opt h1 {
+  margin: 0 0 4px;
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+.opt h2 {
+  margin: 22px 0 8px;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.opt p {
+  margin: 0;
+}
+
+.opt-hero {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.opt-status {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--opt-navy);
+  color: var(--opt-ivory);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.opt-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.opt-btn {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 0 14px;
+  border: 1px solid var(--line, rgba(127, 127, 127, 0.4));
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.opt-btn:hover {
+  background: var(--opt-soft);
+}
+
+.opt-btn.is-main {
+  border-color: var(--opt-navy);
+  background: var(--opt-navy);
+  color: var(--opt-ivory);
+}
+
+.opt-btn.is-main:hover {
+  background: #2f4568;
+}
+
+.opt-btn:focus-visible,
+.opt-thumbs button:focus-visible {
+  outline: 2px solid var(--opt-accent);
+  outline-offset: 2px;
+}
+
+.opt-shot {
+  margin: 0;
+}
+
+.opt-shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line, rgba(127, 127, 127, 0.3));
+  border-radius: 8px;
+}
+
+.opt-shot figcaption {
+  margin-top: 6px;
+  opacity: 0.8;
+}
+
+.opt-thumbs {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  overflow-x: auto;
+}
+
+.opt-thumbs button {
+  flex: none;
+  width: 92px;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  background: none;
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.opt-thumbs button.is-on {
+  border-color: var(--opt-accent);
+  opacity: 1;
+}
+
+.opt-thumbs img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+.opt-chips,
+.opt-built {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.opt-chips li {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 5px 0;
+}
+
+.opt-chip {
+  flex: none;
+  min-width: 150px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.opt-chip.is-ok {
+  background: #dff3e4;
+  color: #14602b;
+}
+
+.opt-chip.is-off {
+  background: #e6e7ea;
+  color: #3b3f46;
+}
+
+.opt-chip.is-h1b {
+  background: #e1e7fb;
+  color: #1f3a8a;
+}
+
+.opt-note {
+  margin-top: 10px;
+  padding: 8px 10px;
+  border-left: 3px solid var(--opt-brass);
+  background: var(--opt-soft);
+  border-radius: 4px;
+}
+
+.opt-built li {
+  position: relative;
+  padding: 3px 0 3px 16px;
+}
+
+.opt-built li::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 0.95em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--opt-brass);
+}
+
+.opt-tech {
+  margin-top: 8px;
+  opacity: 0.75;
+  font-size: 12px;
+}
+
+.opt.is-phone {
+  padding: 4px 0 24px;
+  font-size: 15px;
+}
+
+.opt.is-phone .opt-chips li {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.opt.is-phone .opt-btn {
+  min-height: 44px;
+}

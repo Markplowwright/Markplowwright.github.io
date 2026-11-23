@@ -12,6 +12,7 @@ export function DesktopIcons() {
   const items: { key: string; icon: string; label: string; open: () => void; social?: (typeof SOCIALS)[number]['id'] }[] = [
     { key: 'about', icon: 'folder', label: 'About Me', open: () => openNode('about') },
     { key: 'resume', icon: 'pdf', label: 'Resume.pdf', open: () => openNode('resume') },
+    { key: 'optchecker', icon: 'optchecker', label: 'OPT Employer Checker', open: () => openApp('optchecker') },
     { key: 'helpdesk', icon: 'helpdesk', label: 'Help Desk', open: () => openApp('helpdesk') },
     { key: 'capture', icon: 'capture', label: 'Packet Capture', open: () => openApp('capture') },
     { key: 'subnet', icon: 'subnet', label: 'Subnet Calculator', open: () => openApp('subnet') },

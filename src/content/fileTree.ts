@@ -12,6 +12,8 @@ export type FsNode = {
   id: string;
   name: string;
   kind: FileKind;
+  /** Icon to draw instead of the default for this kind (for example a project's own app icon). */
+  icon?: string;
   /** Child ids, for folders. */
   kids?: string[];
   /** Text shown in the preview pane and the Viewer. */
@@ -107,7 +109,7 @@ function buildTree(): Record<string, FsNode> {
       kids.push(f.id);
       add({ id: f.id, name: f.name, kind: f.kind, src: f.src, body: f.body });
     });
-    add({ id: p.id, name: p.name, kind: 'folder', kids, body: p.blurb });
+    add({ id: p.id, name: p.name, kind: 'folder', icon: p.icon, kids, body: p.blurb });
   };
   projects.forEach(addProject);
   const current = projects.filter((p) => !p.earlier).map((p) => p.id);

@@ -51,6 +51,15 @@ export const apps: AppDefinition[] = [
     launcher: true,
   },
   {
+    id: 'optchecker',
+    title: { windows: 'OPT Employer Checker', mac: 'OPT Employer Checker', linux: 'OPT Employer Checker' },
+    icon: 'optchecker',
+    component: lazy(() => import('../apps/optchecker')),
+    defaultSize: { w: 820, h: 600 },
+    singleInstance: true,
+    launcher: true,
+  },
+  {
     id: 'capture',
     title: { windows: 'Packet Capture', mac: 'Packet Capture', linux: 'Packet Capture' },
     icon: 'capture',
